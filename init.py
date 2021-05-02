@@ -38,5 +38,6 @@ while True:
         print(os.listdir(structure_check[2]))    
     elif choice==3:
         print(os.listdir(structure_check[3]))
+        os.system('python simulations/dyke.py')
     else:
         print("Invalid Selection")
