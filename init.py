@@ -23,23 +23,20 @@ def print_menu():
 
     print (67 * "-")
   
-     
+
+   
   
 while True:          
     print_menu()   
-    choice = input("Enter your choice [1-4]: ")
-     
-    if choice==0:     
+    choice = int(input("Enter your choice [1-4]: "))
+    print(choice)
+    if choice==0:        
         print(os.listdir(structure_check[0]))
-        
     elif choice==1:
         print(os.listdir(structure_check[1]))
-       
     elif choice==2:
         print(os.listdir(structure_check[2]))    
-    
     elif choice==3:
         print(os.listdir(structure_check[3]))
-
     else:
-        print("Selection Error")
+        print("Invalid Selection")
