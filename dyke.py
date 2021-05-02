@@ -68,7 +68,7 @@ def plot_alphas():
     plt.show()
 
 def update(step):
-    global F, P, E, Et, ra, rF, rP, rE, rEt, a, u, w
+    global F, P, E, Et, ra, rF, rP, rE, rEt, u, w
     
     fSUM = 0
     
