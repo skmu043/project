@@ -1,9 +1,11 @@
 import shelve
 import matplotlib.pyplot as plt
 
-s = shelve.open("/Users/sumeet.kumar/IdeaProjects/project/data/1620545390.64.dyke/dyke.data.db")
+s = shelve.open("/Users/sumeet.kumar/IdeaProjects/project/data/1620546669.44.dyke/dyke.data.db")
 
 try :
+
+
     args            = s['sys.argv']
     temperatures    = s['temperatures']
     biotic_force    = s['biotic_force']
@@ -15,14 +17,16 @@ try :
     rF              = s['rF']
     rP              = s['rP']
     rEt             = s['rEt']
+    rAx             = s['rAx']
 
-    K = s['K']
-    R = s['R']
-    P = s['P']
-    E = s['E']
-    start = s['start']
-    end = s['end']
-    step = s['step']
+    K               = s['K']
+    R               = s['R']
+    P               = s['P']
+    E               = s['E']
+    start           = s['start']
+    end             = s['end']
+    step            = s['step']
+
 
 finally:
     s.close()
@@ -140,11 +144,11 @@ def plot_efp():
 
 
 #plot_alphas()          #plot abundance of species over temperature
-#plot_w()               #plot affects values for each species
-#plot_u()               #plot ideal growing temperature for each species
-#plot_aot()             #plot abundance of each species over time
+plot_w()               #plot affects values for each species
+plot_u()               #plot ideal growing temperature for each species
+plot_aot()             #plot abundance of each species over time
 plot_aot_scaled()      #plot abundance of each species over time scaled by R
-#plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
-#plot_b_p()             #plot biotic force and P
-#plot_e()               #plot temperature value over time
-#plot_efp()             #plot temperature, biotic force and P over time
+plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
+plot_b_p()             #plot biotic force and P
+plot_e()               #plot temperature value over time
+plot_efp()             #plot temperature, biotic force and P over time
