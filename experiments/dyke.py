@@ -126,6 +126,7 @@ try :
     s['biotic_force']   = biotic_force
     s['w']              = w
     s['u']              = u
+    s['rAx']              = rAx
     s['rAxR']           = rAxR
     s['time']           = time
     s['rE']             = rE
