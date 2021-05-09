@@ -1,7 +1,7 @@
 import shelve
 import matplotlib.pyplot as plt
 
-s = shelve.open("/Users/sumeet.kumar/IdeaProjects/project/data/1620551767.76.dyke/dyke.data.db")
+s = shelve.open("/Users/sumeet.kumar/IdeaProjects/project/data/1620588216.26.dyke/dyke.data.db")
 
 try :
 
