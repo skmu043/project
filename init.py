@@ -1,5 +1,4 @@
 import os
-
 structure_check = ['analytics','harness','results_data','simulations']
 
 def pre_flight_checks():
@@ -10,7 +9,6 @@ def pre_flight_checks():
     print(check)
 
 pre_flight_checks()
-
 
 
 print(os.listdir(os.getcwdb()))
@@ -24,20 +22,14 @@ def print_menu():
     print (67 * "-")
   
 
-   
-  
 while True:          
     print_menu()   
     choice = int(input("Enter your choice [1-4]: "))
     print(choice)
-    if choice==0:        
+
+    if(choice <= len(structure_check)-1):
+        print(len(structure_check))
         print(os.listdir(structure_check[0]))
-    elif choice==1:
-        print(os.listdir(structure_check[1]))
-    elif choice==2:
-        print(os.listdir(structure_check[2]))    
-    elif choice==3:
-        print(os.listdir(structure_check[3]))
-        os.system('python simulations/dyke.py')
     else:
         print("Invalid Selection")
+        os.system('python simulations/dyke.py')
