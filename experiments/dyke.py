@@ -3,18 +3,34 @@ import math, random, sys
 import matplotlib.pyplot as plt
 import numpy as np
 
-if(len(sys.argv)<7):
-    print(len(sys.argv))
-
 print(len(sys.argv))
 
-K = 100        #Number of Biotic Components
-R = 100        #Essential Range (defines where Biotic Components can be present)
-P = 0          #Perturbation
-OE = []        #Niche
-start = 0      #Time Start
-end = 200      #Time End
-step= 0.01     #Time Step
+if(len(sys.argv)<8):
+    print("Args: K, R, P, E, start, end, step")
+    print("e.g K=100, R=100, P=0, E=10, start=0, end=200, step=0.01")
+    print("exit")
+    print(sys.argv)
+    print(sys.argv[1])
+    print(sys.argv[2])
+    print(sys.argv[3])
+    print(sys.argv[4])
+    print(sys.argv[5])
+    print(sys.argv[6])
+    print(sys.argv[7])
+
+    sys.exit()
+
+
+K = int(sys.argv[1])          #Number of Biotic Components
+R = int(sys.argv[2])          #Essential Range (defines where Biotic Components can be present)
+P = int(sys.argv[3])          #Perturbation
+E = int(sys.argv[4])          #Temperature Start value
+OE = []                       #Niche
+start = int(sys.argv[5])      #Time Start
+end = int(sys.argv[6])        #Time End
+step= float(sys.argv[7])      #Time Step
+
+Et = E          #Temperature without Biotic Force
 w = []         #Affects Parameter (ranges between -1 and 1 for each K)
 u = []         #Ideal Temperature for species (between 0 and R -> the essential range)
 
@@ -25,8 +41,7 @@ w = [random.uniform(-1,1) for _ in range(K)]
 #populates optimum growing temperatures
 u = [math.trunc(random.uniform(0, R)) for _ in range(K)]
                 #Number of Environment Variables
-E = 10          #Temperature Start value
-Et = E          #Temperature without Biotic Force
+
 
 alpha = [[] for _ in range(K)] #abundance value for a species
 
