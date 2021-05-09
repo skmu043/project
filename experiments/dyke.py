@@ -1,25 +1,18 @@
 # Python 3.9.1
-import math, random, sys
+import math, random, sys, os, shelve, time
 import matplotlib.pyplot as plt
 import numpy as np
 
-print(len(sys.argv))
+exp_name = "dyke"
+# the var time below conflicts with time here
+data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + exp_name
 
-if(len(sys.argv)<8):
+# Arguments Check
+if(len(sys.argv)!=8):
     print("Args: K, R, P, E, start, end, step")
     print("e.g K=100, R=100, P=0, E=10, start=0, end=200, step=0.01")
     print("exit")
-    print(sys.argv)
-    print(sys.argv[1])
-    print(sys.argv[2])
-    print(sys.argv[3])
-    print(sys.argv[4])
-    print(sys.argv[5])
-    print(sys.argv[6])
-    print(sys.argv[7])
-
     sys.exit()
-
 
 K = int(sys.argv[1])          #Number of Biotic Components
 R = int(sys.argv[2])          #Essential Range (defines where Biotic Components can be present)
@@ -229,11 +222,28 @@ def plot_efp():
 for xtime in np.arange (start, end, step):
     update(step)
     time.append(xtime)
-#    if(xtime == 50):
-#        P += 10
 
-#    if(xtime == 70):
-#        P -= 10
+#Create Data Dump Directory - uniq to each run
+
+os.mkdir(data_directory)
+# inputs used : sys.argv + date + other metadata
+# temperatures, biotic_force, w, u, rAxR, time, rE, rF, rP, rE, rEt
+print(data_directory)
+s = shelve.open(data_directory + "/" + exp_name + ".data")
+try :
+    s['sys.argv']       = sys.argv
+    s['temperatures']   = temperatures
+    s['biotic_force']   = biotic_force
+    s['w']              = w
+    s['u']              = u
+    s['rAxR']           = rAxR
+    s['time']           = time
+    s['rE']             = rE
+    s['rF']             = rF
+    s['rP']             = rP
+    s['rEt']            = rEt
+finally:
+    s.close()
 
 #plot_alphas()          #plot abundance of species over temperature
 #plot_w()               #plot affects values for each species
