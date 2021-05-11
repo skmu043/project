@@ -1,7 +1,6 @@
 import shelve, os
 import matplotlib.pyplot as plt
 
-
 #plot affects values for each species
 def plot_w():
 
@@ -112,19 +111,18 @@ def plot_efp():
     plt.axhline(y=R)
     plt.show()
 
+    data_dr = os.getcwd() + '/data'
+    data_archives = os.listdir(data_dr)
 
-data_dr = os.getcwd() + '/data'
-data_archives = os.listdir(data_dr)
+    for si in data_archives:
+        print(data_archives.index(si) , si)
 
-for si in data_archives:
-    print(data_archives.index(si) , si)
+    select = int(input("Select [0-"+ str(len(data_archives) - 1)+ "]: "))
 
-select = int(input("Select [0-"+ str(len(data_archives) - 1)+ "]: "))
-
-if(select <= len(os.listdir(data_dr))-1):
-    #print(os.listdir(data_dr))
-    #print(data_dr + "/" + str(os.listdir(data_dr)[select]) + "/dyke.data.db")
-    s = shelve.open(data_dr + "/" + str(data_archives[select]) + "/dyke.data.db")
+    if(select <= len(os.listdir(data_dr))-1):
+        #print(os.listdir(data_dr))
+        #print(data_dr + "/" + str(os.listdir(data_dr)[select]) + "/dyke.data.db")
+        s = shelve.open(data_dr + "/" + str(data_archives[select]) + "/dyke.data.db")
 
     try :
 
@@ -155,14 +153,12 @@ if(select <= len(os.listdir(data_dr))-1):
         #plot_aot()             #plot abundance of each species over time
         #plot_aot_scaled()      #plot abundance of each species over time scaled by R
         #plot_aot_inc_dec()      #plot species that increase temperature and decrease temperature
-        #plot_b_p()             #plot biotic force and P
+        plot_b_p()             #plot biotic force and P
         #plot_e()               #plot temperature value over time
-        #plot_efp()             #plot temperature, biotic force and P over time
+        plot_efp()             #plot temperature, biotic force and P over time
     finally:
         s.close()
 
-else:
-    print("Invalid Selection")
 
 
 
