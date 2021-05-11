@@ -1,36 +1,5 @@
-import shelve
+import shelve, os
 import matplotlib.pyplot as plt
-
-s = shelve.open("/Users/sumeet.kumar/IdeaProjects/project/data/1620588216.26.dyke/dyke.data.db")
-
-try :
-
-
-    args            = s['sys.argv']
-    temperatures    = s['temperatures']
-    biotic_force    = s['biotic_force']
-    w               = s['w']
-    u               = s['u']
-    rAxR            = s['rAxR']
-    time            = s['time']
-    rE              = s['rE']
-    rF              = s['rF']
-    rP              = s['rP']
-    rEt             = s['rEt']
-    rAx             = s['rAx']
-
-    K               = s['K']
-    R               = s['R']
-    P               = s['P']
-    E               = s['E']
-    start           = s['start']
-    end             = s['end']
-    step            = s['step']
-
-
-finally:
-    s.close()
-
 
 #plot affects values for each species
 def plot_w():
@@ -143,12 +112,56 @@ def plot_efp():
     plt.show()
 
 
-#plot_alphas()          #plot abundance of species over temperature
-plot_w()               #plot affects values for each species
-plot_u()               #plot ideal growing temperature for each species
-plot_aot()             #plot abundance of each species over time
-plot_aot_scaled()      #plot abundance of each species over time scaled by R
-plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
-plot_b_p()             #plot biotic force and P
-plot_e()               #plot temperature value over time
-plot_efp()             #plot temperature, biotic force and P over time
+data_dr = os.getcwd() + '/data'
+data_archives = os.listdir(data_dr)
+
+for si in data_archives:
+    print(data_archives.index(si) , si)
+
+select = int(input("Select [0-"+ str(len(data_archives) - 1)+ "]: "))
+
+if(select <= len(os.listdir(data_dr))-1):
+    #print(os.listdir(data_dr))
+    #print(data_dr + "/" + str(os.listdir(data_dr)[select]) + "/dyke.data.db")
+    s = shelve.open(data_dr + "/" + str(data_archives[select]) + "/dyke.data.db")
+
+    try :
+
+        args            = s['sys.argv']
+        temperatures    = s['temperatures']
+        biotic_force    = s['biotic_force']
+        w               = s['w']
+        u               = s['u']
+        rAxR            = s['rAxR']
+        time            = s['time']
+        rE              = s['rE']
+        rF              = s['rF']
+        rP              = s['rP']
+        rEt             = s['rEt']
+        rAx             = s['rAx']
+
+        K               = s['K']
+        R               = s['R']
+        P               = s['P']
+        E               = s['E']
+        start           = s['start']
+        end             = s['end']
+        step            = s['step']
+
+        #plot_alphas()          #plot abundance of species over temperature
+        #plot_w()               #plot affects values for each species
+        #plot_u()               #plot ideal growing temperature for each species
+        #plot_aot()             #plot abundance of each species over time
+        #plot_aot_scaled()      #plot abundance of each species over time scaled by R
+        plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
+        #plot_b_p()             #plot biotic force and P
+        #plot_e()               #plot temperature value over time
+        #plot_efp()             #plot temperature, biotic force and P over time
+    finally:
+        s.close()
+
+else:
+    print("Invalid Selection")
+
+
+
