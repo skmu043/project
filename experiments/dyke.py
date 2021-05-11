@@ -100,6 +100,8 @@ def update(step):
 
     F = fSUM * 10
     P = P + (0.2 * step)
+    #F = fSUM                  [Explore the linear increase for P]
+    #P = P + (step/3.5)
     E = E + ((P + F) * step)
 
     Et = Et + P
