@@ -39,5 +39,3 @@ if(select <= len(os.listdir(data_dr))-1):
 else:
     print("Invalid Selection")
 
-
-
