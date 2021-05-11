@@ -1,7 +1,6 @@
 import shelve, os
 import matplotlib.pyplot as plt
 
-
 #plot affects values for each species
 def plot_w():
 
@@ -149,20 +148,39 @@ if(select <= len(os.listdir(data_dr))-1):
         end             = s['end']
         step            = s['step']
 
-        #plot_alphas()          #plot abundance of species over temperature
-        plot_w()               #plot affects values for each species
-        plot_u()               #plot ideal growing temperature for each species
-        plot_aot()             #plot abundance of each species over time
-        plot_aot_scaled()      #plot abundance of each species over time scaled by R
-        plot_aot_inc_dec()      #plot species that increase temperature and decrease temperature
-        plot_b_p()             #plot biotic force and P
-        plot_e()               #plot temperature value over time
-        plot_efp()             #plot temperature, biotic force and P over time
+
+
+        print("0 plot affects values for each species")
+        print("1 plot ideal growing temperature for each species")
+        print("2 plot abundance of each species over time")
+        print("3 plot abundance of each species over time scaled by R")
+        print("4 plot species that increase temperature and decrease temperature")
+        print("5 plot biotic force and P")
+        print("6 plot temperature value over time")
+        print("7 plot temperature, biotic force and P over time")
+
+        select = int(input("Select [0-"+ str(len(data_archives) - 1)+ "]: "))
+
+        if select == 0:
+            plot_w()               #plot affects values for each species
+        elif select == 1:
+            plot_u()               #plot ideal growing temperature for each species
+        elif select == 2:
+            plot_aot()             #plot abundance of each species over time
+        elif select == 3:
+            plot_aot_scaled()      #plot abundance of each species over time scaled by R
+        elif select == 4:
+            plot_aot_inc_dec()      #plot species that increase temperature and decrease temperature
+        elif select == 5:
+            plot_b_p()             #plot biotic force and P
+        elif select == 6:
+            plot_e()               #plot temperature value over time
+        elif select == 7:
+            plot_efp()             #plot temperature, biotic force and P over time
+        else:
+            print("Invalid Selection")
     finally:
         s.close()
 
 else:
     print("Invalid Selection")
-
-
-
