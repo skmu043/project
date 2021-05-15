@@ -10,7 +10,6 @@ print (sys.version)
 print("Version info.")
 print (sys.version_info)
 
-
 # Fixes in this - Starting E is 0
 # The essential Range starts at 0 so there can be species that will be present and some of them can bring the E down
 #
