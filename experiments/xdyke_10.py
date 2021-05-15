@@ -35,23 +35,17 @@ while (int(len(w)) != int(len(set(w)))):
     w.clear()
     w = [random.uniform(-1,1) for _ in range(K)]
     
-#populates optimum growing temperatures
-u = [math.trunc(random.uniform(0, R)) for _ in range(K)]
+#populates optimum growing temperatures [e.g 78.213423]
+u = [random.uniform(0, R) for _ in range(K)]
+print(u)
+
 while(int(len(u)) != int(len(set(u)))):
-    print("First U:")
-    print(u)
-    print(len(u))
     print("Duplicate u's detected: Regenerating ...")
     u.clear()
-    u = [math.trunc(random.uniform(0, R)) for _ in range(K)]
-    print("Second U:")
-    print(u)
-    print(len(u))
-    print(len(set(u)))
-    time.sleep(10)
+    u = [random.uniform(0, R) for _ in range(K)]
 
 N = 2           #Number of Environment Variables
-E = 10           #Temperature Start value
+E = 10          #Temperature Start value
 Et = 10         #Temperature without Biotic Force
 
 alpha = [[] for _ in range(K)] #abundance value for a species
@@ -257,7 +251,7 @@ for xtime in np.arange (start, end, step):
 #plot_u()               #plot ideal growing temperature for each species
 #plot_aot()             #plot abundance of each species over time
 #plot_aot_scaled()      #plot abundance of each species over time scaled by R
-plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
+#plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
 #plot_b_p()             #plot biotic force and P
 #plot_e()               #plot temperature value over time
 plot_efp()             #plot temperature, biotic force and P over time
