@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # Python 3.9.1
 import math, random
 import matplotlib.pyplot as plt
@@ -15,7 +14,7 @@ print (sys.version_info)
 #
 
 
-K = 30        #Number of Biotic Components
+K = 50         #Number of Biotic Components
 R = 100        #Essential Range (defines where Biotic Components can be present)
 P = 0          #Perturbation
 OE = []        #Niche
@@ -93,13 +92,14 @@ def update(step):
         rAxR[_].append(alpha[_][-1] * R)
         fSUM = fSUM + (alpha[_][-1] * w[_]) 
 
-        # abundance directly on the graph
+        #abundance directly on the graph
         #alpha[_] = al
         #rAx[_].append(alpha[_])
         #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
 
     F = fSUM * 10
     P = P + (0.2 * step)
+    #P = 0 
     #F = fSUM                  [Explore the linear increase for P]
     #P = P + (step/3.5)
     E = E + ((P + F) * step)
