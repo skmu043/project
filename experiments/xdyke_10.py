@@ -2,6 +2,7 @@
 import math, random
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 import sys
 print("Python version")
@@ -28,17 +29,26 @@ u = []         #Ideal Temperature for species (between 0 and R -> the essential 
 OE = [5 for _ in range(K)]
 #populates affects values
 w = [random.uniform(-1,1) for _ in range(K)]
-while (len(w) != len(set(w))):
+
+while (int(len(w)) != int(len(set(w)))):
     print("Duplicate w's detected: Regenerating ...")
     w.clear()
     w = [random.uniform(-1,1) for _ in range(K)]
     
 #populates optimum growing temperatures
 u = [math.trunc(random.uniform(0, R)) for _ in range(K)]
-while(len(u) != len(set(u))):
+while(int(len(u)) != int(len(set(u)))):
+    print("First U:")
+    print(u)
+    print(len(u))
     print("Duplicate u's detected: Regenerating ...")
     u.clear()
     u = [math.trunc(random.uniform(0, R)) for _ in range(K)]
+    print("Second U:")
+    print(u)
+    print(len(u))
+    print(len(set(u)))
+    time.sleep(10)
 
 N = 2           #Number of Environment Variables
 E = 10           #Temperature Start value
