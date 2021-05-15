@@ -28,6 +28,11 @@ u = []         #Ideal Temperature for species (between 0 and R -> the essential 
 OE = [5 for _ in range(K)]
 #populates affects values
 w = [random.uniform(-1,1) for _ in range(K)]
+while (len(w) != len(set(w))):
+    print("Duplicate w's detected: Regenerating ...")
+    w.clear()
+    w = [random.uniform(-1,1) for _ in range(K)]
+
 #populates optimum growing temperatures
 u = [math.trunc(random.uniform(0, R)) for _ in range(K)]
 
