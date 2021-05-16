@@ -15,7 +15,7 @@ print (sys.version)
 # The essential Range starts at 0 so there can be species that will be present and some of them can bring the E down
 #
 
-K = 5000       #Number of Biotic Components
+K = 100       #Number of Biotic Components
 R = 100        #Essential Range (defines where Biotic Components can be present)
 P = 0          #Perturbation
 OE = []        #Niche
@@ -44,7 +44,7 @@ while(int(len(u)) != int(len(set(u)))):
     u = [random.uniform(0, R) for _ in range(K)]
 
 N = 2           #Number of Environment Variables
-E = 0          #Temperature Start value
+E = 10          #Temperature Start value
 Et = E         #Temperature without Biotic Force
 
 alpha = [[] for _ in range(K)] #abundance value for a species
@@ -102,8 +102,7 @@ def biotic_alpha_parallel(_):
 
         # Keep timescales between 1 and 0 [1 = system is at the newly calculated value instantaneously whereas values closer to zero indicate slower timescales]
         # Values outside 1 and 0 will cause errors as rates would go outside model bounds
-        alpha_time_scale = 1
-        temperature_time_scale = 1
+        alpha_time_scale = 5
 
         # abundance da/dt
         newAlpha = alpha[_][-1] + ((new_alpha - alpha[_][-1]) * step)
@@ -124,7 +123,7 @@ def update(step):
     
     fSUM = 0
     
-    temperature_time_scale = 1
+    temperature_time_scale = 0.05
 
     #pool = multiprocessing.Pool(processes=1)
     #pool.map(biotic_alpha_parallel, ( _ for _ in range(K)))
