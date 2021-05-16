@@ -3,25 +3,25 @@ import math, random
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+import multiprocessing
 
 import sys
 print("Python version")
 print (sys.version)
-print("Version info.")
-print (sys.version_info)
+#print("Version info.")
+#print (sys.version_info)
 
 # Fixes in this - Starting E is 0
 # The essential Range starts at 0 so there can be species that will be present and some of them can bring the E down
 #
 
-
-K = 50         #Number of Biotic Components
+K = 5000       #Number of Biotic Components
 R = 100        #Essential Range (defines where Biotic Components can be present)
 P = 0          #Perturbation
 OE = []        #Niche
 start = 0      #Time Start
-end = 300      #Time End
-step= 0.01     #Time Step
+end = 200      #Time End
+step= 0.1    #Time Step
 w = []         #Affects Parameter (ranges between -1 and 1 for each K)
 u = []         #Ideal Temperature for species (between 0 and R -> the essential range)
 
@@ -90,15 +90,11 @@ def plot_alphas():
 
     plt.show()
 
-def update(step):
-    global F, P, E, Et, rF, rP, rE, rEt, u, w
-    
-    fSUM = 0
-    
-    for _ in range(K):
-        new_alpha = (math.e) ** ((-1) * (((abs((E)-u[_])) ** 2) / (2*(OE[_]**2))))
-        
+def biotic_alpha_parallel(_):
+        global F, P, E, Et, rF, rP, rE, rEt, u, w, step
 
+        #print(_)
+        new_alpha = (math.e) ** ((-1) * (((abs((E)-u[_])) ** 2) / (2*(OE[_]**2))))
         #time scales - for each step - the next value is calculated (next abundance and next E (temperature))
         #Now with timescales in mind, simply swithcing from the current value to the newly calculated value would indicate instantaneous change
         #Instead instead of switching directly to the newly calculated value - we can approach that value via some function
@@ -106,8 +102,8 @@ def update(step):
 
         # Keep timescales between 1 and 0 [1 = system is at the newly calculated value instantaneously whereas values closer to zero indicate slower timescales]
         # Values outside 1 and 0 will cause errors as rates would go outside model bounds
-        alpha_time_scale = 0.7
-        temperature_time_scale = 0.5
+        alpha_time_scale = 1
+        temperature_time_scale = 1
 
         # abundance da/dt
         newAlpha = alpha[_][-1] + ((new_alpha - alpha[_][-1]) * step)
@@ -115,6 +111,33 @@ def update(step):
 
         rAx[_].append(alpha[_][-1])
         rAxR[_].append(alpha[_][-1] * R)
+        #fSUM = fSUM + (alpha[_][-1] * w[_]) 
+
+        #abundance directly on the graph
+        #alpha[_] = al
+        #rAx[_].append(alpha[_])
+        #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
+
+
+def update(step):
+    global F, P, E, Et, rF, rP, rE, rEt, u, w
+    
+    fSUM = 0
+    
+    temperature_time_scale = 1
+
+    #pool = multiprocessing.Pool(processes=1)
+    #pool.map(biotic_alpha_parallel, ( _ for _ in range(K)))
+
+    #pool = multiprocessing.Pool()
+    #pool.map(biotic_alpha_parallel, range(K))
+
+    for _ in range(K):
+        biotic_alpha_parallel(_)
+
+    for _ in range(K):
+        #rAx[_].append(alpha[_][-1])
+        #rAxR[_].append(alpha[_][-1] * R)
         fSUM = fSUM + (alpha[_][-1] * w[_]) 
 
         #abundance directly on the graph
@@ -122,7 +145,7 @@ def update(step):
         #rAx[_].append(alpha[_])
         #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
 
-    F = fSUM * 10
+    F = fSUM
     P = P + (0.2 * step)
     #P = 0 
     #F = fSUM                  [Explore the linear increase for P]
@@ -251,21 +274,32 @@ def plot_efp():
     plt.axhline(y=R)
     plt.show()
 
-for xtime in np.arange (start, end, step):
-    update(step)
-    time.append(xtime)
-#    if(xtime == 50):
-#        P += 10
 
-#    if(xtime == 70):
-#        P -= 10
 
-#plot_alphas()          #plot abundance of species over temperature
-#plot_w()               #plot affects values for each species
-#plot_u()               #plot ideal growing temperature for each species
-#plot_aot()             #plot abundance of each species over time
-plot_aot_scaled()      #plot abundance of each species over time scaled by R
-#plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
-#plot_b_p()             #plot biotic force and P
-#plot_e()               #plot temperature value over time
-#plot_efp()             #plot temperature, biotic force and P over time
+sys.stdout.write("[%s]" % (" " * end))
+sys.stdout.flush()
+sys.stdout.write("\b" * (end+1))
+
+
+if __name__ == '__main__':
+    for xtime in np.arange (start, end, step):
+        update(step)
+        time.append(xtime)
+        #print(xtime)
+
+        if(xtime % 1 == 0):
+            sys.stdout.write("-")
+            sys.stdout.flush()
+    
+
+    sys.stdout.write("]\n")
+
+    #plot_alphas()          #plot abundance of species over temperature
+    #plot_w()               #plot affects values for each species
+    #plot_u()               #plot ideal growing temperature for each species
+    #plot_aot()             #plot abundance of each species over time
+    plot_aot_scaled()      #plot abundance of each species over time scaled by R
+    #plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
+    #plot_b_p()             #plot biotic force and P
+    #plot_e()               #plot temperature value over time
+    plot_efp()             #plot temperature, biotic force and P over time
