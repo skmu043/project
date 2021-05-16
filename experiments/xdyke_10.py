@@ -37,7 +37,6 @@ while (int(len(w)) != int(len(set(w)))):
     
 #populates optimum growing temperatures [e.g 78.213423]
 u = [random.uniform(0, R) for _ in range(K)]
-print(u)
 
 while(int(len(u)) != int(len(set(u)))):
     print("Duplicate u's detected: Regenerating ...")
@@ -51,7 +50,7 @@ Et = 10         #Temperature without Biotic Force
 alpha = [[] for _ in range(K)] #abundance value for a species
 
 for _ in range(K):
-    alpha[_].append((math.e) ** ((-1) * (((abs(E-u[_])) ** 2) / (2*(OE[_]**2)))))
+    alpha[_].append((math.e) ** ((-1) * (((abs((E)-u[_])) ** 2) / (2*(OE[_]**2)))))
 
 rF = []         #Biotic Force Values
 rP = []         #Perturbation Values
@@ -98,9 +97,15 @@ def update(step):
     
     for _ in range(K):
         new_alpha = (math.e) ** ((-1) * (((abs((E)-u[_])) ** 2) / (2*(OE[_]**2))))
+        
+
+        #time scales - for each step - the next value is calculated (next abundance and next E (temperature))
+        #Now with timescales in mind, simply swithcing from the current value to the newly calculated value would indicate instantaneous change
+        #Instead instead of switching directly to the newly calculated value - we can approach that value via some function
+        #e.g Current E=5, new E=7, instead of using E=7 we will use a function where (E=5) approaches (E=7) so the final val may be E=6
 
         # abundance da/dt
-        alpha[_].append(alpha[_][-1] + (new_alpha - alpha[_][-1]) * step)
+        alpha[_].append(alpha[_][-1] + ( (new_alpha - alpha[_][-1]) * step) * 0.5)
         rAx[_].append(alpha[_][-1])
         rAxR[_].append(alpha[_][-1] * R)
         fSUM = fSUM + (alpha[_][-1] * w[_]) 
@@ -115,7 +120,7 @@ def update(step):
     #P = 0 
     #F = fSUM                  [Explore the linear increase for P]
     #P = P + (step/3.5)
-    E = E + ((P + F) * step)
+    E = E + ( ((P + F) * step) * 0.7)
 
     # E not P ! This is the Temperature !
     # Incorrect one Et = Et + P
@@ -246,11 +251,11 @@ for xtime in np.arange (start, end, step):
 #    if(xtime == 70):
 #        P -= 10
 
-#plot_alphas()          #plot abundance of species over temperature
+plot_alphas()          #plot abundance of species over temperature
 #plot_w()               #plot affects values for each species
 #plot_u()               #plot ideal growing temperature for each species
 #plot_aot()             #plot abundance of each species over time
-#plot_aot_scaled()      #plot abundance of each species over time scaled by R
+plot_aot_scaled()      #plot abundance of each species over time scaled by R
 #plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
 #plot_b_p()             #plot biotic force and P
 #plot_e()               #plot temperature value over time
