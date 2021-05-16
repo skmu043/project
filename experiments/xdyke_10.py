@@ -14,7 +14,7 @@ print("Python version",sys.version)
 # The essential Range starts at 0 so there can be species that will be present and some of them can bring the E down
 #
 
-K = 500       #Number of Biotic Components
+K = 5000       #Number of Biotic Components
 R = 100        #Essential Range (defines where Biotic Components can be present)
 P = 0          #Perturbation
 OE = []        #Niche
@@ -43,7 +43,7 @@ while(int(len(u)) != int(len(set(u)))):
     u = [random.uniform(0, R) for _ in range(K)]
 
 N = 2           #Number of Environment Variables
-E = -100          #Temperature Start value
+E = -10          #Temperature Start value
 Et = E         #Temperature without Biotic Force
 
 alpha = [[] for _ in range(K)] #abundance value for a species
@@ -122,7 +122,7 @@ def update(step):
     
     fSUM = 0
     
-    temperature_time_scale = 0.5
+    temperature_time_scale = 0.1
 
     #pool = multiprocessing.Pool(processes=1)
     #pool.map(biotic_alpha_parallel, ( _ for _ in range(K)))
@@ -143,7 +143,7 @@ def update(step):
         #rAx[_].append(alpha[_])
         #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
 
-    F = fSUM * 10
+    F = fSUM
     P = P + (0.2 * step)
     #P = 0 
     #F = fSUM                  [Explore the linear increase for P]
