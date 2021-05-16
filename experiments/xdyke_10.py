@@ -104,8 +104,15 @@ def update(step):
         #Instead instead of switching directly to the newly calculated value - we can approach that value via some function
         #e.g Current E=5, new E=7, instead of using E=7 we will use a function where (E=5) approaches (E=7) so the final val may be E=6
 
+        # Keep timescales between 1 and 0 [1 = system is at the newly calculated value instantaneously whereas values closer to zero indicate slower timescales]
+        # Values outside 1 and 0 will cause errors as rates would go outside model bounds
+        alpha_time_scale = 0.7
+        temperature_time_scale = 0.5
+
         # abundance da/dt
-        alpha[_].append(alpha[_][-1] + ( (new_alpha - alpha[_][-1]) * step) * 0.5)
+        newAlpha = alpha[_][-1] + ((new_alpha - alpha[_][-1]) * step)
+        alpha[_].append(alpha[_][-1] + ((newAlpha - alpha[_][-1]) * alpha_time_scale))
+
         rAx[_].append(alpha[_][-1])
         rAxR[_].append(alpha[_][-1] * R)
         fSUM = fSUM + (alpha[_][-1] * w[_]) 
@@ -120,7 +127,9 @@ def update(step):
     #P = 0 
     #F = fSUM                  [Explore the linear increase for P]
     #P = P + (step/3.5)
-    E = E + ( ((P + F) * step) * 0.7)
+    newE = E + ( ((P + F) * step))
+    # E is old E and newE has the current value
+    E = E + ((newE-E) * temperature_time_scale)
 
     # E not P ! This is the Temperature !
     # Incorrect one Et = Et + P
