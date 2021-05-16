@@ -6,8 +6,7 @@ import time
 import multiprocessing
 
 import sys
-print("Python version")
-print (sys.version)
+print("Python version",sys.version)
 #print("Version info.")
 #print (sys.version_info)
 
@@ -15,12 +14,12 @@ print (sys.version)
 # The essential Range starts at 0 so there can be species that will be present and some of them can bring the E down
 #
 
-K = 100       #Number of Biotic Components
+K = 500       #Number of Biotic Components
 R = 100        #Essential Range (defines where Biotic Components can be present)
 P = 0          #Perturbation
 OE = []        #Niche
 start = 0      #Time Start
-end = 200      #Time End
+end = 500      #Time End
 step= 0.1    #Time Step
 w = []         #Affects Parameter (ranges between -1 and 1 for each K)
 u = []         #Ideal Temperature for species (between 0 and R -> the essential range)
@@ -44,7 +43,7 @@ while(int(len(u)) != int(len(set(u)))):
     u = [random.uniform(0, R) for _ in range(K)]
 
 N = 2           #Number of Environment Variables
-E = 10          #Temperature Start value
+E = -100          #Temperature Start value
 Et = E         #Temperature without Biotic Force
 
 alpha = [[] for _ in range(K)] #abundance value for a species
@@ -102,7 +101,7 @@ def biotic_alpha_parallel(_):
 
         # Keep timescales between 1 and 0 [1 = system is at the newly calculated value instantaneously whereas values closer to zero indicate slower timescales]
         # Values outside 1 and 0 will cause errors as rates would go outside model bounds
-        alpha_time_scale = 5
+        alpha_time_scale = 1
 
         # abundance da/dt
         newAlpha = alpha[_][-1] + ((new_alpha - alpha[_][-1]) * step)
@@ -123,7 +122,7 @@ def update(step):
     
     fSUM = 0
     
-    temperature_time_scale = 0.05
+    temperature_time_scale = 0.5
 
     #pool = multiprocessing.Pool(processes=1)
     #pool.map(biotic_alpha_parallel, ( _ for _ in range(K)))
@@ -144,7 +143,7 @@ def update(step):
         #rAx[_].append(alpha[_])
         #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
 
-    F = fSUM
+    F = fSUM * 10
     P = P + (0.2 * step)
     #P = 0 
     #F = fSUM                  [Explore the linear increase for P]
@@ -263,7 +262,7 @@ def plot_efp():
     plt.ylabel('Values', fontsize=40)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.ylim(-50, R+20)
+    plt.ylim(-80, R+20)
     plt.xlim(0, end)
     plt.plot(time,rF, 'g-', label = 'biotic force')
     plt.plot(time,rP, 'b--', label = 'perturbing force(rate)')
@@ -275,9 +274,9 @@ def plot_efp():
 
 
 
-sys.stdout.write("[%s]" % (" " * end))
+sys.stdout.write("[%s]" % (" " * K))
 sys.stdout.flush()
-sys.stdout.write("\b" * (end+1))
+sys.stdout.write("\b" * (K+1))
 
 
 if __name__ == '__main__':
