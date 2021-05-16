@@ -44,8 +44,8 @@ while(int(len(u)) != int(len(set(u)))):
     u = [random.uniform(0, R) for _ in range(K)]
 
 N = 2           #Number of Environment Variables
-E = 10          #Temperature Start value
-Et = 10         #Temperature without Biotic Force
+E = 0          #Temperature Start value
+Et = E         #Temperature without Biotic Force
 
 alpha = [[] for _ in range(K)] #abundance value for a species
 
@@ -260,7 +260,7 @@ for xtime in np.arange (start, end, step):
 #    if(xtime == 70):
 #        P -= 10
 
-plot_alphas()          #plot abundance of species over temperature
+#plot_alphas()          #plot abundance of species over temperature
 #plot_w()               #plot affects values for each species
 #plot_u()               #plot ideal growing temperature for each species
 #plot_aot()             #plot abundance of each species over time
@@ -268,4 +268,4 @@ plot_aot_scaled()      #plot abundance of each species over time scaled by R
 #plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
 #plot_b_p()             #plot biotic force and P
 #plot_e()               #plot temperature value over time
-plot_efp()             #plot temperature, biotic force and P over time
+#plot_efp()             #plot temperature, biotic force and P over time
