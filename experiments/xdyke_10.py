@@ -19,7 +19,7 @@ R = 100        #Essential Range (defines where Biotic Components can be present)
 P = 0          #Perturbation
 OE = []        #Niche
 start = 0      #Time Start
-end = 300      #Time End
+end = 500      #Time End
 step= 0.1    #Time Step
 w = []         #Affects Parameter (ranges between -1 and 1 for each K)
 u = []         #Ideal Temperature for species (between 0 and R -> the essential range)
@@ -149,7 +149,7 @@ def update(step):
         #rAx[_].append(alpha[_])
         #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
 
-    F = fSUM * 14
+    F = fSUM * 15
     P = P + (0.2 * step)
     #P = 0 
     #F = fSUM                  [Explore the linear increase for P]
