@@ -17,19 +17,24 @@ K       = 100        #Number of Biotic Components
 R       = 100        #Essential Range (defines where Biotic Components can be present)
 OE      = []         #Niche
 start   = 0          #Time Start
-end     = 200        #Time End
+end     = 300        #Time End
 step    = 0.1        #Time Step
 w       = []         #Affects Parameter (ranges between -1 and 1 for each K)
 u       = []         #Ideal Temperature for species (between 0 and R -> the essential range)
 
 # The following will change from being single to multiple to support multiple E
-N       = 2          #Number of Environment Variables
+N       = 7          #Number of Environment Variables
 Ei      = -20
-E       = [Ei for _ in range(N)]
+
+E       = [random.uniform(-20,0) for _ in range(N)]
+#same start off for E
+#E       = [Ei for _ in range(N)]
 
 Pi      = 0
 P       = [Pi for _ in range(N)]
 F       = [Pi for _ in range(N)]
+#individual P rates
+Px      = [random.uniform(0.1,0.3) for _ in range(N)]
 
 Et      = Ei         #Temperature without Biotic Force
 
@@ -124,9 +129,8 @@ def plot_alphas():
 
 def update(step):
     global F, P, E, Et, rF, rP, rE, rEt, u, w
-    
-    fSUM = 0
 
+    fSUM = [0 for _ in range(N)]
     alpha_time_scale = 1
     temperature_time_scale = 0.2
 
@@ -158,7 +162,7 @@ def update(step):
 
             #rAx[_].append(alpha[_][-1])
             #rAxR[_].append(alpha[_][-1] * R)
-            fSUM = fSUM + (alpha[ei][_][-1] * w[ei][_])
+            fSUM[ei] = fSUM[ei] + (alpha[ei][_][-1] * w[ei][_])
 
             #abundance directly on the graph
             #alpha[_] = al
@@ -166,10 +170,11 @@ def update(step):
             #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
 
     for ei in range(N):
-        F[ei] = fSUM * 10
+        F[ei] = fSUM[ei] * 10
         #F = F + (fSUM * step)
 
-        P[ei] = P[ei] + (0.2 * step)
+        P[ei] = P[ei] + (Px[ei] * step)
+
         #P = 0
         #F = fSUM                  [Explore the linear increase for P]
         #P = P + (step/3.5)
@@ -185,7 +190,7 @@ def update(step):
         rF[ei].append(F[ei])
         rP[ei].append(P[ei])
         rE[ei].append(E[ei])
-        rEt.append(Et)
+    rEt.append(Et)
 
 #plot affects values for each species
 def plot_w():
@@ -195,7 +200,8 @@ def plot_w():
     plt.title('Affects values for each species', fontsize=20)
     plt.xlabel('Species', fontsize=18)
     plt.ylabel('Affects', fontsize=18)
-    plt.plot(w, 'k.', label='w')
+    for i in range(N):
+        plt.plot(w[i], 'k.', label='w')
     plt.legend(loc=5, prop={'size': 30})
     plt.show()
 
@@ -220,10 +226,11 @@ def plot_aot_scaled():
     plt.yticks(fontsize=20)
     plt.ylim(-50, R+20)
     plt.xlim(0, end)
-    for x in range(K):
-        plt.plot(time,rAxR[x],label = 'id %s'%x)
-
-    plt.plot(time,rE, 'r.', label='E')
+    for i in range(N):
+        for x in range(K):
+            plt.plot(time,rAxR[i][x],label = 'id %s'%x)
+    for i in range(N):
+        plt.plot(time,rE[i], 'r.', label='E')
     plt.show()
 
 #plot abundance of each species over time
@@ -234,8 +241,9 @@ def plot_aot():
     plt.ylabel('Abundance', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    for x in range(K):
-        plt.plot(time,rAx[x],label = 'id %s'%x)
+    for i in range(N):
+        for x in range(K):
+            plt.plot(time,rAx[i][x],label = 'id %s'%x)
     plt.show()
 
 #plot species that increase temperature and decrease temperature
@@ -246,13 +254,14 @@ def plot_aot_inc_dec():
     plt.ylabel('Abundance', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    for x in range(K):
-        if(w[x]==0):
-            plt.plot(time,rAx[x],'k-')
-        if(w[x]<0):
-            plt.plot(time,rAx[x],'b-')
-        if(w[x]>0):
-            plt.plot(time,rAx[x],'r-')
+    for i in range(N):
+        for x in range(K):
+            if(w[i][x]==0):
+                plt.plot(time,rAx[i][x],'k-')
+            if(w[i][x]<0):
+                plt.plot(time,rAx[i][x],'b-')
+            if(w[i][x]>0):
+                plt.plot(time,rAx[i][x],'r-')
     plt.show()
 
 #plot biotic force and P
@@ -263,8 +272,9 @@ def plot_b_p():
     plt.ylabel('Value for Biotic Force and P', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.plot(time,rF, 'g-', label='F')
-    plt.plot(time,rP, 'b--', label='P')
+    for i in range(N):
+        plt.plot(time,rF[i], 'g-', label='F')
+        plt.plot(time,rP[i], 'b--', label='P')
     plt.show()
 
 #plot temperature value over time
@@ -275,7 +285,8 @@ def plot_e():
     plt.ylabel('Temperature', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.plot(time,rE, 'r-', label='E')
+    for i in range(N):
+        plt.plot(time,rE[i], 'r-', label='E')
     plt.axhline(y=R)
     plt.show()
 
@@ -289,9 +300,10 @@ def plot_efp():
     plt.yticks(fontsize=20)
     plt.ylim(-80, R+20)
     plt.xlim(0, end)
-    plt.plot(time,rF, 'g-', label = 'biotic force')
-    plt.plot(time,rP, 'b--', label = 'perturbing force(rate)')
-    plt.plot(time,rE, 'r-',label = 'temperature')
+    for i in range(N):
+        plt.plot(time,rF[i], 'g-', label = 'biotic force')
+        plt.plot(time,rP[i], 'b--', label = 'perturbing force(rate)')
+        plt.plot(time,rE[i], 'r-',label = 'temperature')
     plt.plot(time,rEt, 'k.',label = 'temperature (without biota)')
     #plt.legend(loc='lower right', prop={'size': 30})
     plt.axhline(y=R)
@@ -317,12 +329,12 @@ if __name__ == '__main__':
 
     sys.stdout.write("]\n")
 
-    plot_alphas()          #plot abundance of species over temperature
+    #plot_alphas()          #plot abundance of species over temperature
     #plot_w()               #plot affects values for each species
     #plot_u()               #plot ideal growing temperature for each species
     #plot_aot()             #plot abundance of each species over time
-    #plot_aot_scaled()      #plot abundance of each species over time scaled by R
+    plot_aot_scaled()      #plot abundance of each species over time scaled by R
     #plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
     #plot_b_p()             #plot biotic force and P
     #plot_e()               #plot temperature value over time
-    #plot_efp()             #plot temperature, biotic force and P over time
+    plot_efp()             #plot temperature, biotic force and P over time
