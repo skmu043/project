@@ -17,17 +17,17 @@ K       = 100        #Number of Biotic Components
 R       = 100        #Essential Range (defines where Biotic Components can be present)
 OE      = []         #Niche
 start   = 0          #Time Start
-end     = 150        #Time End
+end     = 300        #Time End
 step    = 0.1        #Time Step
 w       = []         #Affects Parameter (ranges between -1 and 1 for each K)
 u       = []         #Ideal Temperature for species (between 0 and R -> the essential range)
 
 # The following will change from being single to multiple to support multiple E
-N       = 4          #Number of Environment Variables
+N       = 2          #Number of Environment Variables
 Ei      = -20
 
-#E       = [random.uniform(-20,0) for _ in range(N)]
-E       = [50 for _ in range(N)]
+E       = [random.uniform(-1,10) for _ in range(N)]
+#E       = [50 for _ in range(N)]
 
 #same start off for E
 #E       = [Ei for _ in range(N)]
@@ -345,9 +345,9 @@ if __name__ == '__main__':
         if(xtime % 1 == 0):
             sys.stdout.write("-")
             sys.stdout.flush()
-        if(xtime == LP):
-           for x in range(N):
-               P[x] -= 15
+        #f(xtime == LP):
+        #   for x in range(N):
+        #       P[x] -= 15
 
         #if(xtime == 100):
         #    for x in range(N):
@@ -364,5 +364,5 @@ if __name__ == '__main__':
     #plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
     #plot_b_p()             #plot biotic force and P
     #plot_e()               #plot temperature value over time
-    #plot_efp()             #plot temperature, biotic force and P over time
+    plot_efp()             #plot temperature, biotic force and P over time
     #plot_ep(LP)               #plot temperature and large P
