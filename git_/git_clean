@@ -1,0 +1,13 @@
+git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch data/1620856927.89.dyke/dyke.data.db'
+WARNING: git-filter-branch has a glut of gotchas generating mangled history
+	 rewrites.  Hit Ctrl-C before proceeding to abort, then use an
+	 alternative filtering tool such as 'git filter-repo'
+	 (https://github.com/newren/git-filter-repo/) instead.  See the
+	 filter-branch manual page for more details; to squelch this warning,
+	 set FILTER_BRANCH_SQUELCH_WARNING=1.
+Proceeding with filter-branch...
+
+Rewrite 42f64798eaead1cecb576e30518408b230eda321 (62/67) (11 seconds passed, remaining 0 predicted)    rm 'data/1620856927.89.dyke/dyke.data.db'
+Rewrite ab2952234136d6035e34017571d35dae1bcafec3 (62/67) (11 seconds passed, remaining 0 predicted)    rm 'data/1620856927.89.dyke/dyke.data.db'
+Rewrite a1cf0a6dcd7cbe84f0b7cfc4d2e388299a07e3ae (62/67) (11 seconds passed, remaining 0 predicted)
+Ref 'refs/heads/main' was rewritten
