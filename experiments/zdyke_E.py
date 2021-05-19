@@ -89,7 +89,9 @@ for i in range(N):
 #Tracks time (steps accumulation)
 time = []
 
-biotic_force = [[] for _ in range(K)]
+biotic_force = [[] for _ in range(N)]
+for i in range(N):
+    biotic_force[i] = [[] for _ in range(K)]
 temperatures = []
 
 #plot abundance of species over temperature
@@ -98,9 +100,10 @@ def plot_alphas():
     for x in np.arange (0, R, step):
         temperatures.append(x)
 
-    for y in range(K):
-        for x in np.arange (0, R, step):
-            biotic_force[y].append((math.e) ** ((-1) * (((abs(x-u[y])) ** 2) / (2*(OE[y]**2)))) * w[y])
+    for i in range(N):
+        for y in range(K):
+            for x in np.arange (0, R, step):
+                biotic_force[i][y].append((math.e) ** ((-1) * (((abs(x-u[y])) ** 2) / (2*(OE[y]**2)))) * w[i][y])
 
     plt.figure(figsize=(25,15))
     plt.title('Biotic Force over Time', fontsize=40)
@@ -108,15 +111,14 @@ def plot_alphas():
     plt.ylabel('biotic force (a * w)', fontsize=40)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    for _ in range(K):
-        plt.plot(temperatures,biotic_force[_])
 
-    plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
+    for i in range(N):
+        for _ in range(K):
+            plt.plot(temperatures,biotic_force[i][_])
+    for i in range(N):
+        plt.plot(temperatures,np.sum((np.array(biotic_force[i], dtype=float)), axis=0), lw=4)
 
     plt.show()
-
-
-
 
 
 
@@ -315,7 +317,7 @@ if __name__ == '__main__':
 
     sys.stdout.write("]\n")
 
-    #plot_alphas()          #plot abundance of species over temperature
+    plot_alphas()          #plot abundance of species over temperature
     #plot_w()               #plot affects values for each species
     #plot_u()               #plot ideal growing temperature for each species
     #plot_aot()             #plot abundance of each species over time
