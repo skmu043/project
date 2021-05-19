@@ -72,14 +72,19 @@ while(int(len(u)) != int(len(set(u)))):
 
 #u = [1.9450593597140076, 86.35718651062018, 86.72638325100026, 12.729322580032, 57.16938733306887, 46.09789040038521, 98.63971722872468, 90.04427417879262, 78.62023629634596, 65.8962035318393, 55.85499976874695, 9.487715695190712, 2.3443574584210425, 45.71662599462844, 84.8839215011532, 2.8451584634601734, 84.21130987885158, 93.94615303478983, 95.37363778400318, 63.904021203450235, 49.72199553534442, 40.11224992811777, 4.648715035112472, 18.24048527090991, 11.872311160254444, 44.02712903700103, 10.642631784289058, 9.714403865223197, 56.86153216490566, 25.039863106686667, 12.479711612152688, 26.542718248540165, 12.046183150972622, 87.80787901132331, 56.95953061144038, 65.05207456401813, 12.490117909715314, 37.809283809980855, 37.90978137287804, 49.796627133260266, 83.18092392473521, 65.83599387199264, 55.366484549558656, 67.13956218510717, 45.75388872514773, 36.971319039811455, 60.42873207148622, 43.732521718993354, 2.303371173469415, 35.841954514917205, 3.039399306907453, 26.201883032962957, 53.42046238629629, 34.053767651158374, 52.77636429374798, 72.23802635656281, 70.51508379012483, 58.7898893108219, 42.88101578763251, 4.201085828747009, 13.167650529870055, 68.67203522374702, 47.79137311881421, 96.35780426172501, 80.30599018611181, 80.53216745728099, 48.4566659139069, 64.41107021625699, 73.22908999624744, 63.78515752541387, 68.019953942972, 46.95330029987771, 44.54246326249922, 58.029454883459906, 49.24367973816381, 57.93625253714198, 20.10953275651277, 9.894593420429798, 37.82794789521729, 0.322695994484512, 19.430916067054994, 90.79049685068846, 49.20598902680604, 63.06163076214929, 19.671055110153045, 40.323052754292256, 1.272717426670722, 20.464526275161777, 48.319959842316564, 54.242074112001085, 77.36033680183787, 60.23801215137363, 61.24507324294958, 63.39377412716692, 91.75789946422248, 55.52507145374377, 79.8162920335649, 32.73316669367009, 73.2315063470369, 40.60506680022681, 15.243052759952514, 40.41983076817905, 85.65389619459532, 41.646128265210876, 95.08828403635526, 87.03422753711787, 65.86213574030539, 2.660562738965766, 65.92028458103928, 46.019017482072485, 10.859251939561343, 56.935229274800946, 74.94659035503312, 64.69475007979803, 72.64693408355673, 4.558598812936909, 36.99760614642863, 43.056269902334485, 20.51775683063567, 40.77790208125593, 46.11308057819142, 64.50402716622892, 60.20513542368875, 70.48888252501439, 23.79642884634363, 87.67905598948677, 56.53271648460052, 21.350204934463367, 30.38959955731978, 32.75044027494071, 79.00150724522202, 38.221330005036904, 64.67888022009377, 41.79995027879689, 25.756888415913636, 84.84158263983018, 68.0496487261751, 16.014016141152776, 68.9518579359388, 66.95588231344915, 53.61630017080054, 60.242645182137345, 99.30922138353559, 14.326747680534325, 25.959787197538287, 48.75826639546565, 38.0574051158226, 9.930276980232245, 0.3206207062279032, 33.68457374879843, 91.38126378217068, 6.760555911793464, 32.78950554508609, 44.35589419805366, 84.73253854489047, 0.02498255186065279, 47.70270785610856, 91.11053898307166, 1.6210835826729997, 87.21586080111942, 59.05068075434225, 17.98207083156731, 90.76381896825644, 50.3789655255068, 9.812410479435618, 48.33203513581768, 90.04292933627104, 26.924440439026686, 32.3894236632592, 24.376126075965676, 70.39037483780074, 71.62107984046486, 59.06979313292674, 56.3461839323006, 86.34466646043045, 80.6169397595535, 83.11443025820671, 69.18507338653444, 38.41738395592643, 65.17502404211956, 54.874089819465624, 76.81711358181595, 63.4788806206172, 29.61495628507477, 14.612653930750508, 5.047365099193646, 14.080968257330639, 42.17668816752729, 75.14465089342237, 55.84340261621533, 26.048314616523626, 85.13203132940637, 23.01260813335384, 38.90524909223549, 10.943890258166466, 47.787323608262014, 94.52590328617532, 14.180763451150401, 48.71601589018552, 39.614164518184936, 60.031628701643015, 65.70719341725308, 74.04897556998726, 32.72914347879894, 93.35387358970014, 93.79927098582985, 19.5438971215253, 89.48103779527085, 72.38129806107399, 80.01534752994786, 13.977909353774276, 99.67030499680841, 11.839658637897088, 66.15000717948308, 29.650057479008208, 77.14482221516327, 98.08585514617435, 75.52365904994492, 33.41073782695999, 91.7695933794295, 11.702679741866007, 82.74847717324974, 95.19389110535464, 35.02868474624117, 5.649952906829913, 70.73674475673307, 36.45968304006374, 93.44229362524901, 87.7040289907413, 95.94324895529603, 77.27458798141112, 48.86645339837975, 57.49445518370179, 1.9008632804904058, 10.18321700173489, 12.917120671716143, 39.46344074645612, 72.83824010591961, 16.712675768382468, 71.37337854607553, 49.63430571945982, 29.81869518968283, 14.331063900336648, 21.197614120807273, 89.72061268174404, 37.67072725798572, 73.16535536430908, 98.3338797586508, 53.898289916782005, 36.87340465027905, 38.84719417368838, 86.77579018302232, 90.99206235316028, 28.352664657560045, 97.44361637580732, 53.8371257508019, 99.73090496689811, 83.82865741596738, 13.779553809576795, 72.54694917437176, 52.425214205594315, 87.879583230042, 37.61715326965109, 97.8130758558271, 32.72911819520801, 62.10951150989129, 56.00578891077931, 51.52722356398869, 64.79292454014788, 3.4612043554667515, 35.47053425349178, 42.08795503408712, 91.56357518924526, 44.656832250279436, 56.91486802968294, 38.81533510583752, 74.6043942399619, 97.2480658926733, 74.27838439726597, 31.959847330204237, 27.771916701635913, 40.48653119940704, 75.70828095428831, 76.45273830657942, 4.177600535343872, 77.69543424498691, 54.08497108161189, 31.328332564078785, 95.53249866798689, 91.39782885570665, 64.34513166063243, 24.390275903087165, 16.099526004745435, 9.61531579870256, 13.06497832442879, 99.69023769566138, 45.03505313512417, 1.8052961059840555, 14.277742184905817, 47.208112156764074]
 
-alpha = [[] for _ in range(N)]
-for ai in range(N):
-    alpha[ai] = [[] for _ in range(K)] #abundance value for a species
+#alpha = [[] for _ in range(N)]
+#for ai in range(N):
+#    alpha[ai] = [[] for _ in range(K)] #abundance value for a species
+
+alpha = [[] for _ in range(K)]
 
 # Future Fix - this calculates abundance for only the first Environment Variable
-for ai in range(N):
-    for _ in range(K):
-        alpha[ai][_].append((math.e) ** ((-1) * (((abs((E[ai])-u[_])) ** 2) / (2*(OE[_]**2)))))
+
+for _ in range(K):
+    al = []
+    for ai in range(N):
+        al.append((math.e) ** ((-1) * (((abs((E[ai])-u[_])) ** 2) / (2*(OE[_]**2)))))
+    alpha[_].append(np.prod(al))
 
 rF = [[] for _ in range(N)]         #Biotic Force Values
 rP = [[] for _ in range(N)]         #Perturbation Values
@@ -87,14 +92,10 @@ rE = [[] for _ in range(N)]         #Temperature with Biotic Force Values
 rEt = []                            #Temperature without Biotic Force Values
 
 #Abundance values over time
-rAx = [[] for _ in range(N)]
-for i in range(N):
-    rAx[i] = [[] for x in range(K)]
+rAx = [[] for x in range(K)]
 
 #Abundance values over time scaled up by R (Essential Range)
-rAxR = [[] for _ in range(N)]
-for i in range(N):
-    rAxR[i] = [[] for x in range(K)]
+rAxR = [[] for x in range(K)]
 #Tracks time (steps accumulation)
 time = []
 
@@ -129,7 +130,12 @@ def plot_alphas():
 
     plt.show()
 
+local_population_size = 20
+local_population_index = []
+for x in range(local_population_size):
+    local_population_index.append(random.uniform(0,K-1))
 
+print(local_population_index)
 
 def update(step):
     global F, P, E, Et, rF, rP, rE, rEt, u, w
@@ -138,10 +144,11 @@ def update(step):
     alpha_time_scale = 1
     temperature_time_scale = 0.2
 
-    for ei in range(N):
-        for _ in range(K):
+    for _ in range(K):
+        al = []
+        for ei in range(N):
             #print(_)
-            new_alpha = (math.e) ** ((-1) * (((abs((E[ei])-u[_])) ** 2) / (2*(OE[_]**2))))
+            al.append((math.e) ** ((-1) * (((abs((E[ei])-u[_])) ** 2) / (2*(OE[_]**2)))))
             #time scales - for each step - the next value is calculated (next abundance and next E (temperature))
             #Now with timescales in mind, simply swithcing from the current value to the newly calculated value would indicate instantaneous change
             #Instead instead of switching directly to the newly calculated value - we can approach that value via some function
@@ -150,28 +157,37 @@ def update(step):
             # Keep timescales between 1 and 0 [1 = system is at the newly calculated value instantaneously whereas values closer to zero indicate slower timescales]
             # Values outside 1 and 0 will cause errors as rates would go outside model bounds
 
-            # abundance da/dt
-            newAlpha = alpha[ei][_][-1] + ((new_alpha - alpha[ei][_][-1]) * step)
-            alpha[ei][_].append(alpha[ei][_][-1] + ((newAlpha - alpha[ei][_][-1]) * alpha_time_scale))
-
-            rAx[ei][_].append(alpha[ei][_][-1])
-            rAxR[ei][_].append(alpha[ei][_][-1] * R)
-            #fSUM = fSUM + (alpha[_][-1] * w[_])
-
-            #abundance directly on the graph
-            #alpha[_] = al
-            #rAx[_].append(alpha[_])
-            #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
+        # abundance da/dt
+        if(local):
+            new_alpha = np.prod(al)
+        elif(global):
+            new_alpha = al[0]
 
 
-            #rAx[_].append(alpha[_][-1])
-            #rAxR[_].append(alpha[_][-1] * R)
-            fSUM[ei] = fSUM[ei] + (alpha[ei][_][-1] * w[ei][_])
+        newAlpha = alpha[_][-1] + ((new_alpha - alpha[_][-1]) * step)
+        alpha[_].append(alpha[_][-1] + ((newAlpha - alpha[_][-1]) * alpha_time_scale))
 
-            #abundance directly on the graph
-            #alpha[_] = al
-            #rAx[_].append(alpha[_])
-            #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
+        rAx[_].append(alpha[_][-1])
+        rAxR[_].append(alpha[_][-1] * R)
+
+    #fSUM = fSUM + (alpha[_][-1] * w[_])
+
+    #abundance directly on the graph
+    #alpha[_] = al
+    #rAx[_].append(alpha[_])
+    #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
+
+
+    #rAx[_].append(alpha[_][-1])
+    #rAxR[_].append(alpha[_][-1] * R)
+    for _ in range(K):
+        for ei in range(N):
+            fSUM[ei] = fSUM[ei] + (alpha[_][-1] * w[ei][_])
+
+    #abundance directly on the graph
+    #alpha[_] = al
+    #rAx[_].append(alpha[_])
+    #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
 
     for ei in range(N):
         F[ei] = fSUM[ei] * 10
@@ -230,9 +246,10 @@ def plot_aot_scaled():
     plt.yticks(fontsize=20)
     plt.ylim(-50, R+20)
     plt.xlim(0, end)
-    for i in range(N):
-        for x in range(K):
-            plt.plot(time,rAxR[i][x],label = 'id %s'%x)
+
+    for x in range(K):
+        plt.plot(time,rAxR[x],label = 'id %s'%x)
+
     for i in range(N):
         plt.plot(time,rE[i], 'r.', label='E')
     plt.show()
@@ -245,9 +262,8 @@ def plot_aot():
     plt.ylabel('Abundance', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    for i in range(N):
-        for x in range(K):
-            plt.plot(time,rAx[i][x],label = 'id %s'%x)
+    for x in range(K):
+        plt.plot(time,rAx[x],label = 'id %s'%x)
     plt.show()
 
 #plot species that increase temperature and decrease temperature
@@ -258,14 +274,13 @@ def plot_aot_inc_dec():
     plt.ylabel('Abundance', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    for i in range(N):
-        for x in range(K):
-            if(w[i][x]==0):
-                plt.plot(time,rAx[i][x],'k-')
-            if(w[i][x]<0):
-                plt.plot(time,rAx[i][x],'b-')
-            if(w[i][x]>0):
-                plt.plot(time,rAx[i][x],'r-')
+    for x in range(K):
+        if(w[i][x]==0):
+            plt.plot(time,rAx[x],'k-')
+        if(w[i][x]<0):
+            plt.plot(time,rAx[x],'b-')
+        if(w[i][x]>0):
+            plt.plot(time,rAx[x],'r-')
     plt.show()
 
 #plot biotic force and P
@@ -364,5 +379,5 @@ if __name__ == '__main__':
     #plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
     #plot_b_p()             #plot biotic force and P
     #plot_e()               #plot temperature value over time
-    plot_efp()             #plot temperature, biotic force and P over time
+    #plot_efp()             #plot temperature, biotic force and P over time
     #plot_ep(LP)               #plot temperature and large P
