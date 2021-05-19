@@ -133,7 +133,7 @@ def plot_alphas():
 local_population_size = 20
 local_population_index = []
 for x in range(local_population_size):
-    local_population_index.append(random.uniform(0,K-1))
+    local_population_index.append(random.randint(0,K-1))
 
 print(local_population_index)
 
@@ -156,11 +156,13 @@ def update(step):
 
             # Keep timescales between 1 and 0 [1 = system is at the newly calculated value instantaneously whereas values closer to zero indicate slower timescales]
             # Values outside 1 and 0 will cause errors as rates would go outside model bounds
-
+        new_alpha = 0
         # abundance da/dt
-        if(local):
+
+
+        if( _ in local_population_index):
             new_alpha = np.prod(al)
-        elif(global):
+        else:
             new_alpha = al[0]
 
 
