@@ -26,6 +26,7 @@ w = []         #Affects Parameter (ranges between -1 and 1 for each K)
 u = []         #Ideal Temperature for species (between 0 and R -> the essential range)
 
 
+
 #OE = [random.uniform(3,10) for _ in range(K)] #Switches between same sized Niches to different sized ones
 OE = [5 for _ in range(K)]
 #populates affects values
