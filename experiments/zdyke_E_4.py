@@ -13,7 +13,7 @@ print("Python version",sys.version)
 # Fixes in this - Starting E is 0
 # The essential Range starts at 0 so there can be species that will be present and some of them can bring the E down
 
-K       = 100        #Number of Biotic Components
+K       = 800        #Number of Biotic Components
 R       = 100        #Essential Range (defines where Biotic Components can be present)
 OE      = []         #Niche
 start   = 0          #Time Start
@@ -36,9 +36,9 @@ Pi      = 0
 P       = [Pi for _ in range(N)]
 F       = [Pi for _ in range(N)]
 #individual P rates
-Px      = [random.uniform(0.1,0.3) for _ in range(N)]
+#Px      = [random.uniform(0.1,0.3) for _ in range(N)]
 #zero P rates
-#Px      = [0 for _ in range(N)]
+Px      = [0 for _ in range(N)]
 
 Et      = Ei         #Temperature without Biotic Force
 
@@ -360,9 +360,9 @@ if __name__ == '__main__':
     #plot_w()               #plot affects values for each species
     #plot_u()               #plot ideal growing temperature for each species
     #plot_aot()             #plot abundance of each species over time
-    plot_aot_scaled()      #plot abundance of each species over time scaled by R
+    #plot_aot_scaled()      #plot abundance of each species over time scaled by R
     #plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
     #plot_b_p()             #plot biotic force and P
     #plot_e()               #plot temperature value over time
     #plot_efp()             #plot temperature, biotic force and P over time
-    #plot_ep(LP)               #plot temperature and large P
+    plot_ep(LP)               #plot temperature and large P
