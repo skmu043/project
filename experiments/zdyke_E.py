@@ -72,15 +72,20 @@ for ai in range(N):
     for _ in range(K):
         alpha[ai][_].append((math.e) ** ((-1) * (((abs((E[ai])-u[_])) ** 2) / (2*(OE[_]**2)))))
 
-rF = []         #Biotic Force Values
-rP = []         #Perturbation Values
-rE = []         #Temperature with Biotic Force Values
-rEt = []        #Temperature without Biotic Force Values
+rF = [[] for _ in range(N)]         #Biotic Force Values
+rP = [[] for _ in range(N)]         #Perturbation Values
+rE = [[] for _ in range(N)]         #Temperature with Biotic Force Values
+rEt = []                            #Temperature without Biotic Force Values
 
 #Abundance values over time
-rAx = [[] for x in range(K)]
+rAx = [[] for _ in range(N)]
+for i in range(N):
+    rAx[i] = [[] for x in range(K)]
+
 #Abundance values over time scaled up by R (Essential Range)
-rAxR = [[] for x in range(K)]
+rAxR = [[] for _ in range(N)]
+for i in range(N):
+    rAxR[i] = [[] for x in range(K)]
 #Tracks time (steps accumulation)
 time = []
 
@@ -110,80 +115,75 @@ def plot_alphas():
 
     plt.show()
 
-def biotic_alpha_parallel(_):
-        global F, P, E, Et, rF, rP, rE, rEt, u, w, step
 
-        #print(_)
-        new_alpha = (math.e) ** ((-1) * (((abs((E)-u[_])) ** 2) / (2*(OE[_]**2))))
-        #time scales - for each step - the next value is calculated (next abundance and next E (temperature))
-        #Now with timescales in mind, simply swithcing from the current value to the newly calculated value would indicate instantaneous change
-        #Instead instead of switching directly to the newly calculated value - we can approach that value via some function
-        #e.g Current E=5, new E=7, instead of using E=7 we will use a function where (E=5) approaches (E=7) so the final val may be E=6
 
-        # Keep timescales between 1 and 0 [1 = system is at the newly calculated value instantaneously whereas values closer to zero indicate slower timescales]
-        # Values outside 1 and 0 will cause errors as rates would go outside model bounds
-        alpha_time_scale = 1
 
-        # abundance da/dt
-        newAlpha = alpha[_][-1] + ((new_alpha - alpha[_][-1]) * step)
-        alpha[_].append(alpha[_][-1] + ((newAlpha - alpha[_][-1]) * alpha_time_scale))
-
-        rAx[_].append(alpha[_][-1])
-        rAxR[_].append(alpha[_][-1] * R)
-        #fSUM = fSUM + (alpha[_][-1] * w[_]) 
-
-        #abundance directly on the graph
-        #alpha[_] = al
-        #rAx[_].append(alpha[_])
-        #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
 
 
 def update(step):
     global F, P, E, Et, rF, rP, rE, rEt, u, w
     
     fSUM = 0
-    
+
+    alpha_time_scale = 1
     temperature_time_scale = 0.2
 
-    #pool = multiprocessing.Pool(processes=1)
-    #pool.map(biotic_alpha_parallel, ( _ for _ in range(K)))
+    for ei in range(N):
+        for _ in range(K):
+            #print(_)
+            new_alpha = (math.e) ** ((-1) * (((abs((E[ei])-u[_])) ** 2) / (2*(OE[_]**2))))
+            #time scales - for each step - the next value is calculated (next abundance and next E (temperature))
+            #Now with timescales in mind, simply swithcing from the current value to the newly calculated value would indicate instantaneous change
+            #Instead instead of switching directly to the newly calculated value - we can approach that value via some function
+            #e.g Current E=5, new E=7, instead of using E=7 we will use a function where (E=5) approaches (E=7) so the final val may be E=6
 
-    #pool = multiprocessing.Pool()
-    #pool.map(biotic_alpha_parallel, range(K))
+            # Keep timescales between 1 and 0 [1 = system is at the newly calculated value instantaneously whereas values closer to zero indicate slower timescales]
+            # Values outside 1 and 0 will cause errors as rates would go outside model bounds
 
-    for _ in range(K):
-        biotic_alpha_parallel(_)
+            # abundance da/dt
+            newAlpha = alpha[ei][_][-1] + ((new_alpha - alpha[ei][_][-1]) * step)
+            alpha[ei][_].append(alpha[ei][_][-1] + ((newAlpha - alpha[ei][_][-1]) * alpha_time_scale))
 
-    for _ in range(K):
-        #rAx[_].append(alpha[_][-1])
-        #rAxR[_].append(alpha[_][-1] * R)
-        fSUM = fSUM + (alpha[_][-1] * w[_]) 
+            rAx[ei][_].append(alpha[ei][_][-1])
+            rAxR[ei][_].append(alpha[ei][_][-1] * R)
+            #fSUM = fSUM + (alpha[_][-1] * w[_])
 
-        #abundance directly on the graph
-        #alpha[_] = al
-        #rAx[_].append(alpha[_])
-        #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
+            #abundance directly on the graph
+            #alpha[_] = al
+            #rAx[_].append(alpha[_])
+            #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
 
-    F = fSUM * 10
-    #F = F + (fSUM * step)
 
-    P = P + (0.2 * step)
-    #P = 0 
-    #F = fSUM                  [Explore the linear increase for P]
-    #P = P + (step/3.5)
-    newE = E + (((P + F) * step))
-    # E is old E and newE has the current value
-    E = E + ((newE-E) * temperature_time_scale)
+            #rAx[_].append(alpha[_][-1])
+            #rAxR[_].append(alpha[_][-1] * R)
+            fSUM = fSUM + (alpha[ei][_][-1] * w[ei][_])
 
-    # E not P ! This is the Temperature !
-    # Incorrect one Et = Et + P
-    # F becomes 0 - no biotic force as no biota
-    Et = Et + ((P + 0) * step)
+            #abundance directly on the graph
+            #alpha[_] = al
+            #rAx[_].append(alpha[_])
+            #fSUM = fSUM + (alpha[_] * w[_]) # Fixed
 
-    rF.append(F)
-    rP.append(P)
-    rE.append(E)
-    rEt.append(Et)
+    for ei in range(N):
+        F[ei] = fSUM * 10
+        #F = F + (fSUM * step)
+
+        P[ei] = P[ei] + (0.2 * step)
+        #P = 0
+        #F = fSUM                  [Explore the linear increase for P]
+        #P = P + (step/3.5)
+        newE = E[ei] + (((P[ei] + F[ei]) * step))
+        # E is old E and newE has the current value
+        E[ei] = E[ei] + ((newE-E[ei]) * temperature_time_scale)
+
+        # E not P ! This is the Temperature !
+        # Incorrect one Et = Et + P
+        # F becomes 0 - no biotic force as no biota
+        Et = Et + ((P[ei] + 0) * step)
+
+        rF[ei].append(F[ei])
+        rP[ei].append(P[ei])
+        rE[ei].append(E[ei])
+        rEt.append(Et)
 
 #plot affects values for each species
 def plot_w():
@@ -319,7 +319,7 @@ if __name__ == '__main__':
     #plot_w()               #plot affects values for each species
     #plot_u()               #plot ideal growing temperature for each species
     #plot_aot()             #plot abundance of each species over time
-    plot_aot_scaled()      #plot abundance of each species over time scaled by R
+    #plot_aot_scaled()      #plot abundance of each species over time scaled by R
     #plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
     #plot_b_p()             #plot biotic force and P
     #plot_e()               #plot temperature value over time
