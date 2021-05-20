@@ -250,10 +250,12 @@ def plot_aot_scaled():
     plt.xlim(0, end)
 
     for x in range(K):
-        plt.plot(time,rAxR[x],label = 'id %s'%x)
+        plt.plot(time,rAxR[x])
 
-    for i in range(N):
-        plt.plot(time,rE[i], 'r.', label='E')
+    plt.plot(time,rE[0], label='E Global', linewidth=6)
+    plt.plot(time,rE[1], label='E Local', linewidth=6)
+
+    plt.legend(loc=5, prop={'size': 30})
     plt.show()
 
 #plot abundance of each species over time
@@ -381,5 +383,5 @@ if __name__ == '__main__':
     #plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
     #plot_b_p()             #plot biotic force and P
     #plot_e()               #plot temperature value over time
-    #plot_efp()             #plot temperature, biotic force and P over time
+    plot_efp()             #plot temperature, biotic force and P over time
     #plot_ep(LP)               #plot temperature and large P
