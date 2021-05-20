@@ -13,7 +13,7 @@ print("Python version",sys.version)
 # Fixes in this - Starting E is 0
 # The essential Range starts at 0 so there can be species that will be present and some of them can bring the E down
 
-K       = 800        #Number of Biotic Components
+K       = 100        #Number of Biotic Components
 R       = 100        #Essential Range (defines where Biotic Components can be present)
 OE      = []         #Niche
 start   = 0          #Time Start
@@ -321,7 +321,7 @@ def plot_ep(LP):
     plt.ylabel('Environment Variables E', fontsize=40)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.ylim(0, R)
+    plt.ylim(-1000, 1000)
     plt.xlim(0, end)
     for i in range(N):
         plt.plot(time,rE[i], 'r--',label = 'temperature')
@@ -348,6 +348,11 @@ if __name__ == '__main__':
         if(xtime == LP):
            for x in range(N):
                P[x] -= 15
+
+        #if(xtime == LP+7):
+        #    for x in range(N):
+        #        P[x] += 15
+
 
         #if(xtime == 100):
         #    for x in range(N):
