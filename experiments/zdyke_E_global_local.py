@@ -13,7 +13,7 @@ print("Python version",sys.version)
 # Fixes in this - Starting E is 0
 # The essential Range starts at 0 so there can be species that will be present and some of them can bring the E down
 
-K       = 100        #Number of Biotic Components
+K       = 50        #Number of Biotic Components
 R       = 100        #Essential Range (defines where Biotic Components can be present)
 OE      = []         #Niche
 start   = 0          #Time Start
@@ -250,7 +250,11 @@ def plot_aot_scaled():
     plt.xlim(0, end)
 
     for x in range(K):
-        plt.plot(time,rAxR[x])
+        if(x in local_population_index):
+            plt.plot(time,rAxR[x],'r')
+        else:
+            plt.plot(time,rAxR[x],'b')
+
 
     plt.plot(time,rE[0], label='E Global', linewidth=6)
     plt.plot(time,rE[1], label='E Local', linewidth=6)
@@ -375,7 +379,7 @@ if __name__ == '__main__':
 
     sys.stdout.write("]\n")
 
-    #plot_alphas()          #plot abundance of species over temperature
+    plot_alphas()          #plot abundance of species over temperature
     #plot_w()               #plot affects values for each species
     #plot_u()               #plot ideal growing temperature for each species
     #plot_aot()             #plot abundance of each species over time
