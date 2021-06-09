@@ -13,11 +13,11 @@ print("Python version",sys.version)
 # Fixes in this - Starting E is 0
 # The essential Range starts at 0 so there can be species that will be present and some of them can bring the E down
 
-K       = 100        #Number of Biotic Components
+K       = 300        #Number of Biotic Components
 R       = 100        #Essential Range (defines where Biotic Components can be present)
 OE      = []         #Niche
 start   = 0          #Time Start
-end     = 300        #Time End
+end     = 500        #Time End
 step    = 0.1        #Time Step
 w       = []         #Affects Parameter (ranges between -1 and 1 for each K)
 u       = []         #Ideal Temperature for species (between 0 and R -> the essential range)
@@ -135,7 +135,7 @@ def update(step):
     global F, P, E, Et, rF, rP, rE, rEt, u, w
 
     fSUM = [0 for _ in range(N)]
-    alpha_time_scale = 1
+    alpha_time_scale = 0.7
     temperature_time_scale = 0.2
 
     for ei in range(N):
@@ -183,7 +183,10 @@ def update(step):
         #F = fSUM                  [Explore the linear increase for P]
         #P = P + (step/3.5)
         newE = E[ei] + (((P[ei] + F[ei]) * step))
-        # E is old E and newE has the current value
+        #newE = E[ei] + (((0 + F[ei]) * step))
+
+
+# E is old E and newE has the current value
         E[ei] = E[ei] + ((newE-E[ei]) * temperature_time_scale)
 
         # E not P ! This is the Temperature !

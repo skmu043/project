@@ -13,7 +13,7 @@ print("Python version",sys.version)
 # Fixes in this - Starting E is 0
 # The essential Range starts at 0 so there can be species that will be present and some of them can bring the E down
 
-K       = 50        #Number of Biotic Components
+K       = 100        #Number of Biotic Components
 R       = 100        #Essential Range (defines where Biotic Components can be present)
 OE      = []         #Niche
 start   = 0          #Time Start
@@ -130,7 +130,7 @@ def plot_alphas():
 
     plt.show()
 
-local_population_size = 20
+local_population_size = int(20/100 * K)
 local_population_index = []
 for x in range(local_population_size):
     local_population_index.append(random.randint(0,K-1))
@@ -141,7 +141,7 @@ def update(step):
     global F, P, E, Et, rF, rP, rE, rEt, u, w
 
     fSUM = [0 for _ in range(N)]
-    alpha_time_scale = 1
+    alpha_time_scale = 0.7
     temperature_time_scale = 0.2
 
     for _ in range(K):
@@ -256,8 +256,8 @@ def plot_aot_scaled():
             plt.plot(time,rAxR[x],'b')
 
 
-    plt.plot(time,rE[0], label='E Global', linewidth=6)
-    plt.plot(time,rE[1], label='E Local', linewidth=6)
+    plt.plot(time,rE[0], 'y' ,label='E Global', linewidth=6)
+    plt.plot(time,rE[1], 'k',label='E Local', linewidth=6)
 
     plt.legend(loc=5, prop={'size': 30})
     plt.show()
