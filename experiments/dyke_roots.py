@@ -10,7 +10,7 @@ R = 100        #Essential Range (defines where Biotic Components can be present)
 P = 0          #Perturbation
 OE = []        #Niche
 start = 0      #Time Start
-end = 250      #Time End
+end = 100      #Time End
 step= 0.1     #Time Step
 w = []         #Affects Parameter (ranges between -1 and 1 for each K)
 u = []         #Ideal Temperature for species (between 0 and R -> the essential range)
@@ -56,11 +56,11 @@ temperatures = []
 #plot abundance of species over temperature
 def plot_alphas():
 
-    for x in np.arange (0, R, step):
+    for x in np.arange (-50, R+50, step):
         temperatures.append(x)
 
     for y in range(K):
-        for x in np.arange (0, R, step):
+        for x in np.arange (-50, R+50, step):
             biotic_force[y].append((math.e) ** ((-1) * (((abs(x-u[y])) ** 2) / (2*(OE[y]**2)))) * w[y])
 
     plt.figure(figsize=(30,30))
@@ -75,6 +75,113 @@ def plot_alphas():
     plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
 
     plt.show()
+
+
+
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+
+
+def f1(x):
+    #return((x**3) + (2*(x**2)) - (2*x) - 5)
+    #return(x**2 -1000)
+    biotic_force = []
+    for y in range(K):
+        biotic_force.append((math.e) ** ((-1) * (((abs(x-u[y])) ** 2) / (2*(OE[y]**2)))) * w[y])
+
+    return(np.sum((np.array(biotic_force, dtype=float))))
+
+x = []
+y = []
+
+X1 = -50
+Y1 = R + 50
+
+for xi in np.arange(X1, Y1, 0.1):
+    x.append(xi)
+    y.append(f1(xi))
+    print(xi," ",y[-1])
+
+#TypeError: fsolve: there is a mismatch between the input and output shape of the 'func' argument 'f1'.Shape should be (2,) but it is (1,).
+
+def plot_function():
+    print("Plotting Sum  ... ")
+    plt.figure(figsize=(20,10))
+    plt.title('xy', fontsize=40)
+    plt.xlabel('x', fontsize=40)
+    plt.ylabel('y', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.axvline(x=0)
+    plt.axhline(y=0)
+
+    plt.plot(x,y, 'r-',label = 'roots')
+    plt.show()
+
+print("Solving ...")
+true_zeros = []
+
+for _ in range(R):
+    sol = optimize.root(f1, [_], jac=False, method='hybr')
+    if(sol.x >=0 and sol.x <= R):
+        true_zeros.append(sol.x)
+
+print("All points ...")
+print(true_zeros)
+print("Unique Points ...")
+print(np.unique(np.array(true_zeros)))
+
+def plot_stable_points():
+    plt.figure(figsize=(20,10))
+    plt.title('Roots', fontsize=40)
+    plt.xlabel('temperature', fontsize=40)
+    plt.ylabel('biotic force', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    for stable in true_zeros:
+        plt.axvline(x=stable)
+    plt.axvline(x=0)
+    plt.axhline(y=0)
+    plt.plot(x,y, 'r-',label = 'biotic force')
+    #plt.legend(loc=7, prop={'size': 30})
+    plt.show()
+
+
+print("Solving ...")
+true_zeros = []
+sign_change = ""
+
+if(y[0] < 0):
+    sign_change = "neg"
+if(y[0] > 0):
+    sign_change = "pos"
+if(y[0] == 0):
+    print("ZERO DETECTED")
+
+print(sign_change)
+
+for _ in range(R):
+    sol = optimize.root(f1, [_], method='df-sane')
+    if(sol.x >=0 and sol.x <= R):
+        true_zeros.append(sol.x)
+
+print(np.unique(np.array(true_zeros)))
+
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+###################### ROOTS ########################################################
+
 
 
 
@@ -100,7 +207,7 @@ def update(step):
 
     F = fSUM * 10
     #P = P + (0.2 * step)
-    P = 0 # stopping the scan
+    P = P
     E = E + ((P + F) * step)
     # no biotic force
     Et = Et + ((P + 0) * step)
@@ -208,36 +315,46 @@ def plot_efp():
     plt.figure(figsize=(30,20))
     plt.title('Simulation Values over Time', fontsize=40)
     plt.xlabel('Time', fontsize=40)
-    plt.ylabel('Values', fontsize=40)
+    plt.ylabel('Temperatures', fontsize=40)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.ylim(-100, R+80)
     plt.xlim(0, end)
-    plt.plot(time,rF, 'g-', label = 'biotic force')
-    plt.plot(time,rP, 'b--', label = 'perturbing force(rate)')
-    plt.plot(time,rE, 'r-',label = 'temperature')
-    plt.plot(time,rEt, 'k.',label = 'temperature (without biota)')
-    plt.legend(loc='lower right', prop={'size': 30})
+    #plt.plot(time,rF, 'g-', label = 'biotic force')
+    #plt.plot(time,rP, 'b--', label = 'perturbing force(rate)')
+    plt.plot(time,rE, '.',label = 'temperature')
+    #plt.plot(time,rEt, 'k.',label = 'temperature (without biota)')
+    #plt.legend(loc='lower right', prop={'size': 30})
     plt.axhline(y=R)
+    plt.axhline(y=0)
+    plt.axvline(x=50)
+    plt.axvline(x=55)
     plt.show()
 
 
 
+for E_new in np.arange (-50,R+50, 2):
+    E = E_new
+    print("Running for E = ", E)
+    for xtime in np.arange (start, end, step):
+        update(step)
+        time.append(xtime)
+
+        if(xtime==50):
+            P += 10
+        if(xtime==55):
+            P -= 10
+
+P=0
 
 
-
-
-
-for xtime in np.arange (start, end, step):
-    update(step)
-    time.append(xtime)
-    #if(xtime == 100):
-     #   P += 20
-
-#    if(xtime == 70):
-#        P -= 10
 
 plot_alphas()          #plot abundance of species over temperature
+
+#plot_alphas()
+#plot_function()
+plot_stable_points()
+
 #plot_w()               #plot affects values for each species
 #plot_u()               #plot ideal growing temperature for each species
 #plot_aot()             #plot abundance of each species over time
@@ -246,96 +363,3 @@ plot_alphas()          #plot abundance of species over temperature
 #plot_b_p()             #plot biotic force and P
 #plot_e()               #plot temperature value over time
 plot_efp()             #plot temperature, biotic force and P over time
-
-###################### ROOTS ########################################################
-
-
-def f1(x):
-    #return((x**3) + (2*(x**2)) - (2*x) - 5)
-    #return(x**2 -1000)
-    biotic_force = []
-    for y in range(K):
-        biotic_force.append((math.e) ** ((-1) * (((abs(x-u[y])) ** 2) / (2*(OE[y]**2)))) * w[y])
-
-    return(np.sum((np.array(biotic_force, dtype=float))))
-
-x = []
-y = []
-
-X1 = -50
-Y1 = R + 50
-
-for xi in np.arange(X1, Y1, 0.1):
-    x.append(xi)
-    y.append(f1(xi))
-    print(xi," ",y[-1])
-
-#TypeError: fsolve: there is a mismatch between the input and output shape of the 'func' argument 'f1'.Shape should be (2,) but it is (1,).
-
-def plot_function():
-    print("Plotting Sum  ... ")
-    plt.figure(figsize=(20,10))
-    plt.title('xy', fontsize=40)
-    plt.xlabel('x', fontsize=40)
-    plt.ylabel('y', fontsize=40)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    plt.axvline(x=0)
-    plt.axhline(y=0)
-
-    plt.plot(x,y, 'r-',label = 'roots')
-    plt.show()
-
-print("Solving ...")
-true_zeros = []
-
-for _ in range(R):
-    sol = optimize.root(f1, [_], jac=False, method='hybr')
-    if(sol.x >=0 and sol.x <= R):
-        true_zeros.append(sol.x)
-print("All points ...")
-print(true_zeros)
-print("Unique Points ...")
-print(np.unique(np.array(true_zeros)))
-
-def plot_stable_points():
-    plt.figure(figsize=(20,10))
-    plt.title('Roots', fontsize=40)
-    plt.xlabel('temperature', fontsize=40)
-    plt.ylabel('biotic force', fontsize=40)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    for stable in true_zeros:
-        plt.axvline(x=stable)
-    plt.axvline(x=0)
-    plt.axhline(y=0)
-    plt.plot(x,y, 'r-',label = 'biotic force')
-    plt.legend(loc=5, prop={'size': 30})
-    plt.show()
-
-
-print("Solving ...")
-true_zeros = []
-sign_change = ""
-
-if(y[0] < 0):
-    sign_change = "neg"
-if(y[0] > 0):
-    sign_change = "pos"
-
-if(y[0] == 0):
-    print("ZERO DETECTED")
-
-print(sign_change)
-
-for _ in range(R):
-    sol = optimize.root(f1, [_], method='df-sane')
-    if(sol.x >=0 and sol.x <= R):
-        true_zeros.append(sol.x)
-
-print(np.unique(np.array(true_zeros)))
-
-#plot_alphas()
-#plot_function()
-plot_stable_points()
-
