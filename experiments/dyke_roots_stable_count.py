@@ -11,7 +11,7 @@ P = 0          #Perturbation
 OE = []        #Niche
 start = 0      #Time Start
 end = 100      #Time End
-step= 0.1      #Time Step
+step= 0.1     #Time Step
 w = []         #Affects Parameter (ranges between -1 and 1 for each K)
 u = []         #Ideal Temperature for species (between 0 and R -> the essential range)
 
