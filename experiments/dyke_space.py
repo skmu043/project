@@ -21,6 +21,7 @@ end = int(sys.argv[6])        #Time End
 step= float(sys.argv[7])      #Time Step
 N = int(sys.argv[8])          #Number of Environment Variables
 E       = [random.uniform(-1,10) for _ in range(N)]
+F       = [0 for _ in range(N)]
 
 #niche width
 OEn = int(sys.argv[9])
@@ -64,11 +65,6 @@ for ui in range(N):
 alpha = [[] for _ in range(K)]
 
 # Future Fix - this calculates abundance for only the first Environment Variable
-
-print(u)
-print(u[0][0])
-print(u[0][10])
-
 
 for _ in range(K):
     al = []
@@ -137,7 +133,7 @@ def update(step):
         al = []
         for ei in range(N):
             #print(_)
-            al.append((math.e) ** ((-1) * (((abs((E[ei])-u[_])) ** 2) / (2*(OE[_]**2)))))
+            al.append((math.e) ** ((-1) * (((abs((E[ei])-u[ei][_])) ** 2) / (2*(OE[_]**2)))))
             #time scales - for each step - the next value is calculated (next abundance and next E (temperature))
             #Now with timescales in mind, simply swithcing from the current value to the newly calculated value would indicate instantaneous change
             #Instead instead of switching directly to the newly calculated value - we can approach that value via some function
@@ -181,6 +177,18 @@ def update(step):
 
         rF[ei].append(F[ei])
         rE[ei].append(E[ei])
+
+
+if __name__ == '__main__':
+
+    for xtime in np.arange (start, end, step):
+        update(step)
+        time.append(xtime)
+
+        if(xtime % 1 == 0):
+            sys.stdout.write("-")
+            sys.stdout.flush()
+    print("")
 
 #Create Data Dump Directory - uniq to each run
 
