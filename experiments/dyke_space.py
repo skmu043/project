@@ -3,6 +3,7 @@ import math, random, sys, os, shelve, time
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 exp_name = "dyke_space"
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + exp_name
 
@@ -20,7 +21,8 @@ start = int(sys.argv[5])      #Time Start
 end = int(sys.argv[6])        #Time End
 step= float(sys.argv[7])      #Time Step
 N = int(sys.argv[8])          #Number of Environment Variables
-E       = [random.uniform(-1,10) for _ in range(N)]
+E       = [random.uniform(0,100) for _ in range(N)]
+print("E's : ", E)
 F       = [0 for _ in range(N)]
 
 #niche width
@@ -77,6 +79,10 @@ for _ in range(K):
 rF = [[] for _ in range(N)]         #Biotic Force Values
 rE = [[] for _ in range(N)]         #A blank list for each Environment Variable
 
+for _ in range(N):
+    rE[_].append(E[_])                 #Input the Start Temperatures
+
+print("rE",rE)
 #Abundance values over time
 rAx = [[] for x in range(K)]
 #Abundance values over time scaled up by R (Essential Range)
@@ -91,7 +97,6 @@ temperatures = []
 def plot_alphas():
 
     if N == 1:
-
         for x in np.arange (0, R, step):
             temperatures.append(x)
 
@@ -109,18 +114,11 @@ def plot_alphas():
             plt.plot(temperatures,biotic_force[_])
 
         plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
-
         plt.show()
 
     else:
         print("N is greater than 1 - cannot visualize higher dimensions .... yet :)")
 
-local_population_size = int(20/100 * K)
-local_population_index = []
-for x in range(local_population_size):
-    local_population_index.append(random.randint(0,K-1))
-
-print(local_population_index)
 
 def update(step):
     global F, P, E, Et, rF, rP, rE, rEt, u, w, N
@@ -149,7 +147,6 @@ def update(step):
             new_alpha = np.prod(al)
         else:
             new_alpha = al[0]
-
 
         newAlpha = alpha[_][-1] + ((new_alpha - alpha[_][-1]) * step)
         alpha[_].append(alpha[_][-1] + ((newAlpha - alpha[_][-1]) * alpha_time_scale))
@@ -180,15 +177,28 @@ def update(step):
 
 
 if __name__ == '__main__':
+    print("rE",rE)
+    for population_size_percent in np.arange(0 , 100 , 10):
+        print(population_size_percent,"%")
+        local_population_size = int(population_size_percent/100 * K)
+        local_population_index = []
+        for x in range(local_population_size):
+            local_population_index.append(random.randint(0,K-1))
 
-    for xtime in np.arange (start, end, step):
-        update(step)
-        time.append(xtime)
+        for xtime in np.arange (start, end, step):
+            update(step)
+            time.append(xtime)
 
-        if(xtime % 1 == 0):
-            sys.stdout.write("-")
-            sys.stdout.flush()
-    print("")
+        E       = [random.uniform(0,100) for _ in range(N)]
+        for _ in range(N):
+            rE[_].append(E[_])                 #Input the Start Temperatures
+
+        print("E's : ", E)
+    print("rE",rE)
+        #if(xtime % 1 == 0):
+            #    sys.stdout.write("-")
+            #    sys.stdout.flush()
+        #print("")
 
 #Create Data Dump Directory - uniq to each run
 
