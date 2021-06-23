@@ -23,7 +23,7 @@ while True:
             print(os.listdir(structure_[select]).index(si),si)
         run_select = int(input("Select [0-"+ str(len(os.listdir(structure_[select])) - 1)+ "]: "))
         if(run_select <= len(os.listdir(structure_[select]))-1):
-            run_= "python " + structure_[select] + "/" +(os.listdir(structure_[select]))[run_select]
+            run_= "python3.9 " + structure_[select] + "/" +(os.listdir(structure_[select]))[run_select]
             print(run_)
             os.system(run_)
         else:

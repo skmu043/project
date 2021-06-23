@@ -82,7 +82,7 @@ rE = [[] for _ in range(N)]         #A blank list for each Environment Variable
 for _ in range(N):
     rE[_].append(E[_])                 #Input the Start Temperatures
 
-print("rE",rE)
+#print("rE",rE)
 #Abundance values over time
 rAx = [[] for x in range(K)]
 #Abundance values over time scaled up by R (Essential Range)
@@ -177,7 +177,7 @@ def update(step):
 
 
 if __name__ == '__main__':
-    print("rE",rE)
+    #print("rE",rE)
     for population_size_percent in np.arange(0 , 100 , 10):
         print(population_size_percent,"%")
         local_population_size = int(population_size_percent/100 * K)
@@ -194,7 +194,7 @@ if __name__ == '__main__':
             rE[_].append(E[_])                 #Input the Start Temperatures
 
         print("E's : ", E)
-    print("rE",rE)
+    #print("rE",rE)
         #if(xtime % 1 == 0):
             #    sys.stdout.write("-")
             #    sys.stdout.flush()

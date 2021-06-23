@@ -114,7 +114,7 @@ def plot_stable():
     #plt.ylim(-50, R+20)
     #plt.xlim(0, end)
 
-    print(rE)
+    #print(rE)
 
     xtrajectory=[]
     ytrajectory=[]
