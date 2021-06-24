@@ -116,15 +116,21 @@ def plot_stable():
 
     #print(rE)
 
+
+
     xtrajectory=[]
     ytrajectory=[]
     ztime = []
 
     fig = plt.figure(figsize=(10,10))
     ax = fig.add_subplot(111, projection='3d')
-    ax.set_xlim3d(0,2000)
-    ax.set_ylim3d(-50,100)
-    ax.set_zlim3d(0,100)
+    #ax.set_xlim3d(0,2000)
+    #ax.set_ylim3d(-50,100)
+    #ax.set_zlim3d(0,100)
+
+    ax.set_xlabel('Time')
+    ax.set_ylabel('EG')
+    ax.set_zlabel('EL')
 
     index_z = 0
     for idx in range(len(rE[0])):
@@ -136,9 +142,9 @@ def plot_stable():
 
         if (idx > 0) and (idx % (end/step) == 0):
             #print(idx)
-            #print(xtrajectory)
-            # print(ytrajectory)
-            #print(ztime)
+            print(xtrajectory)
+            print(ytrajectory)
+            print(ztime)
             #plt.plot(xtrajectory,ytrajectory, '-', label='traj')
             if(rE[0][idx]<=100 and rE[1][idx]>=0):
                 print("Stable Point : Start Temp: ", xtrajectory[0], ytrajectory[0])

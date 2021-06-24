@@ -21,10 +21,12 @@ start = int(sys.argv[5])      #Time Start
 end = int(sys.argv[6])        #Time End
 step= float(sys.argv[7])      #Time Step
 N = int(sys.argv[8])          #Number of Environment Variables
-E       = [random.uniform(0,100) for _ in range(N)]
+#E       = [random.uniform(0,100) for _ in range(N)]
+E = [50,50]
 print("E's : ", E)
 F       = [0 for _ in range(N)]
 
+ROUND = 5
 #niche width
 OEn = int(sys.argv[9])
 OE = [OEn for _ in range(K)]
@@ -71,8 +73,8 @@ alpha = [[] for _ in range(K)]
 for _ in range(K):
     al = []
     for ai in range(N):
-        al.append((math.e) **
-                  ((-1) * (((abs((E[ai])-u[ai][_])) ** 2) / (2*(OE[_]**2)))))
+
+        al.append(round((math.e) ** ((-1) * (((abs((E[ai])-u[ai][_])) ** 2) / (2*(OE[_]**2)))),ROUND))
     alpha[_].append(np.prod(al))
 
 
@@ -92,7 +94,7 @@ time = []
 
 biotic_force = [[] for _ in range(K)]
 temperatures = []
-
+local_population_index = []
 #plot abundance of species over temperature
 def plot_alphas():
 
@@ -102,7 +104,7 @@ def plot_alphas():
 
         for y in range(K):
             for x in np.arange (0, R, step):
-                biotic_force[y].append((math.e) ** ((-1) * (((abs(x-u[0][y])) ** 2) / (2*(OE[y]**2)))) * w[y])
+                biotic_force[y].append(round((math.e) ** ((-1) * (((abs(x-u[0][y])) ** 2) / (2*(OE[y]**2)))) * w[y], ROUND))
 
         plt.figure(figsize=(30,30))
         plt.title('Biotic Force over Time', fontsize=40)
@@ -131,7 +133,8 @@ def update(step):
         al = []
         for ei in range(N):
             #print(_)
-            al.append((math.e) ** ((-1) * (((abs((E[ei])-u[ei][_])) ** 2) / (2*(OE[_]**2)))))
+            al.append(round((math.e) ** ((-1) * (((abs((E[ei])-u[ei][_])) ** 2) / (2*(OE[_]**2)))), ROUND))
+            print("E",ei," -> ",E[ei],"- a=",al[-1])
             #time scales - for each step - the next value is calculated (next abundance and next E (temperature))
             #Now with timescales in mind, simply swithcing from the current value to the newly calculated value would indicate instantaneous change
             #Instead instead of switching directly to the newly calculated value - we can approach that value via some function
@@ -176,12 +179,12 @@ def update(step):
         rE[ei].append(E[ei])
 
 
-if __name__ == '__main__':
+
+def sampl():
     #print("rE",rE)
     for population_size_percent in np.arange(0 , 100 , 10):
         print(population_size_percent,"%")
         local_population_size = int(population_size_percent/100 * K)
-        local_population_index = []
         for x in range(local_population_size):
             local_population_index.append(random.randint(0,K-1))
 
@@ -189,16 +192,29 @@ if __name__ == '__main__':
             update(step)
             time.append(xtime)
 
-        E       = [random.uniform(0,100) for _ in range(N)]
+        #E       = [random.uniform(0,100) for _ in range(N)]
+        E = [50,50]
         for _ in range(N):
             rE[_].append(E[_])                 #Input the Start Temperatures
 
         print("E's : ", E)
     #print("rE",rE)
-        #if(xtime % 1 == 0):
-            #    sys.stdout.write("-")
-            #    sys.stdout.flush()
-        #print("")
+    #if(xtime % 1 == 0):
+    #    sys.stdout.write("-")
+    #    sys.stdout.flush()
+    #print("")
+
+
+
+
+
+if __name__ == '__main__':
+
+    for xtime in np.arange (start, end, step):
+        update(step)
+        time.append(xtime)
+
+
 
 #Create Data Dump Directory - uniq to each run
 
