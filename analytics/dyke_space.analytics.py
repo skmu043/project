@@ -124,9 +124,10 @@ def plot_stable():
 
     fig = plt.figure(figsize=(10,10))
     ax = fig.add_subplot(111, projection='3d')
+
     #ax.set_xlim3d(0,2000)
-    #ax.set_ylim3d(-50,100)
-    #ax.set_zlim3d(0,100)
+    #ax.set_ylim3d(-10,120)
+    #ax.set_zlim3d(0,200)
 
     ax.set_xlabel('Time')
     ax.set_ylabel('EG')

@@ -22,14 +22,23 @@ end = int(sys.argv[6])        #Time End
 step= float(sys.argv[7])      #Time Step
 N = int(sys.argv[8])          #Number of Environment Variables
 #E       = [random.uniform(0,100) for _ in range(N)]
-E = [50,50]
+E = [0,0]
 print("E's : ", E)
 F       = [0 for _ in range(N)]
 
-ROUND = 5
+ROUND = 1
 #niche width
 OEn = int(sys.argv[9])
 OE = [OEn for _ in range(K)]
+
+
+# Local Population #############################################
+local_population_index = []
+local_population_size =  int(10/100 * K)
+for x in range(local_population_size):
+    local_population_index.append(random.randint(0,K-1))
+    print("Local Population Index : ", local_population_index)
+# Local Population #############################################
 
 #populates affects values
 
@@ -40,7 +49,7 @@ OE = [OEn for _ in range(K)]
 w = [[] for _ in range(N)]
 for wi in range(N):
     w[wi] = [random.uniform(-1,1) for _ in range(K)]
-
+print(w)
 # Duplicate Check
 for wi in range(N):
     while (int(len(w[wi])) != int(len(set(w[wi])))):
@@ -68,15 +77,20 @@ for ui in range(N):
 
 alpha = [[] for _ in range(K)]
 
-# Future Fix - this calculates abundance for only the first Environment Variable
-
+# Fix applied - correctly generating alphas for global and local
 for _ in range(K):
     al = []
     for ai in range(N):
-
         al.append(round((math.e) ** ((-1) * (((abs((E[ai])-u[ai][_])) ** 2) / (2*(OE[_]**2)))),ROUND))
-    alpha[_].append(np.prod(al))
 
+        new_alpha = 0
+        if( _ in local_population_index):
+            new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
+        else:
+            new_alpha = al[0]       # Else take the first one as Eg
+
+        alpha[_].append(new_alpha)
+        print("alpha: ",alpha)
 
 rF = [[] for _ in range(N)]         #Biotic Force Values
 rE = [[] for _ in range(N)]         #A blank list for each Environment Variable
@@ -94,11 +108,11 @@ time = []
 
 biotic_force = [[] for _ in range(K)]
 temperatures = []
-local_population_index = []
+
 #plot abundance of species over temperature
 def plot_alphas():
 
-    if N == 1:
+    if N == 2:
         for x in np.arange (0, R, step):
             temperatures.append(x)
 
@@ -119,37 +133,38 @@ def plot_alphas():
         plt.show()
 
     else:
-        print("N is greater than 1 - cannot visualize higher dimensions .... yet :)")
+        print("N is greater than 2 - cannot visualize higher dimensions .... yet :)")
 
 
 def update(step):
     global F, P, E, Et, rF, rP, rE, rEt, u, w, N
 
     fSUM = [0 for _ in range(N)]
-    alpha_time_scale = 0.7
-    temperature_time_scale = 0.2
+    alpha_time_scale = 1
+    temperature_time_scale = 1
 
     for _ in range(K):
         al = []
         for ei in range(N):
             #print(_)
             al.append(round((math.e) ** ((-1) * (((abs((E[ei])-u[ei][_])) ** 2) / (2*(OE[_]**2)))), ROUND))
-            print("E",ei," -> ",E[ei],"- a=",al[-1])
+            #print("E: ", ei, " for E: ", E[ei]," with u = ", u[ei][_] , "and R = ", R,  " alpha is : ", al[-1])
+            #print("E",ei," -> ",E[ei],"- a=",al[-1])
             #time scales - for each step - the next value is calculated (next abundance and next E (temperature))
             #Now with timescales in mind, simply swithcing from the current value to the newly calculated value would indicate instantaneous change
             #Instead instead of switching directly to the newly calculated value - we can approach that value via some function
             #e.g Current E=5, new E=7, instead of using E=7 we will use a function where (E=5) approaches (E=7) so the final val may be E=6
-
             # Keep timescales between 1 and 0 [1 = system is at the newly calculated value instantaneously whereas values closer to zero indicate slower timescales]
             # Values outside 1 and 0 will cause errors as rates would go outside model bounds
+
+        # al = [0.5,0.5] (each species has its abundance calculated for E1 and E2 based on individual u values)
         new_alpha = 0
-        # abundance da/dt
-
-
         if( _ in local_population_index):
-            new_alpha = np.prod(al)
+            new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
         else:
-            new_alpha = al[0]
+            new_alpha = al[0]       # Else take the first one as Eg
+
+        # For each species : If Species
 
         newAlpha = alpha[_][-1] + ((new_alpha - alpha[_][-1]) * step)
         alpha[_].append(alpha[_][-1] + ((newAlpha - alpha[_][-1]) * alpha_time_scale))
@@ -157,24 +172,22 @@ def update(step):
         rAx[_].append(alpha[_][-1])
         rAxR[_].append(alpha[_][-1] * R)
 
+
+# The above for loop has concluded ============ new code block below ============
+
+# Issue Detected : multiplying all Fs from both - no differentiation given to sub population
+
+# All K affect Eg - Fg
+# All sub-pop K affect only El - Fl
+
+
     for _ in range(K):
         for ei in range(N):
             fSUM[ei] = fSUM[ei] + (alpha[_][-1] * w[ei][_])
-
-
     for ei in range(N):
         F[ei] = fSUM[ei] * 10
-
-        # P is 0
         newE = E[ei] + (((0 + F[ei]) * step))
-        # E is old E and newE has the current value
         E[ei] = E[ei] + ((newE-E[ei]) * temperature_time_scale)
-
-        # E not P ! This is the Temperature !
-        # Incorrect one Et = Et + P
-        # F becomes 0 - no biotic force as no biota
-        #Et = Et + ((P[ei] + 0) * step)
-
         rF[ei].append(F[ei])
         rE[ei].append(E[ei])
 
@@ -182,22 +195,22 @@ def update(step):
 
 def sampl():
     #print("rE",rE)
-    for population_size_percent in np.arange(0 , 100 , 10):
-        print(population_size_percent,"%")
-        local_population_size = int(population_size_percent/100 * K)
-        for x in range(local_population_size):
-            local_population_index.append(random.randint(0,K-1))
 
-        for xtime in np.arange (start, end, step):
-            update(step)
-            time.append(xtime)
 
-        #E       = [random.uniform(0,100) for _ in range(N)]
-        E = [50,50]
-        for _ in range(N):
-            rE[_].append(E[_])                 #Input the Start Temperatures
+    for samplex in np.arange(0 , 101 , 50):
+        for sampley in np.arange(0, 101 ,50):
+            E = [samplex,sampley]
+            for _ in range(N):
+                rE[_].append(E[_])
+            print("Running with E's set to : ", samplex, " ", sampley)
 
-        print("E's : ", E)
+            for xtime in np.arange (start, end, step):
+                update(step)
+                time.append(xtime)
+
+
+
+        #print("E's : ", E)
     #print("rE",rE)
     #if(xtime % 1 == 0):
     #    sys.stdout.write("-")
@@ -206,15 +219,19 @@ def sampl():
 
 
 
-
-
 if __name__ == '__main__':
 
-    for xtime in np.arange (start, end, step):
-        update(step)
-        time.append(xtime)
+    sampl()
+
+    #local_population_size = (int(1)) #int(10/100 * K)
+    #for x in range(local_population_size):
+    #    local_population_index.append(random.randint(0,K-1))
+    #print("Local Population Index : ", local_population_index)
 
 
+    #for xtime in np.arange (start, end, step):
+    #    update(step)
+    #    time.append(xtime)
 
 #Create Data Dump Directory - uniq to each run
 
