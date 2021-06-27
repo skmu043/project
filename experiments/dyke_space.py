@@ -27,7 +27,7 @@ E = [0,0]
 
 F       = [0 for _ in range(N)]
 
-ROUND = 2
+ROUND = 10
 #niche width
 OEn = int(sys.argv[9])
 OE = [OEn for _ in range(K)]
@@ -211,7 +211,7 @@ if __name__ == '__main__':
 
     # sampling
     for Eg_temp in np.arange(1,80,30):
-        for El_temp in np.arange(1,80,33):
+        for El_temp in np.arange(1,80,30):
             print("Init : ", Eg_temp, El_temp)
 
             time.append(0)
