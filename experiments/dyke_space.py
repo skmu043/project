@@ -27,7 +27,7 @@ E = [0,0]
 
 F       = [0 for _ in range(N)]
 
-ROUND = 7
+ROUND = 2
 #niche width
 OEn = int(sys.argv[9])
 OE = [OEn for _ in range(K)]
@@ -109,30 +109,6 @@ time = []
 
 biotic_force = [[] for _ in range(K)]
 temperatures = []
-
-#plot abundance of species over temperature
-def plot_alphas():
-
-    s = 0.01
-
-    for x in np.arange (0, R, s):
-        temperatures.append(x)
-
-    for y in range(K):
-        for x in np.arange (0, R, s):
-            biotic_force[y].append( (round((math.e) ** ((-1) * (((abs((x)-u[0][y])) ** 2) / (2*(OE[y]**2)))), ROUND)) * w[0][y] )
-
-    plt.figure(figsize=(30,30))
-    plt.title('Biotic Force over Time', fontsize=40)
-    plt.xlabel('Temperature', fontsize=40)
-    plt.ylabel('biotic force (a * w)', fontsize=40)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    for _ in range(K):
-        plt.plot(temperatures,biotic_force[_])
-
-    plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
-    plt.show()
 
 
 def update(step):
@@ -234,8 +210,8 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(5,R+1,50):
-        for El_temp in np.arange(5,R+1,50):
+    for Eg_temp in np.arange(1,R+1,20):
+        for El_temp in np.arange(1,R+1,20):
             print("Init : ", Eg_temp, El_temp)
 
             time.append(0)
@@ -244,7 +220,7 @@ if __name__ == '__main__':
             for xtime in np.arange (post_init_start, end, step):
                 update(step)
                 time.append(xtime)
-            print(rAx)
+
             # Going forward - after each run is done
             # Pack the data into separate data structures
             # Zero out the in-use data structures for the run
@@ -305,16 +281,16 @@ if __name__ == '__main__':
             ######################################### END RE INIT #####################################################################
 
 
-    print("E: ",E_prime)
-    print("F: ",F_prime)
-    print("alpha: ",alpha_prime)
-    print("rF: ",rF_prime)
-    print("rE: ",rE_prime)
-    print("rAx: ",rAx_prime)
-    print("rAxR: ",rAxR_prime)
-    print("time: ",time_prime)
-    print("biotic_force: ",biotic_force_prime)
-    print("temperature: ",temperatures_prime)
+    #print("E: ",E_prime)
+    #print("F: ",F_prime)
+    #print("alpha: ",alpha_prime)
+    #print("rF: ",rF_prime)
+    #print("rE: ",rE_prime)
+    #print("rAx: ",rAx_prime)
+    #print("rAxR: ",rAxR_prime)
+    #print("time: ",time_prime)
+    #print("biotic_force: ",biotic_force_prime)
+    #print("temperature: ",temperatures_prime)
 
 
 os.mkdir(data_directory)

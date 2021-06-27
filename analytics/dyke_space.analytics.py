@@ -1,7 +1,9 @@
 import shelve, os
 import matplotlib.pyplot as plt
 import sys
+import numpy as np
 print(sys.version)
+import math, random, time
 
 #plot affects values for each species
 def plot_w():
@@ -29,6 +31,35 @@ def plot_u():
     plt.legend(loc=5, prop={'size': 30})
     plt.show()
 
+#plot abundance of species over temperature
+def plot_alphas():
+
+    biotic_force = [[] for _ in range(K)]
+    temperatures = []
+    ROUND = 7
+
+    s = 0.01
+
+    for x in np.arange (-50, R+50, s):
+        temperatures.append(x)
+
+    for y in range(K):
+        for x in np.arange (-50, R+50, s):
+            biotic_force[y].append( (round((math.e) ** ((-1) * (((abs((x)-u[0][y])) ** 2) / (2*(5**2)))), ROUND)) * w[0][y] )
+
+    plt.figure(figsize=(30,30))
+    plt.title('Biotic Force over Time', fontsize=40)
+    plt.xlabel('Temperature', fontsize=40)
+    plt.ylabel('biotic force (a * w)', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    for _ in range(K):
+        plt.plot(temperatures,biotic_force[_])
+
+    plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
+    plt.show()
+
+
 #plot abundance of each species over time
 def plot_aot():
     plt.figure(figsize=(20,10))
@@ -53,12 +84,19 @@ def plot_aot_scaled():
     plt.ylabel('Abundance Scaled UP + Temperature', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.ylim(-50, R+20)
-    plt.xlim(0, end)
-    for x in range(K):
-        plt.plot(time,rAxR[x],label = 'id %s'%x)
-    for list in rE:
-        plt.plot(time,list, 'r.', label='E')
+    #plt.ylim(-10, R+20)
+    #plt.xlim(-500, end+1000)
+
+
+    time_prime[0].pop(0)
+    for row in rAxR_prime:
+        # Each Row is Each Sample Run
+        for species in row:
+            plt.plot(time_prime[0],species)
+
+    for row in rE_prime:
+        for env_var in row:
+            plt.plot(time_prime[1],env_var, 'k-', label='E', linewidth=4)
     plt.show()
 
 #plot temperature value over time
@@ -69,8 +107,9 @@ def plot_e():
     plt.ylabel('Temperature', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    for list in rE:
-        plt.plot(time,list, 'r-', label='E')
+    for row in rE_prime:
+        for env_var in row:
+            plt.plot(time_prime[1],env_var, 'k-', label='E', linewidth=4)
     plt.axhline(y=R)
     plt.show()
 
@@ -84,28 +123,19 @@ def plot_efp():
     plt.yticks(fontsize=20)
     plt.ylim(-50, R+20)
     plt.xlim(0, end)
-    #for list in rF:
-    #    plt.plot(time,list, 'g.', label = 'biotic force')
-    for list in rE:
-        plt.plot(time,list, 'r.',label = 'temperature')
+
+    time_prime[0].pop(0)
+
+    for row in rF_prime:
+        for env_var in row:
+            plt.plot(time_prime[0],env_var, 'g-', label='F', linewidth=4)
+
+    for row in rE_prime:
+        for env_var in row:
+            plt.plot(time_prime[1],env_var, 'r-', label='E', linewidth=4)
+
     plt.legend(loc='lower right', prop={'size': 30})
     plt.axhline(y=R)
-
-    xtrajectory=[]
-    ytrajectory=[]
-    for idx in range(len(rE[0])):
-
-        xtrajectory.append(rE[0][idx])
-        ytrajectory.append(rE[1][idx])
-
-        if (idx > 0) and (idx % (end/step) == 0):
-            #print(idx)
-            #print(xtrajectory)
-            #print(ytrajectory)
-            plt.plot(xtrajectory, '-',ytrajectory ,'.', label='traj')
-            del xtrajectory[:]
-            del ytrajectory[:]
-
     plt.show()
 
 def plot_stable():
@@ -118,14 +148,6 @@ def plot_stable():
     #plt.ylim(-50, R+20)
     #plt.xlim(0, end)
 
-    #print(rE)
-
-
-
-    xtrajectory=[]
-    ytrajectory=[]
-    ztime = []
-
     fig = plt.figure(figsize=(10,10))
     ax = fig.add_subplot(111, projection='3d')
 
@@ -137,21 +159,10 @@ def plot_stable():
     ax.set_ylabel('EL')
     ax.set_zlabel('EG')
 
-    ax.plot(time, rE[1], rE[0]) # rE[0] is global and goes on the y axis
+    for row in rE_prime:
+        ax.plot(time_prime[1],row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
 
-    plt.legend(loc='lower right', prop={'size': 30})
-    plt.show()
-
-def plot_elg():
-    plt.figure(figsize=(20,10))
-    plt.title('E2', fontsize=20)
-    plt.xlabel('Time', fontsize=20)
-    plt.ylabel('E2', fontsize=20)
-
-
-    plt.plot(time, rE[0], '-', label="EG")
-    plt.plot(time, rE[1], '-', label="EL")
-    plt.legend(loc='lower right', prop={'size': 30})
+    #plt.legend(loc='lower right', prop={'size': 30})
     plt.show()
 
 
@@ -198,10 +209,11 @@ if(select <= len(os.listdir(data_dr))-1):
 
         print("0 plot affects values for each species")
         print("1 plot ideal growing temperature for each species")
-        print("2 plot abundance of each species over time")
-        print("3 plot abundance of each species over time scaled by R")
-        print("4 plot temperature value over time")
-        print("5 plot temperature, biotic force")
+        print("2 plot alphas")
+        print("3 plot abundance of each species over time")
+        print("4 plot abundance of each species over time scaled by R")
+        print("5 plot temperature value over time")
+        print("6 plot temperature, biotic force")
         print("7 Stable Points")
         select = int(input("Select [0-"+ str(len(data_archives) - 1)+ "]: "))
 
@@ -210,15 +222,16 @@ if(select <= len(os.listdir(data_dr))-1):
         elif select == 1:
             plot_u()               #plot ideal growing temperature for each species
         elif select == 2:
-            plot_aot()             #plot abundance of each species over time
+            plot_alphas()
         elif select == 3:
-            plot_aot_scaled()      #plot abundance of each species over time scaled by R
+            plot_aot()             #plot abundance of each species over time
         elif select == 4:
-            plot_e()               #plot temperature value over time
+            plot_aot_scaled()      #plot abundance of each species over time scaled by R
         elif select == 5:
+            plot_e()               #plot temperature value over time
+        elif select == 6:
             plot_efp()             #plot temperature, biotic force over time
         elif select == 7:
-            plot_elg()
             plot_stable()        # [E1 values over time >>>>>]
                                   # [E2 values over time >>>>>]
                                   #.
