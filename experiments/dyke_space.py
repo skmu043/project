@@ -244,7 +244,7 @@ if __name__ == '__main__':
             for xtime in np.arange (post_init_start, end, step):
                 update(step)
                 time.append(xtime)
-
+            print(rAx)
             # Going forward - after each run is done
             # Pack the data into separate data structures
             # Zero out the in-use data structures for the run

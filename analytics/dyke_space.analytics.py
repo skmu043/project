@@ -38,9 +38,11 @@ def plot_aot():
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
 
-    for x in range(K):
-        rAx[x].append(0)
-        plt.plot(time,rAx[x],label = 'id %s'%x)
+    time_prime[0].pop(0)
+    for row in rAx_prime:
+        # Each Row is Each Sample Run
+        for species in row:
+            plt.plot(time_prime[0],species)
     plt.show()
 
 #plot abundance of each species over time where abundance is scaled up by R
