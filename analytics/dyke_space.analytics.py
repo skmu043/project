@@ -55,7 +55,6 @@ def plot_alphas():
     plt.yticks(fontsize=20)
     for _ in range(K):
         plt.plot(temperatures,biotic_force[_])
-
     plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
     plt.show()
 
@@ -69,11 +68,17 @@ def plot_aot():
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
 
-    time_prime[0].pop(0)
+
+    time = time_prime
+
+    if(len(time[0]) > len(rAx_prime[0][0])):
+        time[0].pop(0)
+
+
     for row in rAx_prime:
         # Each Row is Each Sample Run
         for species in row:
-            plt.plot(time_prime[0],species)
+            plt.plot(time[0],species)
     plt.show()
 
 #plot abundance of each species over time where abundance is scaled up by R
@@ -84,15 +89,16 @@ def plot_aot_scaled():
     plt.ylabel('Abundance Scaled UP + Temperature', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    #plt.ylim(-10, R+20)
-    #plt.xlim(-500, end+1000)
 
+    time = time_prime
 
-    time_prime[0].pop(0)
+    if(len(time[0]) > len(rAx_prime[0][0])):
+        time[0].pop(0)
+
     for row in rAxR_prime:
         # Each Row is Each Sample Run
         for species in row:
-            plt.plot(time_prime[0],species)
+            plt.plot(time[0],species)
 
     for row in rE_prime:
         for env_var in row:
@@ -124,11 +130,14 @@ def plot_efp():
     plt.ylim(-50, R+20)
     plt.xlim(0, end)
 
-    time_prime[0].pop(0)
+    time = time_prime
+
+    if(len(time[0]) > len(rAx_prime[0][0])):
+        time[0].pop(0)
 
     for row in rF_prime:
         for env_var in row:
-            plt.plot(time_prime[0],env_var, 'g-', label='F', linewidth=4)
+            plt.plot(time[0],env_var, 'g-', label='F', linewidth=4)
 
     for row in rE_prime:
         for env_var in row:
@@ -150,6 +159,7 @@ def plot_stable():
 
     fig = plt.figure(figsize=(10,10))
     ax = fig.add_subplot(111, projection='3d')
+    #ax.view_init(0, 60)
 
     #ax.set_xlim3d(0,2000)
     #ax.set_ylim3d(-10,120)
@@ -162,7 +172,6 @@ def plot_stable():
     for row in rE_prime:
         ax.plot(time_prime[1],row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
 
-    #plt.legend(loc='lower right', prop={'size': 30})
     plt.show()
 
 
@@ -205,40 +214,40 @@ if(select <= len(os.listdir(data_dr))-1):
         OEn             = s['OEn']
 
 
+        while True:
+            print("0 plot affects values for each species")
+            print("1 plot ideal growing temperature for each species")
+            print("2 plot alphas")
+            print("3 plot abundance of each species over time")
+            print("4 plot abundance of each species over time scaled by R")
+            print("5 plot temperature value over time")
+            print("6 plot temperature, biotic force")
+            print("7 Stable Points")
+            select = int(input("Select [0-"+ str(len(data_archives) - 1)+ "]: "))
 
-
-        print("0 plot affects values for each species")
-        print("1 plot ideal growing temperature for each species")
-        print("2 plot alphas")
-        print("3 plot abundance of each species over time")
-        print("4 plot abundance of each species over time scaled by R")
-        print("5 plot temperature value over time")
-        print("6 plot temperature, biotic force")
-        print("7 Stable Points")
-        select = int(input("Select [0-"+ str(len(data_archives) - 1)+ "]: "))
-
-        if select == 0:
-            plot_w()               #plot affects values for each species
-        elif select == 1:
-            plot_u()               #plot ideal growing temperature for each species
-        elif select == 2:
-            plot_alphas()
-        elif select == 3:
-            plot_aot()             #plot abundance of each species over time
-        elif select == 4:
-            plot_aot_scaled()      #plot abundance of each species over time scaled by R
-        elif select == 5:
-            plot_e()               #plot temperature value over time
-        elif select == 6:
-            plot_efp()             #plot temperature, biotic force over time
-        elif select == 7:
-            plot_stable()        # [E1 values over time >>>>>]
-                                  # [E2 values over time >>>>>]
-                                  #.
-                                  #.
-                                  # [En values over time >>>>>]
-        else:
-            print("Invalid Selection")
+            if select == 0:
+                plot_w()               #plot affects values for each species
+            elif select == 1:
+                plot_u()               #plot ideal growing temperature for each species
+            elif select == 2:
+                plot_alphas()
+            elif select == 3:
+                plot_aot()             #plot abundance of each species over time
+            elif select == 4:
+                plot_aot_scaled()      #plot abundance of each species over time scaled by R
+            elif select == 5:
+                plot_e()               #plot temperature value over time
+            elif select == 6:
+                plot_efp()             #plot temperature, biotic force over time
+            elif select == 7:
+                plot_stable()        # [E1 values over time >>>>>]
+                                      # [E2 values over time >>>>>]
+                                      #.
+                                      #.
+                                      # [En values over time >>>>>]
+            else:
+                print("Invalid Selection")
+                break
     finally:
         s.close()
 
