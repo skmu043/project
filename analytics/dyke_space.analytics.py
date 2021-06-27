@@ -130,32 +130,25 @@ def plot_stable():
     #ax.set_zlim3d(0,200)
 
     ax.set_xlabel('Time')
-    ax.set_ylabel('EG')
-    ax.set_zlabel('EL')
+    ax.set_ylabel('EL')
+    ax.set_zlabel('EG')
 
-    index_z = 0
-    for idx in range(len(rE[0])):
-
-        xtrajectory.append(rE[0][idx])
-        ytrajectory.append(rE[1][idx])
-        ztime.append(index_z)
-        index_z += 1
-
-        if (idx > 0) and (idx % (end/step) == 0):
-            #print(idx)
-            print(xtrajectory)
-            print(ytrajectory)
-            print(ztime)
-            #plt.plot(xtrajectory,ytrajectory, '-', label='traj')
-            if(rE[0][idx]<=100 and rE[1][idx]>=0):
-                print("Stable Point : Start Temp: ", xtrajectory[0], ytrajectory[0])
-            ax.plot(ztime, xtrajectory, ytrajectory)
-            xtrajectory.clear()
-            ytrajectory.clear()
-            ztime.clear()
-            index_z = 0
+    ax.plot(time, rE[1], rE[0]) # rE[0] is global and goes on the y axis
 
     plt.legend(loc='lower right', prop={'size': 30})
+    plt.show()
+
+def plot_elg():
+    plt.figure(figsize=(20,10))
+    plt.title('E2', fontsize=20)
+    plt.xlabel('Time', fontsize=20)
+    plt.ylabel('E2', fontsize=20)
+
+    for list in rE:
+        print(list)
+        print(time)
+        plt.plot(time, list, '-')
+
     plt.show()
 
 
@@ -221,7 +214,8 @@ if(select <= len(os.listdir(data_dr))-1):
         elif select == 5:
             plot_efp()             #plot temperature, biotic force over time
         elif select == 7:
-            plot_stable()         # [E1 values over time >>>>>]
+            plot_elg()
+            plot_stable()        # [E1 values over time >>>>>]
                                   # [E2 values over time >>>>>]
                                   #.
                                   #.

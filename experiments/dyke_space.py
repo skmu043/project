@@ -22,11 +22,11 @@ end = int(sys.argv[6])        #Time End
 step= float(sys.argv[7])      #Time Step
 N = int(sys.argv[8])          #Number of Environment Variables
 #E       = [random.uniform(0,100) for _ in range(N)]
-E = [0,0]
+E = [10,50]
 print("E's : ", E)
 F       = [0 for _ in range(N)]
 
-ROUND = 1
+ROUND = 7
 #niche width
 OEn = int(sys.argv[9])
 OE = [OEn for _ in range(K)]
@@ -90,7 +90,7 @@ for _ in range(K):
             new_alpha = al[0]       # Else take the first one as Eg
 
         alpha[_].append(new_alpha)
-        print("alpha: ",alpha)
+        #print("alpha: ",alpha)
 
 rF = [[] for _ in range(N)]         #Biotic Force Values
 rE = [[] for _ in range(N)]         #A blank list for each Environment Variable
@@ -112,36 +112,34 @@ temperatures = []
 #plot abundance of species over temperature
 def plot_alphas():
 
-    if N == 2:
-        for x in np.arange (0, R, step):
-            temperatures.append(x)
+    s = 0.01
 
-        for y in range(K):
-            for x in np.arange (0, R, step):
-                biotic_force[y].append(round((math.e) ** ((-1) * (((abs(x-u[0][y])) ** 2) / (2*(OE[y]**2)))) * w[y], ROUND))
+    for x in np.arange (0, R, s):
+        temperatures.append(x)
 
-        plt.figure(figsize=(30,30))
-        plt.title('Biotic Force over Time', fontsize=40)
-        plt.xlabel('Temperature', fontsize=40)
-        plt.ylabel('biotic force (a * w)', fontsize=40)
-        plt.xticks(fontsize=20)
-        plt.yticks(fontsize=20)
-        for _ in range(K):
-            plt.plot(temperatures,biotic_force[_])
+    for y in range(K):
+        for x in np.arange (0, R, s):
+            biotic_force[y].append( (round((math.e) ** ((-1) * (((abs((x)-u[0][y])) ** 2) / (2*(OE[y]**2)))), ROUND)) * w[0][y] )
 
-        plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
-        plt.show()
+    plt.figure(figsize=(30,30))
+    plt.title('Biotic Force over Time', fontsize=40)
+    plt.xlabel('Temperature', fontsize=40)
+    plt.ylabel('biotic force (a * w)', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    for _ in range(K):
+        plt.plot(temperatures,biotic_force[_])
 
-    else:
-        print("N is greater than 2 - cannot visualize higher dimensions .... yet :)")
+    plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
+    plt.show()
 
 
 def update(step):
     global F, P, E, Et, rF, rP, rE, rEt, u, w, N
 
     fSUM = [0 for _ in range(N)]
-    alpha_time_scale = 1
-    temperature_time_scale = 1
+    alpha_time_scale = 0.7
+    temperature_time_scale = 0.2
 
     for _ in range(K):
         al = []
@@ -179,49 +177,55 @@ def update(step):
 
 # All K affect Eg - Fg
 # All sub-pop K affect only El - Fl
+# F [0 is Fg and 1 is Fl same as abundance above]
 
+    # w[0] affects EG whereas a subset of w[1] affects EL only
+    for _ in range(K):
+        fSUM[0] = fSUM[0] + (alpha[_][-1] * w[0][_])
+
+    F[0] = fSUM[0] * 10
+    newE = E[0] + (((0 + F[0]) * step))
+    E[0] = E[0] + ((newE-E[0]) * temperature_time_scale)
+    rF[0].append(F[0])
+    rE[0].append(E[0])
+
+    # ============ END EG ==============
 
     for _ in range(K):
-        for ei in range(N):
-            fSUM[ei] = fSUM[ei] + (alpha[_][-1] * w[ei][_])
-    for ei in range(N):
-        F[ei] = fSUM[ei] * 10
-        newE = E[ei] + (((0 + F[ei]) * step))
-        E[ei] = E[ei] + ((newE-E[ei]) * temperature_time_scale)
-        rF[ei].append(F[ei])
-        rE[ei].append(E[ei])
+        if( _ in local_population_index):
+            fSUM[1] = fSUM[1] + (alpha[_][-1] * w[1][_])
 
+    F[1] = fSUM[1] * 10
+    newE = E[1] + (((0 + F[1]) * step))
+    E[1] = E[1] + ((newE-E[1]) * temperature_time_scale)
+    rF[1].append(F[1])
+    rE[1].append(E[1])
 
+    # ============ END EL ==============
 
-def sampl():
-    #print("rE",rE)
+    #for _ in range(K):
+    #    for ei in range(N):
+    #        fSUM[ei] = fSUM[ei] + (alpha[_][-1] * w[ei][_])
 
-
-    for samplex in np.arange(0 , 101 , 50):
-        for sampley in np.arange(0, 101 ,50):
-            E = [samplex,sampley]
-            for _ in range(N):
-                rE[_].append(E[_])
-            print("Running with E's set to : ", samplex, " ", sampley)
-
-            for xtime in np.arange (start, end, step):
-                update(step)
-                time.append(xtime)
-
-
-
-        #print("E's : ", E)
-    #print("rE",rE)
-    #if(xtime % 1 == 0):
-    #    sys.stdout.write("-")
-    #    sys.stdout.flush()
-    #print("")
-
+    #for ei in range(N):
+    #    F[ei] = fSUM[ei] * 10
+    #    newE = E[ei] + (((0 + F[ei]) * step))
+    #    E[ei] = E[ei] + ((newE-E[ei]) * temperature_time_scale)
+    #    rF[ei].append(F[ei])
+    #    rE[ei].append(E[ei])
 
 
 if __name__ == '__main__':
 
-    sampl()
+    # First Set of calculations have occurred during initilization so appending time 0
+    time.append(0)
+
+    # xtime should should start from one timestep + 0
+    post_init_start = start + step
+    for xtime in np.arange (post_init_start, end, step):
+        update(step)
+        time.append(xtime)
+
 
     #local_population_size = (int(1)) #int(10/100 * K)
     #for x in range(local_population_size):
