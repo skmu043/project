@@ -22,8 +22,9 @@ end = int(sys.argv[6])        #Time End
 step= float(sys.argv[7])      #Time Step
 N = int(sys.argv[8])          #Number of Environment Variables
 #E       = [random.uniform(0,100) for _ in range(N)]
-E = [10,20]
-print("E's : ", E)
+E = [0,0]
+
+
 F       = [0 for _ in range(N)]
 
 ROUND = 7
@@ -37,7 +38,7 @@ local_population_index = []
 local_population_size =  int(10/100 * K)
 for x in range(local_population_size):
     local_population_index.append(random.randint(0,K-1))
-    print("Local Population Index : ", local_population_index)
+    #print("Local Population Index : ", local_population_index)
 # Local Population #############################################
 
 #populates affects values
@@ -217,23 +218,103 @@ def update(step):
 
 if __name__ == '__main__':
 
+    E_prime             =[]
+    F_prime             =[]
+    alpha_prime         =[]
+    rF_prime            =[]
+    rE_prime            =[]
+    rAx_prime           =[]
+    rAxR_prime          =[]
+    time_prime          =[]
+    biotic_force_prime  =[]
+    temperatures_prime  =[]
+
+
     # First Set of calculations have occurred during initilization so appending time 0
-    time.append(0)
 
-    # xtime should should start from one timestep + 0
-    post_init_start = start + step
-    for xtime in np.arange (post_init_start, end, step):
-        update(step)
-        time.append(xtime)
 
-    # Going forward - after each run is done
-    # Pack the data into separate data structures
-    # Zero out the in-use data structures for the run
-    # Re-initilize
-    # Run again
-    # e.g rE = [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]] >>>> rE_prime.append(rE) >>>> rE = [[] for _ in N] (the initilization bit)
-    # rE_prime = [[[1,2,3,4,5,6,7][2,4,6,7,8,9,0]], [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]], [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]]]
+    # sampling
+    for Eg_temp in np.arange(5,R+1,50):
+        for El_temp in np.arange(5,R+1,50):
+            print("Init : ", Eg_temp, El_temp)
 
+            time.append(0)
+            # xtime should should start from one timestep + 0
+            post_init_start = start + step
+            for xtime in np.arange (post_init_start, end, step):
+                update(step)
+                time.append(xtime)
+
+            # Going forward - after each run is done
+            # Pack the data into separate data structures
+            # Zero out the in-use data structures for the run
+            # Re-initilize
+            # Run again
+            # e.g rE = [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]] >>>> rE_prime.append(rE) >>>> rE = [[] for _ in N] (the initilization bit)
+            # rE_prime = [[[1,2,3,4,5,6,7][2,4,6,7,8,9,0]], [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]], [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]]]
+
+            E_prime.append([Eg_temp, El_temp])
+            F_prime.append(F)
+            alpha_prime.append(alpha)
+            rF_prime.append(rF)
+            rE_prime.append(rE)
+            rAx_prime.append(rAx)
+            rAxR_prime.append(rAxR)
+            time_prime.append(time)
+            biotic_force_prime.append(biotic_force)
+            temperatures_prime.append(temperatures)
+
+            ###########################################################################################################################
+            ###########################################################################################################################
+            ###########################################################################################################################
+            ######################################### RE INIT #########################################################################
+            E = [Eg_temp,El_temp]
+            F       = [0 for _ in range(N)]
+            alpha = [[] for _ in range(K)]
+
+            # Fix applied - correctly generating alphas for global and local
+            for _ in range(K):
+                al = []
+                for ai in range(N):
+                    al.append(round((math.e) ** ((-1) * (((abs((E[ai])-u[ai][_])) ** 2) / (2*(OE[_]**2)))),ROUND))
+
+                    new_alpha = 0
+                    if( _ in local_population_index):
+                        new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
+                    else:
+                        new_alpha = al[0]       # Else take the first one as Eg
+
+                    alpha[_].append(new_alpha)
+                    #print("alpha: ",alpha)
+
+            rF = [[] for _ in range(N)]         #Biotic Force Values
+            rE = [[] for _ in range(N)]         #A blank list for each Environment Variable
+
+            for _ in range(N):
+                rE[_].append(E[_])                 #Input the Start Temperatures
+
+            rAx = [[] for x in range(K)]
+            rAxR = [[] for x in range(K)]
+            time = []
+            biotic_force = [[] for _ in range(K)]
+            temperatures = []
+
+            ###########################################################################################################################
+            ###########################################################################################################################
+            ###########################################################################################################################
+            ######################################### END RE INIT #####################################################################
+
+
+    print("E: ",E_prime)
+    print("F: ",F_prime)
+    print("alpha: ",alpha_prime)
+    print("rF: ",rF_prime)
+    print("rE: ",rE_prime)
+    print("rAx: ",rAx_prime)
+    print("rAxR: ",rAxR_prime)
+    print("time: ",time_prime)
+    print("biotic_force: ",biotic_force_prime)
+    print("temperature: ",temperatures_prime)
 
 
 os.mkdir(data_directory)
@@ -247,20 +328,20 @@ try :
     s['biotic_force']   = biotic_force
     s['w']              = w
     s['u']              = u
-    s['rAx']              = rAx
-    s['rAxR']           = rAxR
-    s['time']           = time
-    s['rE']             = rE
-    s['rF']             = rF
+    s['rAx_prime']      = rAx_prime
+    s['rAxR_prime']     = rAxR_prime
+    s['time_prime']     = time_prime
+    s['rE_prime']       = rE_prime
+    s['rF_prime']       = rF_prime
 
-    s['K'] = K
-    s['R'] = R
-    s['E'] = E
-    s['start'] = start
-    s['end'] = end
-    s['step'] = step
-    s['N'] = N
-    s['OEn'] = OEn
+    s['K']              = K
+    s['R']              = R
+    s['E']              = E
+    s['start']          = start
+    s['end']            = end
+    s['step']           = step
+    s['N']              = N
+    s['OEn']            = OEn
 
 finally:
     s.close()
