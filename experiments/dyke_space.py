@@ -22,7 +22,7 @@ end = int(sys.argv[6])        #Time End
 step= float(sys.argv[7])      #Time Step
 N = int(sys.argv[8])          #Number of Environment Variables
 #E       = [random.uniform(0,100) for _ in range(N)]
-E = [10,50]
+E = [10,20]
 print("E's : ", E)
 F       = [0 for _ in range(N)]
 
@@ -226,18 +226,15 @@ if __name__ == '__main__':
         update(step)
         time.append(xtime)
 
+    # Going forward - after each run is done
+    # Pack the data into separate data structures
+    # Zero out the in-use data structures for the run
+    # Re-initilize
+    # Run again
+    # e.g rE = [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]] >>>> rE_prime.append(rE) >>>> rE = [[] for _ in N] (the initilization bit)
+    # rE_prime = [[[1,2,3,4,5,6,7][2,4,6,7,8,9,0]], [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]], [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]]]
 
-    #local_population_size = (int(1)) #int(10/100 * K)
-    #for x in range(local_population_size):
-    #    local_population_index.append(random.randint(0,K-1))
-    #print("Local Population Index : ", local_population_index)
 
-
-    #for xtime in np.arange (start, end, step):
-    #    update(step)
-    #    time.append(xtime)
-
-#Create Data Dump Directory - uniq to each run
 
 os.mkdir(data_directory)
 # inputs used : sys.argv + date + other metadata

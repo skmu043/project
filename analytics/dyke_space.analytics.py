@@ -37,7 +37,9 @@ def plot_aot():
     plt.ylabel('Abundance', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
+
     for x in range(K):
+        rAx[x].append(0)
         plt.plot(time,rAx[x],label = 'id %s'%x)
     plt.show()
 
@@ -106,7 +108,7 @@ def plot_efp():
 
 def plot_stable():
     #plt.figure(figsize=(30,20))
-    plt.title('Stable Points', fontsize=40)
+    #plt.title('Stable Points', fontsize=40)
     #plt.xlabel('E Values', fontsize=40)
     #plt.ylabel('E Values', fontsize=40)
     #plt.xticks(fontsize=20)
@@ -144,11 +146,10 @@ def plot_elg():
     plt.xlabel('Time', fontsize=20)
     plt.ylabel('E2', fontsize=20)
 
-    for list in rE:
-        print(list)
-        print(time)
-        plt.plot(time, list, '-')
 
+    plt.plot(time, rE[0], '-', label="EG")
+    plt.plot(time, rE[1], '-', label="EL")
+    plt.legend(loc='lower right', prop={'size': 30})
     plt.show()
 
 
