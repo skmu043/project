@@ -210,8 +210,8 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(1,80,50):
-        for El_temp in np.arange(1,80,50):
+    for Eg_temp in np.arange(1,80,30):
+        for El_temp in np.arange(1,80,33):
             print("Init : ", Eg_temp, El_temp)
 
             time.append(0)

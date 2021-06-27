@@ -76,9 +76,19 @@ def plot_aot():
 
 
     for row in rAx_prime:
-        # Each Row is Each Sample Run
         for species in row:
             plt.plot(time[0],species)
+
+    abundance = []
+    for row in rAx_prime:
+        for _ in range(len(time[0])):
+            sum_abundance = 0
+            for species_block in row: #(K species)
+                sum_abundance += species[_]
+            abundance.append(sum_abundance)
+        plt.plot(time[0],abundance, linewidth=5)
+        abundance.clear()
+
     plt.show()
 
 #plot abundance of each species over time where abundance is scaled up by R
