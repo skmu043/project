@@ -21,7 +21,6 @@ if __name__ == '__main__':
             print(_, phi)
             jobs.append(Process(target=run_it,args=(phi,)))
 
-
     for job in jobs:
         job.start()
 
