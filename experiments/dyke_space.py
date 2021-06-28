@@ -210,8 +210,8 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(1,80,30):
-        for El_temp in np.arange(1,80,30):
+    for Eg_temp in np.arange(1,80,70):
+        for El_temp in np.arange(1,80,70):
             print("Init : ", Eg_temp, El_temp)
 
             time.append(0)
@@ -299,9 +299,23 @@ if __name__ == '__main__':
         for species in row:
             plt.plot(time[0],species)
 
+    plt.show()
+
+    plt.figure(figsize=(20,10))
+    plt.title('Abundance over Time', fontsize=20)
+    plt.xlabel('Time', fontsize=20)
+    plt.ylabel('Abundance', fontsize=20)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+
+
     abundance           = []
     abundance_local     = []
     abundance_not_local = []
+
+    a_t = []
+    a_l = []
+    a_g = []
 
 
     for row in rAx_prime:
@@ -310,21 +324,36 @@ if __name__ == '__main__':
             sum_abundance_local     = 0
             sum_abundance_not_local = 0
 
+            num = 0
             for species_block in row: #(K species)
-                sum_abundance += species[_]
-                if( _ in local_population_index):
-                    sum_abundance_local += species[_]
+                sum_abundance += species_block[_]
+                if(num in local_population_index):
+                    sum_abundance_local += species_block[num]
                 else:
-                    sum_abundance_not_local += species[_]
+                    sum_abundance_not_local += species_block[num]
+
+                num+=1
             abundance.append(sum_abundance)
             abundance_local.append(sum_abundance_local)
             abundance_not_local.append(sum_abundance_not_local)
 
         plt.plot(time[0],abundance, linewidth=5)
+        plt.plot(time[0],abundance_local, linewidth=5)
+        plt.plot(time[0],abundance_not_local, linewidth=5)
+
+        a_t.append(abundance[-1])
+        a_l.append(abundance_local[-1])
+        a_g.append(abundance_not_local[-1])
+
         abundance.clear()
+        abundance_local.clear()
+        abundance_not_local.clear()
 
     plt.show()
 
+print("total: ", a_t)
+print("total L: ", a_l)
+print("total G: ", a_g)
 os.mkdir(data_directory)
 # inputs used : sys.argv + date + other metadata
 # temperatures, biotic_force, w, u, rAxR, time, rE, rF, rP, rE, rEt
