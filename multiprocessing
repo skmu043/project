@@ -10,8 +10,7 @@ print(epoch_time)
 def run_it(phi):
     print(phi)
     time.sleep(5)
-    
-    
+
 if __name__ == '__main__':
     
     jobs=[]
