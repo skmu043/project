@@ -281,17 +281,49 @@ if __name__ == '__main__':
             ######################################### END RE INIT #####################################################################
 
 
-    #print("E: ",E_prime)
-    #print("F: ",F_prime)
-    #print("alpha: ",alpha_prime)
-    #print("rF: ",rF_prime)
-    #print("rE: ",rE_prime)
-    #print("rAx: ",rAx_prime)
-    #print("rAxR: ",rAxR_prime)
-    #print("time: ",time_prime)
-    #print("biotic_force: ",biotic_force_prime)
-    #print("temperature: ",temperatures_prime)
 
+    plt.figure(figsize=(20,10))
+    plt.title('Abundance over Time', fontsize=20)
+    plt.xlabel('Time', fontsize=20)
+    plt.ylabel('Abundance', fontsize=20)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+
+
+    time = time_prime
+
+    if(len(time[0]) > len(rAx_prime[0][0])):
+        time[0].pop(0)
+
+    for row in rAx_prime:
+        for species in row:
+            plt.plot(time[0],species)
+
+    abundance           = []
+    abundance_local     = []
+    abundance_not_local = []
+
+
+    for row in rAx_prime:
+        for _ in range(len(time[0])):
+            sum_abundance           = 0
+            sum_abundance_local     = 0
+            sum_abundance_not_local = 0
+
+            for species_block in row: #(K species)
+                sum_abundance += species[_]
+                if( _ in local_population_index):
+                    sum_abundance_local += species[_]
+                else:
+                    sum_abundance_not_local += species[_]
+            abundance.append(sum_abundance)
+            abundance_local.append(sum_abundance_local)
+            abundance_not_local.append(sum_abundance_not_local)
+
+        plt.plot(time[0],abundance, linewidth=5)
+        abundance.clear()
+
+    plt.show()
 
 os.mkdir(data_directory)
 # inputs used : sys.argv + date + other metadata
