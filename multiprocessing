@@ -14,10 +14,17 @@ def run_it(phi):
     
 if __name__ == '__main__':
     
+    jobs=[]
+    
     for phi in np.arange(0.1, 1, 0.1):
         print(phi)
-        for _ in range(100):
+        for _ in range(2):
             print(_, phi)
-            p = Process(target=run_it)
-            p.start()
-            p.join()
+            jobs.append(Process(target=run_it,args=(phi,)))
+
+
+    for job in jobs:
+        job.start()
+
+    for job in jobs:
+        job.join()
