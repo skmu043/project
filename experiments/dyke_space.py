@@ -304,11 +304,11 @@ try :
     s['biotic_force']   = biotic_force
     s['w']              = w
     s['u']              = u
-    s['rAx_prime']      = rAx_prime
-    s['rAxR_prime']     = rAxR_prime
+    #s['rAx_prime']      = rAx_prime
+    #s['rAxR_prime']     = rAxR_prime
     s['time_prime']     = time_prime
-    s['rE_prime']       = rE_prime
-    s['rF_prime']       = rF_prime
+    #s['rE_prime']       = rE_prime
+    #s['rF_prime']       = rF_prime
 
     s['K']              = K
     s['R']              = R
