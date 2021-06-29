@@ -12,7 +12,7 @@ def print_time():
     print(current_time)
 
 phi = 0
-SAMPLE = 1
+SAMPLE = 10
 
 def run_it(phi):
     #"Args: K, R, P, E, start, end, step, ENumber, Niche, PSR, Local Population Size"
@@ -27,39 +27,12 @@ if __name__ == '__main__':
     pool = Pool(processes=8)
     #result = pool.apply_async(f, [10])
     #print result.get(timeout=1)
-    print_time()
-    pool.map(run_it, [phi for x in range(SAMPLE)])
-    print("Completed : " + str(phi))
-    print_time()
-    phi = 20
-    pool.map(run_it, [phi for x in range(SAMPLE)])
-    print("Completed : " + str(phi))
-    print_time()
-    phi = 30
-    pool.map(run_it, [phi for x in range(SAMPLE)])
-    print("Completed : " + str(phi))
-    print_time()
-    phi = 40
-    pool.map(run_it, [phi for x in range(SAMPLE)])
-    print("Completed : " + str(phi))
-    print_time()
-    phi = 50
-    pool.map(run_it, [phi for x in range(SAMPLE)])
-    print("Completed : " + str(phi))
-    print_time()
-    phi = 60
-    pool.map(run_it, [phi for x in range(SAMPLE)])
-    print("Completed : " + str(phi))
-    print_time()
-    phi = 70
-    pool.map(run_it, [phi for x in range(SAMPLE)])
-    print("Completed : " + str(phi))
-    print_time()
-    phi = 80
-    pool.map(run_it, [phi for x in range(SAMPLE)])
-    print("Completed : " + str(phi))
-    print_time()
-    phi = 90
+
+
+    for phi in np.arange(10, 100, 10):
+        print_time()
+        pool.map(run_it, [phi for x in range(SAMPLE)])
+        print("Completed : " + str(phi))
 
     #for phi in np.arange(10, 100, 10):
         #print(phi)
