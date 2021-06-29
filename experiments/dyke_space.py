@@ -8,9 +8,9 @@ exp_name = "dyke_space"
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + exp_name
 
 # Arguments Check
-if(len(sys.argv)!=11):
-    print("Args: K, R, P, E, start, end, step, EN, OE, LP_Z")
-    print("e.g K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN=2, OE=5, LP_Z = (10 - 100)")
+if(len(sys.argv)!=12):
+    print("Args: K, R, P, E, start, end, step, EN, OE, LP_Z, RUN_ID")
+    print("e.g K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN=2, OE=5, LP_Z = (10 - 100), RUN_ID : epoch")
     print("exit")
     sys.exit()
 
@@ -33,7 +33,6 @@ OEn = int(sys.argv[9])
 OE = [OEn for _ in range(K)]
 
 local_population_ = int(sys.argv[10])
-
 # Local Population #############################################
 local_population_index = []
 local_population_size =  int(local_population_/100 * K)
@@ -41,6 +40,10 @@ for x in range(local_population_size):
     local_population_index.append(random.randint(0,K-1))
     #print("Local Population Index : ", local_population_index)
 # Local Population #############################################
+
+
+RUN_ID = int(sys.argv[11])
+
 
 #populates affects values
 
@@ -51,7 +54,7 @@ for x in range(local_population_size):
 w = [[] for _ in range(N)]
 for wi in range(N):
     w[wi] = [random.uniform(-1,1) for _ in range(K)]
-print(w)
+#print(w)
 # Duplicate Check
 for wi in range(N):
     while (int(len(w[wi])) != int(len(set(w[wi])))):
@@ -301,7 +304,7 @@ if __name__ == '__main__':
         for species in row:
             plt.plot(time[0],species)
 
-    plt.show()
+    #plt.show()
 
     plt.figure(figsize=(20,10))
     plt.title('Abundance over Time', fontsize=20)
@@ -351,17 +354,17 @@ if __name__ == '__main__':
         abundance_local.clear()
         abundance_not_local.clear()
 
-    plt.show()
+    #plt.show()
 
-print("total: ", a_t)
-print("total L: ", a_l)
-print("total G: ", a_g)
-print("simulation: ", simulation_run)
+#print("total: ", a_t)
+#print("total L: ", a_l)
+#print("total G: ", a_g)
+#print("simulation: ", simulation_run)
 
 os.mkdir(data_directory)
 # inputs used : sys.argv + date + other metadata
 # temperatures, biotic_force, w, u, rAxR, time, rE, rF, rP, rE, rEt
-print(data_directory)
+#print(data_directory)
 s = shelve.open(data_directory + "/" + exp_name + ".data")
 try :
     s['sys.argv']       = sys.argv
@@ -388,6 +391,7 @@ try :
     s['a_l']            = a_l
     s['a_g']            = a_g
     s['simulation_run'] = simulation_run
+    s['RUN_ID']         = RUN_ID
 
 finally:
     s.close()
