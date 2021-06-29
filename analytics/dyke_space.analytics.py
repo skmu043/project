@@ -208,12 +208,7 @@ if(select <= len(os.listdir(data_dr))-1):
         biotic_force    = s['biotic_force']
         w               = s['w']
         u               = s['u']
-        rAxR_prime      = s['rAxR_prime']
         time_prime      = s['time_prime']
-        rE_prime        = s['rE_prime']
-        rF_prime        = s['rF_prime']
-        rAx_prime       = s['rAx_prime']
-
         K               = s['K']
         R               = s['R']
         E               = s['E']
@@ -222,6 +217,16 @@ if(select <= len(os.listdir(data_dr))-1):
         step            = s['step']
         N               = s['N']
         OEn             = s['OEn']
+        a_t             = s['a_t']
+        a_l             = s['a_l']
+        a_g             = s['a_g']
+        simulation_run  = s['simulation_run']
+        RUN_ID          = s['RUN_ID']
+
+        #s['rAx_prime']      = rAx_prime
+        #s['rAxR_prime']     = rAxR_prime
+        #s['rE_prime']       = rE_prime
+        #s['rF_prime']       = rF_prime
 
 
         while True:

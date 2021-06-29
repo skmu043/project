@@ -24,7 +24,6 @@ N = int(sys.argv[8])          #Number of Environment Variables
 #E       = [random.uniform(0,100) for _ in range(N)]
 E = [0,0]
 
-
 F       = [0 for _ in range(N)]
 
 ROUND = 10
@@ -215,9 +214,9 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(1,80,70):
-        for El_temp in np.arange(1,80,70):
-            print("Init : ", Eg_temp, El_temp)
+    for Eg_temp in np.arange(1,91,30):
+        for El_temp in np.arange(1,91,30):
+            #print("Init : ", Eg_temp, El_temp)
             simulation_run.append((Eg_temp,El_temp))
             time.append(0)
             # xtime should should start from one timestep + 0
@@ -387,11 +386,12 @@ try :
     s['N']              = N
     s['OEn']            = OEn
 
-    s['a_t']            = a_t
-    s['a_l']            = a_l
-    s['a_g']            = a_g
-    s['simulation_run'] = simulation_run
-    s['RUN_ID']         = RUN_ID
+    s['a_t']                = a_t
+    s['a_l']                = a_l
+    s['a_g']                = a_g
+    s['simulation_run']     = simulation_run
+    s['RUN_ID']             = RUN_ID
+    s['local_population_']  = local_population_
 
 finally:
     s.close()

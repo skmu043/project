@@ -5,24 +5,61 @@ import numpy as np
 
 epoch_time = int(time.time())
 
-#print(epoch_time)
+#print(epoch_time)'
+def print_time():
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+    print(current_time)
 
-def run_it(one):
+phi = 0
+SAMPLE = 1
+
+def run_it(phi):
     #"Args: K, R, P, E, start, end, step, ENumber, Niche, PSR, Local Population Size"
     #"e.g                                K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN = 2, OE = 5, LP_Z = (10 - 100), RUN_ID=epoch"
-    phi = 10
+    print("Running with PHI : ", phi)
     os.system("python3.9 " + os.getcwd() + "/experiments/dyke_space.py 100 100 0 10 0 200 0.1 2 5 " + str(phi) + " " + str(epoch_time))
 
 if __name__ == '__main__':
 
     jobs=[]
-
-    pool = Pool(processes=4)
+    phi = 10
+    pool = Pool(processes=8)
     #result = pool.apply_async(f, [10])
     #print result.get(timeout=1)
-    pool.map(run_it, range(100))
-
-
+    print_time()
+    pool.map(run_it, [phi for x in range(SAMPLE)])
+    print("Completed : " + str(phi))
+    print_time()
+    phi = 20
+    pool.map(run_it, [phi for x in range(SAMPLE)])
+    print("Completed : " + str(phi))
+    print_time()
+    phi = 30
+    pool.map(run_it, [phi for x in range(SAMPLE)])
+    print("Completed : " + str(phi))
+    print_time()
+    phi = 40
+    pool.map(run_it, [phi for x in range(SAMPLE)])
+    print("Completed : " + str(phi))
+    print_time()
+    phi = 50
+    pool.map(run_it, [phi for x in range(SAMPLE)])
+    print("Completed : " + str(phi))
+    print_time()
+    phi = 60
+    pool.map(run_it, [phi for x in range(SAMPLE)])
+    print("Completed : " + str(phi))
+    print_time()
+    phi = 70
+    pool.map(run_it, [phi for x in range(SAMPLE)])
+    print("Completed : " + str(phi))
+    print_time()
+    phi = 80
+    pool.map(run_it, [phi for x in range(SAMPLE)])
+    print("Completed : " + str(phi))
+    print_time()
+    phi = 90
 
     #for phi in np.arange(10, 100, 10):
         #print(phi)
