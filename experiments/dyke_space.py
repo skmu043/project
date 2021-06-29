@@ -8,9 +8,9 @@ exp_name = "dyke_space"
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + exp_name
 
 # Arguments Check
-if(len(sys.argv)!=10):
-    print("Args: K, R, P, E, start, end, step, EN, OE")
-    print("e.g K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN=2, OE=5")
+if(len(sys.argv)!=11):
+    print("Args: K, R, P, E, start, end, step, EN, OE, LP_Z")
+    print("e.g K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN=2, OE=5, LP_Z = (10 - 100)")
     print("exit")
     sys.exit()
 
@@ -32,10 +32,11 @@ ROUND = 10
 OEn = int(sys.argv[9])
 OE = [OEn for _ in range(K)]
 
+local_population_ = int(sys.argv[10])
 
 # Local Population #############################################
 local_population_index = []
-local_population_size =  int(10/100 * K)
+local_population_size =  int(local_population_/100 * K)
 for x in range(local_population_size):
     local_population_index.append(random.randint(0,K-1))
     #print("Local Population Index : ", local_population_index)
@@ -204,6 +205,7 @@ if __name__ == '__main__':
     time_prime          =[]
     biotic_force_prime  =[]
     temperatures_prime  =[]
+    simulation_run      =[]
 
 
     # First Set of calculations have occurred during initilization so appending time 0
@@ -213,7 +215,7 @@ if __name__ == '__main__':
     for Eg_temp in np.arange(1,80,70):
         for El_temp in np.arange(1,80,70):
             print("Init : ", Eg_temp, El_temp)
-
+            simulation_run.append((Eg_temp,El_temp))
             time.append(0)
             # xtime should should start from one timestep + 0
             post_init_start = start + step
@@ -354,6 +356,8 @@ if __name__ == '__main__':
 print("total: ", a_t)
 print("total L: ", a_l)
 print("total G: ", a_g)
+print("simulation: ", simulation_run)
+
 os.mkdir(data_directory)
 # inputs used : sys.argv + date + other metadata
 # temperatures, biotic_force, w, u, rAxR, time, rE, rF, rP, rE, rEt
@@ -379,6 +383,11 @@ try :
     s['step']           = step
     s['N']              = N
     s['OEn']            = OEn
+
+    s['a_t']            = a_t
+    s['a_l']            = a_l
+    s['a_g']            = a_g
+    s['simulation_run'] = simulation_run
 
 finally:
     s.close()
