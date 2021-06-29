@@ -214,8 +214,8 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(1,91,30):
-        for El_temp in np.arange(1,91,30):
+    for Eg_temp in np.arange(1,100,30):
+        for El_temp in np.arange(1,100,30):
             #print("Init : ", Eg_temp, El_temp)
             simulation_run.append((Eg_temp,El_temp))
             time.append(0)

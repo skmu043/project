@@ -92,8 +92,6 @@ for phi in uniq:
         idx +=1
 
 
-
-
 plt.figure(figsize=(20,10))
 plt.title('Abundance Values at different PHI Levels', fontsize=20)
 plt.xlabel('PHI', fontsize=20)
