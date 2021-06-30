@@ -367,22 +367,22 @@ os.mkdir(data_directory)
 s = shelve.open(data_directory + "/" + exp_name + ".data")
 try :
     s['sys.argv']       = sys.argv
-    s['temperatures']   = temperatures
-    s['biotic_force']   = biotic_force
+    #s['temperatures']   = temperatures
+    #s['biotic_force']   = biotic_force
     s['w']              = w
     s['u']              = u
     #s['rAx_prime']      = rAx_prime
     #s['rAxR_prime']     = rAxR_prime
-    s['time_prime']     = time_prime
+    #s['time_prime']     = time_prime
     #s['rE_prime']       = rE_prime
     #s['rF_prime']       = rF_prime
 
     s['K']              = K
     s['R']              = R
     s['E']              = E
-    s['start']          = start
-    s['end']            = end
-    s['step']           = step
+    #s['start']          = start
+    #s['end']            = end
+    #s['step']           = step
     s['N']              = N
     s['OEn']            = OEn
 
