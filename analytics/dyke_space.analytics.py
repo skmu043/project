@@ -185,6 +185,8 @@ def plot_stable():
     plt.show()
 
 
+
+
 data_dr = os.getcwd() + '/data'
 data_archives = os.listdir(data_dr)
 
@@ -203,30 +205,20 @@ if(select <= len(os.listdir(data_dr))-1):
     print(s)
     try :
 
-        args            = s['sys.argv']
-        temperatures    = s['temperatures']
-        biotic_force    = s['biotic_force']
-        w               = s['w']
-        u               = s['u']
-        time_prime      = s['time_prime']
-        K               = s['K']
-        R               = s['R']
-        E               = s['E']
-        start           = s['start']
-        end             = s['end']
-        step            = s['step']
-        N               = s['N']
-        OEn             = s['OEn']
-        a_t             = s['a_t']
-        a_l             = s['a_l']
-        a_g             = s['a_g']
-        simulation_run  = s['simulation_run']
-        RUN_ID          = s['RUN_ID']
-
-        #s['rAx_prime']      = rAx_prime
-        #s['rAxR_prime']     = rAxR_prime
-        #s['rE_prime']       = rE_prime
-        #s['rF_prime']       = rF_prime
+        args                = s['sys.argv']
+        w                   = s['w']
+        u                   = s['u']
+        K                   = s['K']
+        R                   = s['R']
+        E                   = s['E']
+        N                   = s['N']
+        OEn                 = s['OEn']
+        a_t                 = s['a_t']
+        a_l                 = s['a_l']
+        a_g                 = s['a_g']
+        simulation_run      = s['simulation_run']
+        RUN_ID              = s['RUN_ID']
+        local_population_   = s['local_population_']
 
 
         while True:
@@ -256,10 +248,10 @@ if(select <= len(os.listdir(data_dr))-1):
                 plot_efp()             #plot temperature, biotic force over time
             elif select == 7:
                 plot_stable()        # [E1 values over time >>>>>]
-                                      # [E2 values over time >>>>>]
-                                      #.
-                                      #.
-                                      # [En values over time >>>>>]
+                # [E2 values over time >>>>>]
+                #.
+                #.
+                # [En values over time >>>>>]
             else:
                 print("Invalid Selection")
                 break
@@ -268,3 +260,5 @@ if(select <= len(os.listdir(data_dr))-1):
 
 else:
     print("Invalid Selection")
+
+

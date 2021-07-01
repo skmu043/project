@@ -20,7 +20,7 @@ def run_it(phi):
 
 if __name__ == '__main__':
 
-    pool = Pool(processes=10)
+    pool = Pool(processes=8)
 
     for phi in np.arange(10, 91, 10):
         print_time()

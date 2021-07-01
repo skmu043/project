@@ -4,14 +4,8 @@ import sys
 import numpy as np
 print(sys.version)
 import math, random, time
+import statistics
 
-
-plt.figure(figsize=(20,10))
-plt.title('Abundance Values at different PHI Levels', fontsize=20)
-plt.xlabel('PHI', fontsize=20)
-plt.ylabel('Total Abundance', fontsize=20)
-plt.xticks(fontsize=20)
-plt.yticks(fontsize=20)
 
 P = []
 T = []
@@ -22,7 +16,7 @@ data_dr = os.getcwd() + '/data'
 data_archives = os.listdir(data_dr)
 
 for si in data_archives:
-    print(data_archives.index(si) , si)
+    #print(data_archives.index(si) , si)
     #print(data_dr + "/" + str(si) + "/dyke_space.data")
     s = shelve.open(data_dr + "/" + str(si) + "/dyke_space.data")
     try :
@@ -74,12 +68,17 @@ for x in P:
         uniq.append(x)
 
 uniq.sort()
-print(uniq)
+
 
 Ps = []
 Ts = []
 Ls = []
 Gs = []
+
+
+#plt.errorbar(x, y, e, linestyle='None', marker='^')
+
+#plt.show()
 
 for phi in uniq:
     idx = 0
@@ -91,6 +90,24 @@ for phi in uniq:
             Gs.append(G[idx])
         idx +=1
 
+x = np.array([])
+y = np.array([])
+e = np.array([])
+
+
+for phi in uniq:
+    nums = []
+    idx=0
+    for entry in Ps:
+        if phi == entry:
+            for each_num in Ts[idx]:
+                nums.append(each_num)
+        idx +=1
+
+    x = np.append(x, phi)
+    y = np.append(y, statistics.mean(nums))
+    e = np.append(e, statistics.stdev(nums))
+
 
 plt.figure(figsize=(20,10))
 plt.title('Abundance Values at different PHI Levels', fontsize=20)
@@ -98,7 +115,9 @@ plt.xlabel('PHI', fontsize=20)
 plt.ylabel('Total Abundance', fontsize=20)
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
-plt.plot(Ps, Ts, '.' , label='A', linewidth=4)
+plt.errorbar(x, y, e, linestyle='None', marker='^', elinewidth=7, capsize=8, capthick=7)
+plt.plot(x,y)
+plt.plot(Ps, Ts, '.' , label='A', linewidth=1)
 plt.show()
 
 plt.figure(figsize=(20,10))
@@ -108,7 +127,7 @@ plt.ylabel('Total Abundance', fontsize=20)
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
 plt.plot(Ps, Ls, '.' , label='L', linewidth=4)
-plt.show()
+#plt.show()
 
 plt.figure(figsize=(20,10))
 plt.title('Global Abundance Values at different PHI Levels', fontsize=20)
@@ -117,4 +136,5 @@ plt.ylabel('Total Abundance', fontsize=20)
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
 plt.plot(Ps, Gs, '.' , label='G', linewidth=4)
-plt.show()
+#plt.show()
+
