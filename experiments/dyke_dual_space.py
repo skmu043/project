@@ -8,9 +8,9 @@ exp_name = "dyke_space"
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + exp_name
 
 # Arguments Check
-if(len(sys.argv)!=12):
+if(len(sys.argv)!=13):
     print("Args: K, R, P, E, start, end, step, EN, OE, LP_Z, RUN_ID")
-    print("e.g K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN=2, OE=5, LP_Z = (10 - 100), RUN_ID : epoch")
+    print("e.g K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN=3, OE=5, LP_1_size, LP_2_size , RUN_ID : epoch")
     print("exit")
     sys.exit()
 
@@ -31,7 +31,9 @@ ROUND = 10
 OEn = int(sys.argv[9])
 OE = [OEn for _ in range(K)]
 
-local_population_ = int(sys.argv[10])
+local_population_1 = int(sys.argv[10])
+local_population_2 = int(sys.argv[11])
+
 # Local Population #############################################
 local_population_index = []
 local_population_size =  int(local_population_/100 * K)
@@ -41,7 +43,7 @@ for x in range(local_population_size):
 # Local Population #############################################
 
 
-RUN_ID = int(sys.argv[11])
+RUN_ID = int(sys.argv[12])
 
 
 #populates affects values
