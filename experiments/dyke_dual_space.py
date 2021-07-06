@@ -8,7 +8,9 @@ exp_name = "dyke_space"
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + exp_name
 
 # Arguments Check
+
 if(len(sys.argv)!=13):
+    print(sys.argv)
     print("Args: K, R, P, E, start, end, step, EN, OE, LP_Z, RUN_ID")
     print("e.g K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN=3, OE=5, LP_1_size, LP_2_size , RUN_ID : epoch")
     print("exit")
@@ -31,16 +33,32 @@ ROUND = 10
 OEn = int(sys.argv[9])
 OE = [OEn for _ in range(K)]
 
-local_population_1 = int(sys.argv[10])
-local_population_2 = int(sys.argv[11])
+local_population_1_size = int(sys.argv[10])
+local_population_2_size = int(sys.argv[11])
 
-# Local Population #############################################
-local_population_index = []
-local_population_size =  int(local_population_/100 * K)
-for x in range(local_population_size):
-    local_population_index.append(random.randint(0,K-1))
-    #print("Local Population Index : ", local_population_index)
-# Local Population #############################################
+# Local Population 1 #############################################
+local_population_1_index = []
+local_population_2_index = []
+
+for _ in random.sample(range(K-1), local_population_1_size):
+    local_population_1_index.append(_)
+# Local Population 1 #############################################
+# Local Population 2 #############################################
+for _ in range(K):
+    if(_ not in local_population_1_index):
+        local_population_2_index.append(_)
+# Local Population 2 #############################################
+print("RandomSample")
+print(local_population_1_size)
+print(local_population_2_size)
+print("LP1: ",local_population_1_index, len(local_population_1_index))
+print("LP2: ",local_population_2_index, len(local_population_2_index))
+
+
+
+# Local Population 2 #############################################
+
+
 
 
 RUN_ID = int(sys.argv[12])

@@ -16,7 +16,7 @@ def print_time():
     current_time = time.strftime("%H:%M:%S", t)
     print(current_time)
 
-SAMPLE = 100
+SAMPLE = 1
 
 K = 100
 
@@ -27,7 +27,7 @@ def run_it(LP_Zx):
 
     print("Running : ", LP_Zx)
 
-    #os.system("python3.9 " + os.getcwd() + "/experiments/dyke_space.py "+ str(K) +" 100 0 10 0 200 0.1 3 5 " + str(LP1_size) + " " + str(LP2_size) + " " + str(epoch_time))
+    os.system("python3.9 " + os.getcwd() + "/experiments/dyke_dual_space.py "+ str(K) +" 100 0 10 0 200 0.1 3 5 " + str(LP1_size) + " " + str(LP2_size) + " " + str(epoch_time))
 
 if __name__ == '__main__':
 
@@ -35,16 +35,16 @@ if __name__ == '__main__':
 
     LP_Zx = []
 
-    for LP1_size in np.arange(10, 91, 10):
-        LP2_size = (K - LP1_size)
-        for sn in range(SAMPLE):
-            LP_Zx.append((LP1_size, LP2_size))
+    #for LP1_size in np.arange(10, 91, 10):
+    #    LP2_size = (K - LP1_size)
+    #    for sn in range(SAMPLE):
+    #        LP_Zx.append((LP1_size, LP2_size))
             #print_time()
             #print(LP1_size, LP2_size)
 
-    pool.map(run_it, LP_Zx)
+    #pool.map(run_it, LP_Zx)
 
 
-
+os.system("python3.9 " + os.getcwd() + "/experiments/dyke_dual_space.py "+ str(K) +" 100 0 10 0 200 0.1 3 5 50 50 " + str(epoch_time))
 
 
