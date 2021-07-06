@@ -48,11 +48,11 @@ for _ in range(K):
     if(_ not in local_population_1_index):
         local_population_2_index.append(_)
 # Local Population 2 #############################################
-print("RandomSample")
-print(local_population_1_size)
-print(local_population_2_size)
-print("LP1: ",local_population_1_index, len(local_population_1_index))
-print("LP2: ",local_population_2_index, len(local_population_2_index))
+#print("RandomSample")
+#print(local_population_1_size)
+#print(local_population_2_size)
+#print("LP1: ",local_population_1_index, len(local_population_1_index))
+#print("LP2: ",local_population_2_index, len(local_population_2_index))
 
 
 
@@ -103,13 +103,12 @@ alpha = [[] for _ in range(K)]
 for _ in range(K):
     al = []
     for ai in range(N):
-        print("Index: ", _, ai)
         al.append(round((math.e) ** ((-1) * (((abs((E[ai])-u[ai][_])) ** 2) / (2*(OE[_]**2)))),ROUND))
 
         new_alpha = 0
         if(_ in local_population_1_index):
             new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
-        elif(_ in local_population_1_index):
+        elif(_ in local_population_2_index):
             new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
         else:
             new_alpha = al[0]       # Else take the first one as Eg
@@ -159,7 +158,7 @@ def update(step):
 
         if(_ in local_population_1_index):
             new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
-        elif(_ in local_population_1_index):
+        elif(_ in local_population_2_index):
             new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
         else:
             new_alpha = al[0]       # Else take the first one as Eg
@@ -195,8 +194,6 @@ def update(step):
     for _ in range(K):
         if( _ in local_population_1_index):
             fSUM[1] = fSUM[1] + (alpha[_][-1] * w[1][_])
-        if( _ in local_population_2_index):
-            fSUM[1] = fSUM[1] + (alpha[_][-1] * w[1][_])
 
     F[1] = fSUM[1] * 10
     newE = E[1] + (((0 + F[1]) * step))
@@ -204,7 +201,20 @@ def update(step):
     rF[1].append(F[1])
     rE[1].append(E[1])
 
-    # ============ END EL ==============
+    # ============ END EL1 ==============
+
+    for _ in range(K):
+        if( _ in local_population_2_index):
+            fSUM[2] = fSUM[2] + (alpha[_][-1] * w[2][_])
+
+    F[2] = fSUM[2] * 10
+    newE = E[2] + (((0 + F[2]) * step))
+    E[2] = E[2] + ((newE-E[2]) * temperature_time_scale)
+    rF[2].append(F[2])
+    rE[2].append(E[2])
+
+    # ============ END EL2 ==============
+
 
     #for _ in range(K):
     #    for ei in range(N):
@@ -237,75 +247,78 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(1,100,30):
-        for El_temp in np.arange(1,100,30):
-            #print("Init : ", Eg_temp, El_temp)
-            simulation_run.append((Eg_temp,El_temp))
-            time.append(0)
-            # xtime should should start from one timestep + 0
-            post_init_start = start + step
-            for xtime in np.arange (post_init_start, end, step):
-                update(step)
-                time.append(xtime)
+    for Eg_temp in np.arange(1,100,40):
+        for El_temp in np.arange(1,100,40):
+            for El_temp2 in np.arange(1,100,40):
+                print("Init : ", Eg_temp, El_temp, El_temp2)
+                simulation_run.append((Eg_temp,El_temp, El_temp2))
+                time.append(0)
+                # xtime should should start from one timestep + 0
+                post_init_start = start + step
+                for xtime in np.arange (post_init_start, end, step):
+                    update(step)
+                    time.append(xtime)
 
-            # Going forward - after each run is done
-            # Pack the data into separate data structures
-            # Zero out the in-use data structures for the run
-            # Re-initilize
-            # Run again
-            # e.g rE = [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]] >>>> rE_prime.append(rE) >>>> rE = [[] for _ in N] (the initilization bit)
-            # rE_prime = [[[1,2,3,4,5,6,7][2,4,6,7,8,9,0]], [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]], [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]]]
+                # Going forward - after each run is done
+                # Pack the data into separate data structures
+                # Zero out the in-use data structures for the run
+                # Re-initilize
+                # Run again
+                # e.g rE = [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]] >>>> rE_prime.append(rE) >>>> rE = [[] for _ in N] (the initilization bit)
+                # rE_prime = [[[1,2,3,4,5,6,7][2,4,6,7,8,9,0]], [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]], [[1,2,3,4,5,6,7][2,4,6,7,8,9,0]]]
 
-            E_prime.append([Eg_temp, El_temp])
-            F_prime.append(F)
-            alpha_prime.append(alpha)
-            rF_prime.append(rF)
-            rE_prime.append(rE)
-            rAx_prime.append(rAx)
-            rAxR_prime.append(rAxR)
-            time_prime.append(time)
-            biotic_force_prime.append(biotic_force)
-            temperatures_prime.append(temperatures)
+                E_prime.append([Eg_temp, El_temp, El_temp2])
+                F_prime.append(F)
+                alpha_prime.append(alpha)
+                rF_prime.append(rF)
+                rE_prime.append(rE)
+                rAx_prime.append(rAx)
+                rAxR_prime.append(rAxR)
+                time_prime.append(time)
+                biotic_force_prime.append(biotic_force)
+                temperatures_prime.append(temperatures)
 
-            ###########################################################################################################################
-            ###########################################################################################################################
-            ###########################################################################################################################
-            ######################################### RE INIT #########################################################################
-            E = [Eg_temp,El_temp]
-            F       = [0 for _ in range(N)]
-            alpha = [[] for _ in range(K)]
+                ###########################################################################################################################
+                ###########################################################################################################################
+                ###########################################################################################################################
+                ######################################### RE INIT #########################################################################
+                E = [Eg_temp,El_temp, El_temp2]
+                F       = [0 for _ in range(N)]
+                alpha = [[] for _ in range(K)]
 
-            # Fix applied - correctly generating alphas for global and local
-            for _ in range(K):
-                al = []
-                for ai in range(N):
-                    al.append(round((math.e) ** ((-1) * (((abs((E[ai])-u[ai][_])) ** 2) / (2*(OE[_]**2)))),ROUND))
+                # Fix applied - correctly generating alphas for global and local
+                for _ in range(K):
+                    al = []
+                    for ai in range(N):
+                        al.append(round((math.e) ** ((-1) * (((abs((E[ai])-u[ai][_])) ** 2) / (2*(OE[_]**2)))),ROUND))
 
-                    new_alpha = 0
-                    if( _ in local_population_index):
-                        new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
-                    else:
-                        new_alpha = al[0]       # Else take the first one as Eg
+                        new_alpha = 0
+                        if( _ in local_population_1_index):
+                            new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
+                        if( _ in local_population_2_index):
+                            new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
+                        else:
+                            new_alpha = al[0]       # Else take the first one as Eg
 
-                    alpha[_].append(new_alpha)
-                    #print("alpha: ",alpha)
+                        alpha[_].append(new_alpha)
+                        #print("alpha: ",alpha)
 
-            rF = [[] for _ in range(N)]         #Biotic Force Values
-            rE = [[] for _ in range(N)]         #A blank list for each Environment Variable
+                rF = [[] for _ in range(N)]         #Biotic Force Values
+                rE = [[] for _ in range(N)]         #A blank list for each Environment Variable
 
-            for _ in range(N):
-                rE[_].append(E[_])                 #Input the Start Temperatures
+                for _ in range(N):
+                    rE[_].append(E[_])                 #Input the Start Temperatures
 
-            rAx = [[] for x in range(K)]
-            rAxR = [[] for x in range(K)]
-            time = []
-            biotic_force = [[] for _ in range(K)]
-            temperatures = []
+                rAx = [[] for x in range(K)]
+                rAxR = [[] for x in range(K)]
+                time = []
+                biotic_force = [[] for _ in range(K)]
+                temperatures = []
 
-            ###########################################################################################################################
-            ###########################################################################################################################
-            ###########################################################################################################################
-            ######################################### END RE INIT #####################################################################
+                ###########################################################################################################################
+                ###########################################################################################################################
+                ###########################################################################################################################
+                ######################################### END RE INIT #####################################################################
 
 
 
