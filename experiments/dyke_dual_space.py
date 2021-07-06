@@ -24,7 +24,7 @@ end = int(sys.argv[6])        #Time End
 step= float(sys.argv[7])      #Time Step
 N = int(sys.argv[8])          #Number of Environment Variables
 #E       = [random.uniform(0,100) for _ in range(N)]
-E = [0,0]
+E = [0,0,0]
 
 F       = [0 for _ in range(N)]
 
@@ -57,8 +57,6 @@ print("LP2: ",local_population_2_index, len(local_population_2_index))
 
 
 # Local Population 2 #############################################
-
-
 
 
 RUN_ID = int(sys.argv[12])
@@ -105,10 +103,13 @@ alpha = [[] for _ in range(K)]
 for _ in range(K):
     al = []
     for ai in range(N):
+        print("Index: ", _, ai)
         al.append(round((math.e) ** ((-1) * (((abs((E[ai])-u[ai][_])) ** 2) / (2*(OE[_]**2)))),ROUND))
 
         new_alpha = 0
-        if( _ in local_population_index):
+        if(_ in local_population_1_index):
+            new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
+        elif(_ in local_population_1_index):
             new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
         else:
             new_alpha = al[0]       # Else take the first one as Eg
@@ -155,14 +156,14 @@ def update(step):
             # Keep timescales between 1 and 0 [1 = system is at the newly calculated value instantaneously whereas values closer to zero indicate slower timescales]
             # Values outside 1 and 0 will cause errors as rates would go outside model bounds
 
-        # al = [0.5,0.5] (each species has its abundance calculated for E1 and E2 based on individual u values)
-        new_alpha = 0
-        if( _ in local_population_index):
+
+        if(_ in local_population_1_index):
+            new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
+        elif(_ in local_population_1_index):
             new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
         else:
             new_alpha = al[0]       # Else take the first one as Eg
 
-        # For each species : If Species
 
         newAlpha = alpha[_][-1] + ((new_alpha - alpha[_][-1]) * step)
         alpha[_].append(alpha[_][-1] + ((newAlpha - alpha[_][-1]) * alpha_time_scale))
@@ -192,7 +193,9 @@ def update(step):
     # ============ END EG ==============
 
     for _ in range(K):
-        if( _ in local_population_index):
+        if( _ in local_population_1_index):
+            fSUM[1] = fSUM[1] + (alpha[_][-1] * w[1][_])
+        if( _ in local_population_2_index):
             fSUM[1] = fSUM[1] + (alpha[_][-1] * w[1][_])
 
     F[1] = fSUM[1] * 10
@@ -351,7 +354,7 @@ if __name__ == '__main__':
             num = 0
             for species_block in row: #(K species)
                 sum_abundance += species_block[_]
-                if(num in local_population_index):
+                if(num in local_population_1_index):
                     sum_abundance_local += species_block[num]
                 else:
                     sum_abundance_not_local += species_block[num]
@@ -411,7 +414,10 @@ try :
     s['a_g']                = a_g
     s['simulation_run']     = simulation_run
     s['RUN_ID']             = RUN_ID
-    s['local_population_']  = local_population_
+    s['local_population_1_size'] = local_population_1_size
+    s['local_population_2_size'] = local_population_2_size
+    s['local_population_1_index']  = local_population_1_index
+    s['local_population_2_index']  = local_population_2_index
 
 finally:
     s.close()
