@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-exp_name = "dyke_space"
+exp_name = "dyke_dual_space"
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + exp_name
 
 # Arguments Check
@@ -105,15 +105,15 @@ for _ in range(K):
     for ai in range(N):
         al.append(round((math.e) ** ((-1) * (((abs((E[ai])-u[ai][_])) ** 2) / (2*(OE[_]**2)))),ROUND))
 
-        new_alpha = 0
-        if(_ in local_population_1_index):
-            new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
-        elif(_ in local_population_2_index):
-            new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
-        else:
-            new_alpha = al[0]       # Else take the first one as Eg
+    new_alpha = 0
+    if(_ in local_population_1_index):
+        new_alpha = (al[0] * al[1]) # If local population (product of abundances) (both local and global affect the local one)
+    elif(_ in local_population_2_index):
+        new_alpha = (al[0] * al[2]) # If local population (product of abundances) (both local and global affect the local one)
+    else:
+        new_alpha = al[0]       # Else take the first one as Eg
 
-        alpha[_].append(new_alpha)
+    alpha[_].append(new_alpha)
         #print("alpha: ",alpha)
 
 rF = [[] for _ in range(N)]         #Biotic Force Values
@@ -157,9 +157,9 @@ def update(step):
 
 
         if(_ in local_population_1_index):
-            new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
+            new_alpha = (al[0] * al[1]) # If local population (product of abundances) (both local and global affect the local one)
         elif(_ in local_population_2_index):
-            new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
+            new_alpha = (al[0] * al[2]) # If local population (product of abundances) (both local and global affect the local one)
         else:
             new_alpha = al[0]       # Else take the first one as Eg
 
@@ -247,10 +247,10 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(1,100,40):
-        for El_temp in np.arange(1,100,40):
-            for El_temp2 in np.arange(1,100,40):
-                print("Init : ", Eg_temp, El_temp, El_temp2)
+    for Eg_temp in np.arange(1,100,30):
+        for El_temp in np.arange(1,100,30):
+            for El_temp2 in np.arange(1,100,30):
+                #print("Init : ", Eg_temp, El_temp, El_temp2)
                 simulation_run.append((Eg_temp,El_temp, El_temp2))
                 time.append(0)
                 # xtime should should start from one timestep + 0
@@ -292,15 +292,15 @@ if __name__ == '__main__':
                     for ai in range(N):
                         al.append(round((math.e) ** ((-1) * (((abs((E[ai])-u[ai][_])) ** 2) / (2*(OE[_]**2)))),ROUND))
 
-                        new_alpha = 0
-                        if( _ in local_population_1_index):
-                            new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
-                        if( _ in local_population_2_index):
-                            new_alpha = np.prod(al) # If local population (product of abundances) (both local and global affect the local one)
-                        else:
-                            new_alpha = al[0]       # Else take the first one as Eg
+                    new_alpha = 0
+                    if(_ in local_population_1_index):
+                        new_alpha = (al[0] * al[1]) # If local population (product of abundances) (both local and global affect the local one)
+                    elif(_ in local_population_2_index):
+                        new_alpha = (al[0] * al[2]) # If local population (product of abundances) (both local and global affect the local one)
+                    else:
+                        new_alpha = al[0]       # Else take the first one as Eg
 
-                        alpha[_].append(new_alpha)
+                    alpha[_].append(new_alpha)
                         #print("alpha: ",alpha)
 
                 rF = [[] for _ in range(N)]         #Biotic Force Values
@@ -350,43 +350,52 @@ if __name__ == '__main__':
 
 
     abundance           = []
-    abundance_local     = []
+    abundance_local_1     = []
+    abundance_local_2     = []
     abundance_not_local = []
 
     a_t = []
     a_l = []
     a_g = []
+    a_2 = []
 
 
     for row in rAx_prime:
         for _ in range(len(time[0])):
             sum_abundance           = 0
-            sum_abundance_local     = 0
+            sum_abundance_local_1     = 0
+            sum_abundance_local_2     = 0
             sum_abundance_not_local = 0
 
             num = 0
             for species_block in row: #(K species)
                 sum_abundance += species_block[_]
                 if(num in local_population_1_index):
-                    sum_abundance_local += species_block[num]
+                    sum_abundance_local_1 += species_block[num]
+                elif(num in local_population_2_index):
+                    sum_abundance_local_2 += species_block[num]
                 else:
                     sum_abundance_not_local += species_block[num]
 
                 num+=1
             abundance.append(sum_abundance)
-            abundance_local.append(sum_abundance_local)
+            abundance_local_1.append(sum_abundance_local_1)
+            abundance_local_2.append(sum_abundance_local_2)
             abundance_not_local.append(sum_abundance_not_local)
 
         plt.plot(time[0],abundance, linewidth=5)
-        plt.plot(time[0],abundance_local, linewidth=5)
+        plt.plot(time[0],abundance_local_1, linewidth=5)
+        plt.plot(time[0],abundance_local_2, linewidth=5)
         plt.plot(time[0],abundance_not_local, linewidth=5)
 
         a_t.append(abundance[-1])
-        a_l.append(abundance_local[-1])
+        a_l.append(abundance_local_1[-1])
+        a_2.append(abundance_local_2[-1])
         a_g.append(abundance_not_local[-1])
 
         abundance.clear()
-        abundance_local.clear()
+        abundance_local_1.clear()
+        abundance_local_2.clear()
         abundance_not_local.clear()
 
     #plt.show()
@@ -425,6 +434,7 @@ try :
     s['a_t']                = a_t
     s['a_l']                = a_l
     s['a_g']                = a_g
+    s['a_2']               = a_2
     s['simulation_run']     = simulation_run
     s['RUN_ID']             = RUN_ID
     s['local_population_1_size'] = local_population_1_size
