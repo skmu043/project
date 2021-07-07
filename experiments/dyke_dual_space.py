@@ -247,9 +247,9 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(1,100,30):
-        for El_temp in np.arange(1,100,30):
-            for El_temp2 in np.arange(1,100,30):
+    for Eg_temp in np.arange(1,100,50):
+        for El_temp in np.arange(1,100,50):
+            for El_temp2 in np.arange(1,100,50):
                 #print("Init : ", Eg_temp, El_temp, El_temp2)
                 simulation_run.append((Eg_temp,El_temp, El_temp2))
                 time.append(0)
@@ -339,6 +339,7 @@ if __name__ == '__main__':
         for species in row:
             plt.plot(time[0],species)
 
+    plt.savefig('aot_1.png')
     #plt.show()
 
     plt.figure(figsize=(20,10))
@@ -397,7 +398,7 @@ if __name__ == '__main__':
         abundance_local_1.clear()
         abundance_local_2.clear()
         abundance_not_local.clear()
-
+    plt.savefig('aot_2.png')
     #plt.show()
 
 #print("total: ", a_t)

@@ -16,7 +16,7 @@ def print_time():
     current_time = time.strftime("%H:%M:%S", t)
     print(current_time)
 
-SAMPLE = 1
+SAMPLE = 100
 
 K = 100
 
@@ -45,7 +45,5 @@ if __name__ == '__main__':
 
     pool.map(run_it, LP_Zx)
 
-os.system("python3.9 " + os.getcwd() + "/experiments/dyke_dual_space.py "+ str(K) +" 100 0 10 0 200 0.1 3 5 10 90 " + str(epoch_time))
-os.system("python3.9 " + os.getcwd() + "/experiments/dyke_dual_space.py "+ str(K) +" 100 0 10 0 200 0.1 3 5 20 80 " + str(epoch_time))
-os.system("python3.9 " + os.getcwd() + "/experiments/dyke_dual_space.py "+ str(K) +" 100 0 10 0 200 0.1 3 5 30 70 " + str(epoch_time))
+
 
