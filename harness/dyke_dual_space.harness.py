@@ -41,7 +41,7 @@ if __name__ == '__main__':
         for sn in range(SAMPLE):
             LP_Zx.append((LP1_size, LP2_size))
             #print_time()
-            print(LP1_size, LP2_size)
+            #print(LP1_size, LP2_size)
 
     pool.map(run_it, LP_Zx)
 
