@@ -248,9 +248,9 @@ if __name__ == '__main__':
             ###########################################################################################################################
             ###########################################################################################################################
             ######################################### RE INIT #########################################################################
-            E = [Eg_temp,El_temp]
+            E       = [Eg_temp,El_temp]
             F       = [0 for _ in range(N)]
-            alpha = [[] for _ in range(K)]
+            alpha   = [[] for _ in range(K)]
 
             # Fix applied - correctly generating alphas for global and local
             for _ in range(K):
@@ -299,6 +299,20 @@ if __name__ == '__main__':
     if(len(time[0]) > len(rAx_prime[0][0])):
         time[0].pop(0)
 
+    #   rAx => [[] .... [] .... [K]] - Abundance Values for Each Species over Time
+    #   rAx_prime [rAx_sample 1 run ... rAx_sample 2 run .... etc]
+
+    # each row in rAX_prime is the following:
+    #   rAx [
+    #           [1,2,3,4,5,6,7 ... ] => time units
+    #           [1,2,3,4,5,6,7 ... ] => time units
+    #            .
+    #            .
+    #            .
+    #          K arrays - each row above is a species -> its abundance values over time
+    #       ]
+
+
     for row in rAx_prime:
         for species in row:
             plt.plot(time[0],species)
@@ -313,20 +327,40 @@ if __name__ == '__main__':
     plt.yticks(fontsize=20)
 
 
-    abundance           = []
-    abundance_local     = []
-    abundance_not_local = []
+    abundance               = []
+    abundance_local         = []
+    abundance_not_local     = []
+
+    total_alive             = []
+    total_not_alive         = []
+    total_local_alive       = []
+    total_local_not_alive   = []
+    total_global_alive      = []
+    total_global_not_alive  = []
 
     a_t = []
     a_l = []
     a_g = []
 
+    t_a     = []
+    t_n_a   = []
+    t_l_a   = []
+    t_l_n_a = []
+    t_g_a   = []
+    t_g_n_a = []
 
     for row in rAx_prime:
         for _ in range(len(time[0])):
-            sum_abundance           = 0
-            sum_abundance_local     = 0
-            sum_abundance_not_local = 0
+            sum_abundance               = 0
+            sum_abundance_local         = 0
+            sum_abundance_not_local     = 0
+
+            sum_total_alive             = 0
+            sum_total_not_alive         = 0
+            sum_total_local_alive       = 0
+            sum_total_local_not_alive   = 0
+            sum_total_global_alive      = 0
+            sum_total_global_not_alive  = 0
 
             num = 0
             for species_block in row: #(K species)
@@ -336,22 +370,66 @@ if __name__ == '__main__':
                 else:
                     sum_abundance_not_local += species_block[num]
 
+                # If abundance is 0 then not alive, if abundance is greater than 0 then alive
+                if(species_block[_] > 0):
+                    sum_total_alive += 1
+                else:
+                    sum_total_not_alive += 1
+                # then alive non alive values for locals and globals
+                if(num in local_population_index):
+                    if(species_block[num] > 0):
+                        sum_total_local_alive += 1
+                    else:
+                        sum_total_local_not_alive += 1
+                # globals
+                else:
+                    if(species_block[num] > 0):
+                        sum_total_global_alive += 1
+                    else:
+                        sum_total_global_not_alive += 1
+
                 num+=1
             abundance.append(sum_abundance)
             abundance_local.append(sum_abundance_local)
             abundance_not_local.append(sum_abundance_not_local)
 
+            total_alive.append(sum_total_alive)
+            total_not_alive.append(sum_total_not_alive)
+            total_local_alive.append(sum_total_local_alive)
+            total_local_not_alive.append(sum_total_local_not_alive)
+            total_global_alive.append(sum_total_global_alive)
+            total_global_not_alive.append(sum_total_global_not_alive)
+
         plt.plot(time[0],abundance, linewidth=5)
         plt.plot(time[0],abundance_local, linewidth=5)
         plt.plot(time[0],abundance_not_local, linewidth=5)
 
+
+        # Append just the last value for each simulation run producing
+        # s1 s2 s3 s4 s5 s6 ...
+        # [5, 6, 7, 8, 9, 0]
         a_t.append(abundance[-1])
         a_l.append(abundance_local[-1])
         a_g.append(abundance_not_local[-1])
 
+        t_a.append(total_alive[-1])
+        t_n_a.append(total_not_alive[-1])
+        t_l_a.append(total_local_alive[-1])
+        t_l_n_a.append(total_local_not_alive[-1])
+        t_g_a.append(total_global_alive[-1])
+        t_g_n_a.append(total_global_not_alive[-1])
+
+
         abundance.clear()
         abundance_local.clear()
         abundance_not_local.clear()
+
+        total_alive.clear()
+        total_not_alive.clear()
+        total_local_alive.clear()
+        total_local_not_alive.clear()
+        total_global_alive.clear()
+        total_global_not_alive.clear()
 
     #plt.show()
 
@@ -389,6 +467,15 @@ try :
     s['a_t']                = a_t
     s['a_l']                = a_l
     s['a_g']                = a_g
+
+    s['t_a']                = t_a
+    s['t_n_a']              = t_n_a
+    s['t_l_a']              = t_l_a
+    s['t_l_n_a']            = t_l_n_a
+    s['t_g_a']              = t_g_a
+    s['t_g_n_a']            = t_g_n_a
+
+
     s['simulation_run']     = simulation_run
     s['RUN_ID']             = RUN_ID
     s['local_population_']  = local_population_

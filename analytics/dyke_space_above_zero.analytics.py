@@ -12,6 +12,13 @@ T = []
 L = []
 G = []
 
+T_A     = []
+T_N_A   = []
+T_L_A   = []
+T_L_N_A = []
+T_G_A   = []
+T_G_N_A = []
+
 data_dr = os.getcwd() + '/data'
 data_archives = os.listdir(data_dr)
 
@@ -35,12 +42,19 @@ for si in data_archives:
         a_t                 = s['a_t']
         a_l                 = s['a_l']
         a_g                 = s['a_g']
+
+        t_a                 = s['t_a']
+        t_n_a               = s['t_n_a']
+        t_l_a               = s['t_l_a']
+        t_l_n_a             = s['t_l_n_a']
+        t_g_a               = s['t_g_a']
+        t_g_n_a             = s['t_g_n_a']
         #simulation_run      = s['simulation_run']
         #RUN_ID              = s['RUN_ID']
         #local_population_   = s['local_population_']
 
 
-        #print("PHI: ", args[10])
+        print("PHI: ", args[10])
         #print(simulation_run)
         #print(RUN_ID)
 
@@ -48,6 +62,13 @@ for si in data_archives:
         T.append(a_t)
         L.append(a_l)
         G.append(a_g)
+
+        T_A.append(t_a)
+        T_N_A.append(t_n_a)
+        T_L_A.append(t_l_a)
+        T_L_N_A.append(t_l_n_a)
+        T_G_A.append(t_g_a)
+        T_G_N_A.append(t_g_n_a)
 
         #s['rAx_prime']      = rAx_prime
         #s['rAxR_prime']     = rAxR_prime
@@ -75,6 +96,13 @@ Gs = [] # Global Abundance
 ###############
 Zs = [] # Above Zero Abundance
 ###############
+T_As     = []
+T_N_As   = []
+T_L_As   = []
+T_L_N_As = []
+T_G_As   = []
+T_G_N_As = []
+##############
 
 #plt.errorbar(x, y, e, linestyle='None', marker='^')
 
@@ -88,6 +116,12 @@ for phi in uniq:
             Ts.append(T[idx])
             Ls.append(L[idx])
             Gs.append(G[idx])
+            T_As.append(T_A[idx])
+            T_N_As.append(T_N_A[idx])
+            T_L_As.append(T_L_A[idx])
+            T_L_N_As.append(T_L_N_A[idx])
+            T_G_As.append(T_G_A[idx])
+            T_G_N_As.append(T_G_N_A[idx])
         idx +=1
 
 # This Set Does Total Abundance Sum, Mean and Standard Deviation (Error Bar Plot)
@@ -120,20 +154,18 @@ for phi in uniq:
     for entry in Ps:
         if phi == entry:
             # extracts exact abundance value for Totals
+            #print(Ts[idx])
             for each_num in Ts[idx]:
                 nums.append(each_num)
             # extracts non zero abundance values for Totals
-            for each_num in Ts[idx]:
-                if(each_num > 0):
-                    znums.append(each_num)
+            for each_num in T_As[idx]:
+                znums.append(each_num)
             # extracts non zero abundance values for Locals
-            for each_num in Ls[idx]:
-                if(each_num > 0):
-                    zlnums.append(each_num)
+            for each_num in T_L_As[idx]:
+                zlnums.append(each_num)
             # extracts non zero abundance values for Globals
-            for each_num in Gs[idx]:
-                if(each_num > 0):
-                    zgnums.append(each_num)
+            for each_num in T_G_As[idx]:
+                zgnums.append(each_num)
 
         idx +=1
 
@@ -165,34 +197,34 @@ plt.plot(Ps, Ts, '.' , label='A', linewidth=1)
 plt.show()
 
 plt.figure(figsize=(20,10))
-plt.title('Above Zero Abundance Values at different PHI Levels', fontsize=20)
+plt.title('Number of Alive Species at different PHI Levels', fontsize=20)
 plt.xlabel('PHI', fontsize=20)
-plt.ylabel('Above Zero Total Abundance', fontsize=20)
+plt.ylabel('Above Zero Number Alive', fontsize=20)
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
 plt.errorbar(zx, zy, ze, linestyle='None', marker='^', elinewidth=7, capsize=8, capthick=7)
 plt.plot(zx,zy)
-plt.plot(Ps, Ts, '.' , label='A', linewidth=1)
+plt.plot(Ps, T_As, '.' , label='A', linewidth=1)
 plt.show()
 
 plt.figure(figsize=(20,10))
-plt.title('Above Zero Local Abundance Values at different PHI Levels', fontsize=20)
+plt.title('Number of Local Species Alive at different PHI Levels', fontsize=20)
 plt.xlabel('PHI', fontsize=20)
-plt.ylabel('Above Zero Local Abundance', fontsize=20)
+plt.ylabel('Above Zero Number Local Alive', fontsize=20)
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
 plt.errorbar(zlx, zly, zle, linestyle='None', marker='^', elinewidth=7, capsize=8, capthick=7)
 plt.plot(zlx,zly)
-plt.plot(Ps, Ts, '.' , label='A', linewidth=1)
+plt.plot(Ps, T_L_As, '.' , label='A', linewidth=1)
 plt.show()
 
 plt.figure(figsize=(20,10))
-plt.title('Above Zero Global Abundance Values at different PHI Levels', fontsize=20)
+plt.title('Number of Global Species Alive at different PHI Levels', fontsize=20)
 plt.xlabel('PHI', fontsize=20)
-plt.ylabel('Above Zero Global Abundance', fontsize=20)
+plt.ylabel('Above Zero Number Global Alive', fontsize=20)
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
 plt.errorbar(zgx, zgy, zge, linestyle='None', marker='^', elinewidth=7, capsize=8, capthick=7)
 plt.plot(zgx,zgy)
-plt.plot(Ps, Ts, '.' , label='A', linewidth=1)
+plt.plot(Ps, T_G_As, '.' , label='A', linewidth=1)
 plt.show()
