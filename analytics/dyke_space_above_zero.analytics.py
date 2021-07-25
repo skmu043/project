@@ -16,8 +16,6 @@ data_dr = os.getcwd() + '/data'
 data_archives = os.listdir(data_dr)
 
 for si in data_archives:
-    #print(data_archives.index(si) , si)
-    #print(data_dr + "/" + str(si) + "/dyke_space.data")
     s = shelve.open(data_dr + "/" + str(si) + "/dyke_space_above_zero.data")
     try :
         args                = s['sys.argv']
@@ -69,12 +67,14 @@ for x in P:
 
 uniq.sort()
 
-
-Ps = []
-Ts = []
-Ls = []
-Gs = []
-
+################
+Ps = [] # Phi
+Ts = [] # Total Abundance
+Ls = [] # Local Abundance
+Gs = [] # Global Abundance
+###############
+Zs = [] # Above Zero Abundance
+###############
 
 #plt.errorbar(x, y, e, linestyle='None', marker='^')
 
@@ -90,24 +90,68 @@ for phi in uniq:
             Gs.append(G[idx])
         idx +=1
 
+# This Set Does Total Abundance Sum, Mean and Standard Deviation (Error Bar Plot)
 x = np.array([])
 y = np.array([])
 e = np.array([])
 
+# This Set Does Abundance above Zero Totals Sum, Mean and Standard Deviation (Error Bar Plot)
+zx = np.array([])
+zy = np.array([])
+ze = np.array([])
+
+# This Set Does Abundance above Zero for Locals Sum, Mean and Standard Deviation (Error Bar Plot)
+zlx = np.array([])
+zly = np.array([])
+zle = np.array([])
+
+# This Set Does Abundance above Zero for Globals Sum, Mean and Standard Deviation (Error Bar Plot)
+zgx = np.array([])
+zgy = np.array([])
+zge = np.array([])
+
 
 for phi in uniq:
-    nums = []
+    nums    = []
+    znums   = []
+    zlnums  = []
+    zgnums  = []
     idx=0
     for entry in Ps:
         if phi == entry:
+            # extracts exact abundance value for Totals
             for each_num in Ts[idx]:
                 nums.append(each_num)
+            # extracts non zero abundance values for Totals
+            for each_num in Ts[idx]:
+                if(each_num > 0):
+                    znums.append(each_num)
+            # extracts non zero abundance values for Locals
+            for each_num in Ls[idx]:
+                if(each_num > 0):
+                    zlnums.append(each_num)
+            # extracts non zero abundance values for Globals
+            for each_num in Gs[idx]:
+                if(each_num > 0):
+                    zgnums.append(each_num)
+
         idx +=1
 
     x = np.append(x, phi)
     y = np.append(y, statistics.mean(nums))
     e = np.append(e, statistics.stdev(nums))
 
+    zx = np.append(zx, phi)
+    zy = np.append(zy, statistics.mean(znums))
+    ze = np.append(ze, statistics.stdev(znums))
+
+    zlx = np.append(zlx, phi)
+    zly = np.append(zly, statistics.mean(zlnums))
+    zle = np.append(zle, statistics.stdev(zlnums))
+
+    zgx = np.append(zgx, phi)
+    zgy = np.append(zgy, statistics.mean(zgnums))
+    zge = np.append(zge, statistics.stdev(zgnums))
 
 plt.figure(figsize=(20,10))
 plt.title('Abundance Values at different PHI Levels', fontsize=20)
@@ -121,20 +165,34 @@ plt.plot(Ps, Ts, '.' , label='A', linewidth=1)
 plt.show()
 
 plt.figure(figsize=(20,10))
-plt.title('Local Abundance Values at different PHI Levels', fontsize=20)
+plt.title('Above Zero Abundance Values at different PHI Levels', fontsize=20)
 plt.xlabel('PHI', fontsize=20)
-plt.ylabel('Total Abundance', fontsize=20)
+plt.ylabel('Above Zero Total Abundance', fontsize=20)
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
-plt.plot(Ps, Ls, '.' , label='L', linewidth=4)
-#plt.show()
+plt.errorbar(zx, zy, ze, linestyle='None', marker='^', elinewidth=7, capsize=8, capthick=7)
+plt.plot(zx,zy)
+plt.plot(Ps, Ts, '.' , label='A', linewidth=1)
+plt.show()
 
 plt.figure(figsize=(20,10))
-plt.title('Global Abundance Values at different PHI Levels', fontsize=20)
+plt.title('Above Zero Local Abundance Values at different PHI Levels', fontsize=20)
 plt.xlabel('PHI', fontsize=20)
-plt.ylabel('Total Abundance', fontsize=20)
+plt.ylabel('Above Zero Local Abundance', fontsize=20)
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
-plt.plot(Ps, Gs, '.' , label='G', linewidth=4)
-#plt.show()
+plt.errorbar(zlx, zly, zle, linestyle='None', marker='^', elinewidth=7, capsize=8, capthick=7)
+plt.plot(zlx,zly)
+plt.plot(Ps, Ts, '.' , label='A', linewidth=1)
+plt.show()
 
+plt.figure(figsize=(20,10))
+plt.title('Above Zero Global Abundance Values at different PHI Levels', fontsize=20)
+plt.xlabel('PHI', fontsize=20)
+plt.ylabel('Above Zero Global Abundance', fontsize=20)
+plt.xticks(fontsize=20)
+plt.yticks(fontsize=20)
+plt.errorbar(zgx, zgy, zge, linestyle='None', marker='^', elinewidth=7, capsize=8, capthick=7)
+plt.plot(zgx,zgy)
+plt.plot(Ps, Ts, '.' , label='A', linewidth=1)
+plt.show()

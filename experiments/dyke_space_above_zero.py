@@ -287,7 +287,7 @@ if __name__ == '__main__':
 
 
     plt.figure(figsize=(20,10))
-    plt.title('Abundance over Time', fontsize=20)
+    plt.title('Abundance over Time for Each Species', fontsize=20)
     plt.xlabel('Time', fontsize=20)
     plt.ylabel('Abundance', fontsize=20)
     plt.xticks(fontsize=20)
@@ -306,7 +306,7 @@ if __name__ == '__main__':
     #plt.show()
 
     plt.figure(figsize=(20,10))
-    plt.title('Abundance over Time', fontsize=20)
+    plt.title('Abundance over Time: ALL, Local, Global species', fontsize=20)
     plt.xlabel('Time', fontsize=20)
     plt.ylabel('Abundance', fontsize=20)
     plt.xticks(fontsize=20)
