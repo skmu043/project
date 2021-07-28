@@ -50,7 +50,7 @@ for si in data_archives:
         t_g_a               = s['t_g_a']
         t_g_n_a             = s['t_g_n_a']
         #simulation_run      = s['simulation_run']
-        #RUN_ID              = s['RUN_ID']
+        RUN_ID              = s['RUN_ID']
         #local_population_   = s['local_population_']
 
 
@@ -195,6 +195,7 @@ plt.errorbar(x, y, e, linestyle='None', marker='^', elinewidth=7, capsize=8, cap
 plt.plot(x,y)
 plt.plot(Ps, Ts, '.' , label='A', linewidth=1)
 plt.show()
+plt.savefig(str(str(RUN_ID) + "_1.png"))
 
 plt.figure(figsize=(20,10))
 plt.title('Number of Alive Species at different PHI Levels', fontsize=20)
@@ -206,6 +207,7 @@ plt.errorbar(zx, zy, ze, linestyle='None', marker='^', elinewidth=7, capsize=8, 
 plt.plot(zx,zy)
 plt.plot(Ps, T_As, '.' , label='A', linewidth=1)
 plt.show()
+plt.savefig(str(str(RUN_ID) + "_2.png"))
 
 plt.figure(figsize=(20,10))
 plt.title('Number of Local Species Alive at different PHI Levels', fontsize=20)
@@ -217,6 +219,7 @@ plt.errorbar(zlx, zly, zle, linestyle='None', marker='^', elinewidth=7, capsize=
 plt.plot(zlx,zly)
 plt.plot(Ps, T_L_As, '.' , label='A', linewidth=1)
 plt.show()
+plt.savefig(str(str(RUN_ID) + "_3.png"))
 
 plt.figure(figsize=(20,10))
 plt.title('Number of Global Species Alive at different PHI Levels', fontsize=20)
@@ -228,3 +231,4 @@ plt.errorbar(zgx, zgy, zge, linestyle='None', marker='^', elinewidth=7, capsize=
 plt.plot(zgx,zgy)
 plt.plot(Ps, T_G_As, '.' , label='A', linewidth=1)
 plt.show()
+plt.savefig(str(str(RUN_ID) + "_4.png"))
