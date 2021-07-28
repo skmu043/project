@@ -12,12 +12,12 @@ def print_time():
     print(current_time)
 
 
-SAMPLE = 1
+SAMPLE = 100
 
 def run_it(phi):
     #"e.g                                K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN = 2, OE = 5, LP_Z = (10 - 100), RUN_ID=epoch"
     print("Running with PHI : ", phi)
-    os.system("python3.9 " + os.getcwd() + "/experiments/dyke_space_above_zero.py 10 100 0 10 0 200 0.1 2 5 " + str(phi) + " " + str(epoch_time))
+    os.system("python3.9 " + os.getcwd() + "/experiments/dyke_space_above_zero_RK4.py 100 100 0 10 0 200 0.1 2 5 " + str(phi) + " " + str(epoch_time))
 
 if __name__ == '__main__':
 

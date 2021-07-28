@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-exp_name = "dyke_space_above_zero"
+exp_name = "dyke_space_above_zero_RK4"
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + exp_name
 
 # Arguments Check
@@ -143,9 +143,41 @@ def update(step):
             new_alpha = al[0]       # Else take the first one as Eg
 
         # For each species : If Species
+        #y0 = yi
+        #
+        #for i in np.arange(start,end,step):
+        #    x.append(i)
+        #    res = f1(i)
+        #    y.append(res)
 
-        newAlpha = alpha[_][-1] + ((new_alpha - alpha[_][-1]) * step)
-        alpha[_].append(alpha[_][-1] + ((newAlpha - alpha[_][-1]) * alpha_time_scale))
+        #y0 = yi
+        ## Euler
+        #for i in np.arange(start,end,step):
+        #    yt = y0 + (f1_(i) * step)
+        #    y0 = yt
+        #    e.append(yt)
+        #
+        # y0 = yi
+        #RK4
+        #for i in np.arange(start,end,step):
+        #
+        #    k1 = f1_(i)
+        #    k2 = f1_(i) + (k1 * step/2)
+        #    k3 = f1_(i) + (k2 * step/2)
+        #    k4 = f1_(i) + (k3 * step)
+
+        #    yt = y0 + ((k1 + (2*k2) + (2*k3) + k4)/6) * step
+        #    y0 = yt
+        #    r.append(yt)
+
+        k1 = new_alpha
+        k2 = k1 + (k1 * step/2)
+        k3 = k1 + (k2 * step/2)
+        k4 = k1 + (k3 * step)
+        yt = alpha[_][-1] + (((k1 + (2*k2) + (2*k3) + k4)/6) -  alpha[_][-1]) * step
+        #newAlpha = alpha[_][-1] + ((new_alpha - alpha[_][-1]) * step)
+        #alpha[_].append(alpha[_][-1] + ((newAlpha - alpha[_][-1]) * alpha_time_scale))
+        alpha[_].append(yt)
 
         rAx[_].append(alpha[_][-1])
         rAxR[_].append(alpha[_][-1] * R)
@@ -163,8 +195,8 @@ def update(step):
     for _ in range(K):
         fSUM[0] = fSUM[0] + (alpha[_][-1] * w[0][_])
 
-    F[0] = fSUM[0] * 10
-    newE = E[0] + (((0 + F[0]) * step))
+    F[0] = fSUM[0] #* 10                #FINALLY 10 has been removed !
+    newE = E[0] + (((0 + F[0]) * 1))    # [* 1] changes to [* step] -> if [* 10] is brought back above
     E[0] = E[0] + ((newE-E[0]) * temperature_time_scale)
     rF[0].append(F[0])
     rE[0].append(E[0])
@@ -175,8 +207,8 @@ def update(step):
         if( _ in local_population_index):
             fSUM[1] = fSUM[1] + (alpha[_][-1] * w[1][_])
 
-    F[1] = fSUM[1] * 10
-    newE = E[1] + (((0 + F[1]) * step))
+    F[1] = fSUM[1] #* 10                #FINALLY 10 has been removed !
+    newE = E[1] + (((0 + F[1]) * 1))    # [* 1] changes to [* step] -> if [* 10] is brought back above
     E[1] = E[1] + ((newE-E[1]) * temperature_time_scale)
     rF[1].append(F[1])
     rE[1].append(E[1])
@@ -214,8 +246,8 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(1,100,30):
-        for El_temp in np.arange(1,100,30):
+    for Eg_temp in np.arange(1,100,70):
+        for El_temp in np.arange(1,100,70):
             #print("Init : ", Eg_temp, El_temp)
             simulation_run.append((Eg_temp,El_temp))
             time.append(0)
@@ -285,20 +317,6 @@ if __name__ == '__main__':
             ######################################### END RE INIT #####################################################################
 
 
-
-    plt.figure(figsize=(20,10))
-    plt.title('Abundance over Time for Each Species', fontsize=20)
-    plt.xlabel('Time', fontsize=20)
-    plt.ylabel('Abundance', fontsize=20)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-
-
-    time = time_prime
-
-    if(len(time[0]) > len(rAx_prime[0][0])):
-        time[0].pop(0)
-
     #   rAx => [[] .... [] .... [K]] - Abundance Values for Each Species over Time
     #   rAx_prime [rAx_sample 1 run ... rAx_sample 2 run .... etc]
 
@@ -313,11 +331,53 @@ if __name__ == '__main__':
     #       ]
 
 
+    ################################################################################################################################
+    plt.figure(figsize=(20,10))
+    plt.title('Abundance over Time for Each Species', fontsize=20)
+    plt.xlabel('Time', fontsize=20)
+    plt.ylabel('Abundance', fontsize=20)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+
+    time = time_prime
+
+    if(len(time[0]) > len(rAx_prime[0][0])):
+        time[0].pop(0)
+
     for row in rAx_prime:
         for species in row:
             plt.plot(time[0],species)
 
     #plt.show()
+    ################################################################################################################################
+
+
+    ################################################################################################################################
+    plt.figure(figsize=(20,10))
+    plt.title('E and F Time for Each Species', fontsize=20)
+    plt.xlabel('Time', fontsize=20)
+    plt.ylabel('E - F', fontsize=20)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+
+    time = time_prime
+
+    for row in rF_prime:
+        for F_ in row:
+            #print("F: ",len(F_))
+            #print("T: ", len(time[0]))
+            plt.plot(time[0],F_,linestyle='dashed')
+
+    for row in rE_prime:
+        for E_ in row:
+            E_.pop(0)
+            #print("E: ",len(E_))
+            #print("T: ", len(time[0]))
+            plt.plot(time[0],E_)
+
+    #plt.show()
+    ################################################################################################################################
+
 
     plt.figure(figsize=(20,10))
     plt.title('Abundance over Time: ALL, Local, Global species', fontsize=20)
@@ -455,14 +515,14 @@ try :
     #s['rE_prime']       = rE_prime
     #s['rF_prime']       = rF_prime
 
-    s['K']              = K
-    s['R']              = R
-    s['E']              = E
-    #s['start']          = start
-    #s['end']            = end
-    #s['step']           = step
-    s['N']              = N
-    s['OEn']            = OEn
+    s['K']                  = K
+    s['R']                  = R
+    s['E']                  = E
+    #s['start']             = start
+    #s['end']                = end
+    #s['step']              = step
+    s['N']                  = N
+    s['OEn']                = OEn
 
     s['a_t']                = a_t
     s['a_l']                = a_l

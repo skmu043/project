@@ -23,7 +23,7 @@ data_dr = os.getcwd() + '/data'
 data_archives = os.listdir(data_dr)
 
 for si in data_archives:
-    s = shelve.open(data_dr + "/" + str(si) + "/dyke_space_above_zero.data")
+    s = shelve.open(data_dr + "/" + str(si) + "/dyke_space_above_zero_RK4.data")
     try :
         args                = s['sys.argv']
         #temperatures        = s['temperatures']
