@@ -140,6 +140,7 @@ for xi in true_zeros:
         zeros_uniq.append(int(xi))
 
 print("Unique Points ...")
+zeros_uniq.sort()
 print(zeros_uniq)
 
 def plot_stable_points():
