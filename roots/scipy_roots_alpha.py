@@ -112,6 +112,7 @@ for xi in np.arange(X1, Y1, 0.1):
 
 #TypeError: fsolve: there is a mismatch between the input and output shape of the 'func' argument 'f1'.Shape should be (2,) but it is (1,).
 
+
 def plot_function():
     print("Plotting Sum  ... ")
     plt.figure(figsize=(20,10))
@@ -122,7 +123,6 @@ def plot_function():
     plt.yticks(fontsize=20)
     plt.axvline(x=0)
     plt.axhline(y=0)
-
     plt.plot(x,y, 'r-',label = 'roots')
     plt.show()
 
@@ -133,10 +133,14 @@ for _ in range(R):
     sol = optimize.root(f1, [_], jac=False, method='hybr')
     if(sol.x >=0 and sol.x <= R):
         true_zeros.append(sol.x)
-print("All points ...")
-print(true_zeros)
+
+zeros_uniq = []
+for xi in true_zeros:
+    if(int(xi) not in zeros_uniq):
+        zeros_uniq.append(int(xi))
+
 print("Unique Points ...")
-print(np.unique(np.array(true_zeros)))
+print(zeros_uniq)
 
 def plot_stable_points():
     plt.figure(figsize=(20,10))
@@ -145,54 +149,16 @@ def plot_stable_points():
     plt.ylabel('biotic force', fontsize=40)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    for stable in true_zeros:
+    for stable in zeros_uniq:
         plt.axvline(x=stable)
     plt.axvline(x=0)
     plt.axhline(y=0)
     plt.plot(x,y, 'r-',label = 'temperature')
     plt.legend(loc=5, prop={'size': 30})
     plt.show()
-
-
-print("Solving ...")
-true_zeros = []
-sign_change = ""
-
-if(y[0] < 0):
-    sign_change = "neg"
-if(y[0] > 0):
-    sign_change = "pos"
-
-if(y[0] == 0):
-    print("ZERO DETECTED")
-
-print(sign_change)
-
-for _ in range(R):
-    sol = optimize.root(f1, [_], method='df-sane')
-    if(sol.x >=0 and sol.x <= R):
-        true_zeros.append(sol.x)
-
-print(np.unique(np.array(true_zeros)))
-
-def plot_stable_points_sign_change():
-    plt.figure(figsize=(20,10))
-    plt.title('Stable Points Check', fontsize=40)
-    plt.xlabel('temperature', fontsize=40)
-    plt.ylabel('biotic force', fontsize=40)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    for stable in true_zeros:
-        plt.axvline(x=stable)
-    plt.axvline(x=0)
-    plt.axhline(y=0)
-    plt.plot(x,y, 'r-',label = 'temperature')
-    plt.legend(loc=5, prop={'size': 30})
-    plt.show()
-
 
 
 #plot_alphas()
 #plot_function()
 plot_stable_points()
-plot_stable_points_sign_change()
+
