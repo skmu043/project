@@ -85,7 +85,21 @@ alpha = [[] for _ in range(K)]
 for _ in range(K):
     al = []
     for ai in range(N):
+
         al.append(round((math.e) ** ((-1) * (((abs((E[ai])-u[ai][_])) ** 2) / (2*(OE[_]**2)))),ROUND))
+
+        # HAT Function - too coarse #
+        #if(E[ai] < u[ai][_] - OE[_]): # outside
+        #    al.append(0)
+        #elif(E[ai] > u[ai][_] + OE[_]):
+        #    al.append(0)
+        #elif(E[ai] == u[ai][_]):
+        #    al.append(1)
+        #elif(E[ai] > u[ai][_] - OE[_] and E[ai] < u[ai][_]):
+        #    al.append(0.2 * (OE[_] - (u[ai][_] - E[ai])))
+        #elif(E[ai] < u[ai][_] + OE[_] and E[ai] > u[ai][_]):
+        #    al.append(0.2 * ((E[ai])) - u[ai][_])
+        # HAT Function - too coarse #
 
         new_alpha = 0
         if( _ in local_population_index):
@@ -94,7 +108,7 @@ for _ in range(K):
             new_alpha = al[0]       # Else take the first one as Eg
 
         alpha[_].append(new_alpha)
-        #print("alpha: ",alpha)
+            #print("alpha: ",alpha)
 
 rF = [[] for _ in range(N)]         #Biotic Force Values
 rE = [[] for _ in range(N)]         #A blank list for each Environment Variable
@@ -126,6 +140,20 @@ def update(step):
         for ei in range(N):
             #print(_)
             al.append(round((math.e) ** ((-1) * (((abs((E[ei])-u[ei][_])) ** 2) / (2*(OE[_]**2)))), ROUND))
+
+
+            # HAT Function - too coarse #
+            #if(E[ei] < u[ei][_] - OE[_]): # outside
+            #    al.append(0)
+            #elif(E[ei] > u[ei][_] + OE[_]):
+            #    al.append(0)
+            #elif(E[ei] == u[ei][_]):
+            #    al.append(1)
+            #elif(E[ei] > u[ei][_] - OE[_] and E[ei] < u[ei][_]):
+            #    al.append(0.2 * (OE[_] - (u[ei][_] - E[ei])))
+            #elif(E[ei] < u[ei][_] + OE[_] and E[ei] > u[ei][_]):
+            #    al.append(0.2 * ((E[ei])) - u[ei][_])
+            # HAT Function - too coarse #
             #print("E: ", ei, " for E: ", E[ei]," with u = ", u[ei][_] , "and R = ", R,  " alpha is : ", al[-1])
             #print("E",ei," -> ",E[ei],"- a=",al[-1])
             #time scales - for each step - the next value is calculated (next abundance and next E (temperature))
@@ -348,7 +376,7 @@ if __name__ == '__main__':
         for species in row:
             plt.plot(time[0],species)
 
-    #plt.show()
+    plt.show()
     ################################################################################################################################
 
 
