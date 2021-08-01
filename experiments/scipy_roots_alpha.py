@@ -1,7 +1,7 @@
 from scipy import optimize
 import numpy as np
 import matplotlib.pyplot as plt
-import math, random
+import math, random, time, sys, os, shelve
 from multiprocessing import Process, Pool
 
 #def fun(x):
@@ -11,19 +11,33 @@ from multiprocessing import Process, Pool
 #sol = optimize.root(fun, [0, 0], jac=jac, method='hybr')
 #print(sol.x)
 
-K = 100      #Number of Biotic Components
+
+exp_name = "scipy_roots_alpha"
+data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + exp_name
+
+# Arguments Check
+if(len(sys.argv)!=4):
+    print("Args: K, N,  RUN_ID")
+    print("e.g K=100, N=5, RUN_ID : epoch")
+    print("exit")
+    sys.exit()
+
+K = int(sys.argv[1])          #Number of Biotic Components
+N = int(sys.argv[2])          #Essential Range (defines where Biotic Components can be present)
+RUN_ID = int(sys.argv[3])          #Perturbation
+
 R = 100        #Essential Range (defines where Biotic Components can be present)
 P = 0          #Perturbation
 F = P
 OE = []        #Niche
 start = 0      #Time Start
-end = 200         #Time End
-step= 0.1    #Time Step
+end = 200      #Time End
+step= 0.1      #Time Step
 w = []         #Affects Parameter (ranges between -1 and 1 for each K)
 u = []         #Ideal Temperature for species (between 0 and R -> the essential range)
 
 #OE = [random.uniform(3,10) for _ in range(K)] #Switches between same sized Niches to different sized ones
-OE = [5 for _ in range(K)]
+OE = [N for _ in range(K)]
 #populates affects values
 w = [random.uniform(-1,1) for _ in range(K)]
 
@@ -44,7 +58,6 @@ while(int(len(u)) != int(len(set(u)))):
 
 #print(u)
 
-N = 2           #Number of Environment Variables
 E = -20          #Temperature Start value
 Et = E         #Temperature without Biotic Force
 
@@ -89,17 +102,15 @@ def plot_alphas():
     plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
     plt.show()
 
-
-
 ########################################################################################################################
 def f1(x):
     biotic_force = []
+
     for y in range(K):
         biotic_force.append((math.e) ** ((-1) * (((abs(x-u[y])) ** 2) / (2*(OE[y]**2)))) * w[y])
     return(np.sum((np.array(biotic_force, dtype=float))))
 
 def stable_point_return():
-    print(K)
 
     x = []
     y = []
@@ -157,107 +168,23 @@ def stable_point_return():
     #print("Stable Points: ", stable_points)
     return(len(stable_points))
 
-biotic_elements_x = []
-stable_points_y   = []
-
-niche_vals = [5, 7, 10]
-
-def plot_stable_biotic():
-    plt.figure(figsize=(20,10))
-    plt.title('Number of Species vs Stable Points', fontsize=40)
-    plt.xlabel('Number of Species', fontsize=40)
-    plt.ylabel('Number of Stable Points', fontsize=40)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    plt.axvline(x=0)
-    plt.axhline(y=0)
-    plt.plot(biotic_elements_x,stable_points_y, '.',label = 'roots')
-    plt.savefig('stable_biotic.png')
-    plt.show()
-
-
-def plot_stable_points():
-    plt.figure(figsize=(20,10))
-    plt.title('Stable Points', fontsize=40)
-    plt.xlabel('temperature', fontsize=40)
-    plt.ylabel('biotic force', fontsize=40)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    for stable in zeros_uniq:
-        plt.axvline(x=stable)
-    plt.axvline(x=0)
-    plt.axhline(y=0)
-    plt.plot(x,y, 'r-',label = 'temperature')
-    plt.legend(loc=5, prop={'size': 30})
-    plt.show()
-
-
 stable_points_average = []
-SAMPLE = 10
-
 total_points = []
 
-for each_niche in niche_vals:
-    OE = [each_niche for _ in range(K)]
-    print("Niche : ",each_niche)
-    for each_k in range(K):
-        K = each_k
-        for x in range(SAMPLE):
-            ############################################################################
-            w = [random.uniform(-1,1) for _ in range(K)]
-            while (int(len(w)) != int(len(set(w)))):
-                print("Duplicate w's detected: Regenerating ...")
-                w.clear()
-                w = [random.uniform(-1,1) for _ in range(K)]
+stable_point_return()
 
-            u = [random.uniform(0, R) for _ in range(K)]
-            while(int(len(u)) != int(len(set(u)))):
-                print("Duplicate u's detected: Regenerating ...")
-                u.clear()
-                u = [random.uniform(0, R) for _ in range(K)]
+os.mkdir(data_directory)
+s = shelve.open(data_directory + "/" + exp_name + ".data")
+try :
 
-            alpha = [[] for _ in range(K)]
-            for _ in range(K):
-                alpha[_].append((math.e) ** ((-1) * (((abs((E)-u[_])) ** 2) / (2*(OE[_]**2)))))
-            ############################################################################
-            stable_points_average.append(stable_point_return())
-        biotic_elements_x.append(each_k)
-        stable_points_y.append(sum(stable_points_average) / len(stable_points_average))
-        stable_points_average.clear()
+    s['sys.argv']       = sys.argv
+    s['w']              = w
+    s['u']              = u
+    s['K']              = K
+    s['N']              = N
+    s['RUN_ID']         = RUN_ID
 
-    #print(biotic_elements_x)
-    #print(stable_points_y)
+finally:
+    s.close()
 
-    x1 = biotic_elements_x.copy()
-    y1 = stable_points_y.copy()
-    total_points.append((x1, y1))
-    print(total_points)
-    biotic_elements_x.clear()
-    stable_points_y.clear()
-
-
-
-def plot_function():
-    plt.figure(figsize=(20,10))
-    plt.title('Number of Species vs Stable Points', fontsize=40)
-    plt.xlabel('Number of Species', fontsize=40)
-    plt.ylabel('Number of Stable Points', fontsize=40)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    plt.axvline(x=0)
-    plt.axhline(y=0)
-    print("Total Points : ",total_points)
-    plt.plot(total_points[0][0],total_points[0][1], 'r-',label = '5')
-    plt.plot(total_points[1][0],total_points[1][1], 'b-',label = '7')
-    plt.plot(total_points[2][0],total_points[2][1], 'k-',label = '10')
-    plt.legend(loc='lower right')
-    plt.savefig('stable_biotic_5_7_10.png')
-    plt.show()
-
-
-#plot_alphas()
-
-plot_function()
-#plot_stable_points()
-#plot_stable_biotic()
 
