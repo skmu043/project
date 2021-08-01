@@ -143,6 +143,41 @@ print("Unique Points ...")
 zeros_uniq.sort()
 print(zeros_uniq)
 
+idx=0
+
+current_sign = "?"
+
+if(y[idx]>0):
+    current_sign = "+"
+elif(y[idx]<0):
+    current_sign = "-"
+
+
+stable_points = []
+
+for xi in np.arange(X1, Y1, 0.1):
+    #print(x[idx])
+    loopy_sign="?"
+    #print(y[idx])
+    if(y[idx]>0):
+        loopy_sign = "+"
+    elif(y[idx]<0):
+        loopy_sign = "-"
+
+    if(loopy_sign != current_sign):
+        #print("Sign Change Detected!")
+        #print("From : ", current_sign , " To : ", loopy_sign)
+        if(current_sign == "+" and loopy_sign == "-"):
+            #print(">>>>> Stable Point : ", x[idx])
+            stable_points.append(int(x[idx]))
+        current_sign = loopy_sign
+        #print(y[idx])
+
+    idx+=1
+
+
+print("Stable Points: ", stable_points)
+
 def plot_stable_points():
     plt.figure(figsize=(20,10))
     plt.title('Stable Points', fontsize=40)
