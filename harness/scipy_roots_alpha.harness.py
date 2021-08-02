@@ -10,7 +10,7 @@ def print_time():
     current_time = time.strftime("%H:%M:%S", t)
     print(current_time)
 
-K = 101
+K = 30
 N = [5,7,10]
 
 SAMPLE = 2

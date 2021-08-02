@@ -7,276 +7,123 @@ import math, random, time
 import statistics
 
 
-P = []
-T = []
-L = []
-G = []
+K       = 0
+N       = 0
+RUN_ID  = 0
 
-T_A     = []
-T_N_A   = []
-T_L_A   = []
-T_L_N_A = []
-T_G_A   = []
-T_G_N_A = []
+data_points = []
 
 data_dr = os.getcwd() + '/data'
 data_archives = os.listdir(data_dr)
 
 for si in data_archives:
-    s = shelve.open(data_dr + "/" + str(si) + "/dyke_space_above_zero_RK4.data")
+    s = shelve.open(data_dr + "/" + str(si) + "/scipy_roots_alpha.data")
     try :
-        args                = s['sys.argv']
-        #temperatures        = s['temperatures']
-        #biotic_force        = s['biotic_force']
-        #w                   = s['w']
-        #u                   = s['u']
-        #time_prime          = s['time_prime']
-        #K                   = s['K']
-        #R                   = s['R']
-        #E                   = s['E']
-        #start               = s['start']
-        #end                 = s['end']
-        #step                = s['step']
-        #N                   = s['N']
-        #OEn                 = s['OEn']
-        a_t                 = s['a_t']
-        a_l                 = s['a_l']
-        a_g                 = s['a_g']
+        args            = s['sys.argv']
+        w               = s['w']
+        u               = s['u']
+        K               = s['K']
+        N               = s['N']
+        stable_point    = s['stable_point']
+        RUN_ID          = s['RUN_ID']
 
-        t_a                 = s['t_a']
-        t_n_a               = s['t_n_a']
-        t_l_a               = s['t_l_a']
-        t_l_n_a             = s['t_l_n_a']
-        t_g_a               = s['t_g_a']
-        t_g_n_a             = s['t_g_n_a']
-        #simulation_run      = s['simulation_run']
-        RUN_ID              = s['RUN_ID']
-        #local_population_   = s['local_population_']
-
-
-        print("PHI: ", args[10])
-        #print(simulation_run)
-        #print(RUN_ID)
-
-        P.append(args[10])
-        T.append(a_t)
-        L.append(a_l)
-        G.append(a_g)
-
-        T_A.append(t_a)
-        T_N_A.append(t_n_a)
-        T_L_A.append(t_l_a)
-        T_L_N_A.append(t_l_n_a)
-        T_G_A.append(t_g_a)
-        T_G_N_A.append(t_g_n_a)
-
-        #s['rAx_prime']      = rAx_prime
-        #s['rAxR_prime']     = rAxR_prime
-        #s['rE_prime']       = rE_prime
-        #s['rF_prime']       = rF_prime
+        data_points.append((K, N, stable_point))
 
     finally:
         s.close()
 
+uniq_n = []
+for x in data_points:
+    if x[1] not in uniq_n:
+        uniq_n.append(x[1])
 
-# First get uniq items from P - essentially all the PHIs
+uniq_n.sort()
+print(uniq_n)
 
-uniq = []
-for x in P:
-    if x not in uniq:
-        uniq.append(x)
+uniq_k = []
+for x in data_points:
+    if x[0] not in uniq_k:
+        uniq_k.append(x[0])
 
-uniq.sort()
-
-################
-Ps = [] # Phi
-Ts = [] # Total Abundance
-Ls = [] # Local Abundance
-Gs = [] # Global Abundance
-###############
-Zs = [] # Above Zero Abundance
-###############
-T_As     = []
-T_N_As   = []
-T_L_As   = []
-T_L_N_As = []
-T_G_As   = []
-T_G_N_As = []
-##############
-
-#plt.errorbar(x, y, e, linestyle='None', marker='^')
-
-#plt.show()
-
-for phi in uniq:
-    idx = 0
-    for entry in P:
-        if phi == entry:
-            Ps.append(P[idx])
-            Ts.append(T[idx])
-            Ls.append(L[idx])
-            Gs.append(G[idx])
-            T_As.append(T_A[idx])
-            T_N_As.append(T_N_A[idx])
-            T_L_As.append(T_L_A[idx])
-            T_L_N_As.append(T_L_N_A[idx])
-            T_G_As.append(T_G_A[idx])
-            T_G_N_As.append(T_G_N_A[idx])
-        idx +=1
-
-# This Set Does Total Abundance Sum, Mean and Standard Deviation (Error Bar Plot)
-x = np.array([])
-y = np.array([])
-e = np.array([])
-
-# This Set Does Abundance above Zero Totals Sum, Mean and Standard Deviation (Error Bar Plot)
-zx = np.array([])
-zy = np.array([])
-ze = np.array([])
-
-# This Set Does Abundance above Zero for Locals Sum, Mean and Standard Deviation (Error Bar Plot)
-zlx = np.array([])
-zly = np.array([])
-zle = np.array([])
-
-# This Set Does Abundance above Zero for Globals Sum, Mean and Standard Deviation (Error Bar Plot)
-zgx = np.array([])
-zgy = np.array([])
-zge = np.array([])
-
-
-for phi in uniq:
-    nums    = []
-    znums   = []
-    zlnums  = []
-    zgnums  = []
-    idx=0
-    for entry in Ps:
-        if phi == entry:
-            # extracts exact abundance value for Totals
-            #print(Ts[idx])
-            for each_num in Ts[idx]:
-                nums.append(each_num)
-            # extracts non zero abundance values for Totals
-            for each_num in T_As[idx]:
-                znums.append(each_num)
-            # extracts non zero abundance values for Locals
-            for each_num in T_L_As[idx]:
-                zlnums.append(each_num)
-            # extracts non zero abundance values for Globals
-            for each_num in T_G_As[idx]:
-                zgnums.append(each_num)
-
-        idx +=1
-
-    x = np.append(x, phi)
-    y = np.append(y, statistics.mean(nums))
-    e = np.append(e, statistics.stdev(nums))
-
-    zx = np.append(zx, phi)
-    zy = np.append(zy, statistics.mean(znums))
-    ze = np.append(ze, statistics.stdev(znums))
-
-    zlx = np.append(zlx, phi)
-    zly = np.append(zly, statistics.mean(zlnums))
-    zle = np.append(zle, statistics.stdev(zlnums))
-
-    zgx = np.append(zgx, phi)
-    zgy = np.append(zgy, statistics.mean(zgnums))
-    zge = np.append(zge, statistics.stdev(zgnums))
-
-plt.figure(figsize=(20,10))
-plt.title('Abundance Values at different PHI Levels', fontsize=20)
-plt.xlabel('PHI', fontsize=20)
-plt.ylabel('Total Abundance', fontsize=20)
-plt.xticks(fontsize=20)
-plt.yticks(fontsize=20)
-plt.errorbar(x, y, e, linestyle='None', marker='^', elinewidth=7, capsize=8, capthick=7)
-plt.plot(x,y)
-plt.plot(Ps, Ts, '.' , label='A', linewidth=1)
-plt.show()
-plt.savefig(str(str(RUN_ID) + "_1.png"))
-
-plt.figure(figsize=(20,10))
-plt.title('Number of Alive Species at different PHI Levels', fontsize=20)
-plt.xlabel('PHI', fontsize=20)
-plt.ylabel('Above Zero Number Alive', fontsize=20)
-plt.xticks(fontsize=20)
-plt.yticks(fontsize=20)
-plt.errorbar(zx, zy, ze, linestyle='None', marker='^', elinewidth=7, capsize=8, capthick=7)
-plt.plot(zx,zy)
-plt.plot(Ps, T_As, '.' , label='A', linewidth=1)
-plt.show()
-plt.savefig(str(str(RUN_ID) + "_2.png"))
-
-plt.figure(figsize=(20,10))
-plt.title('Number of Local Species Alive at different PHI Levels', fontsize=20)
-plt.xlabel('PHI', fontsize=20)
-plt.ylabel('Above Zero Number Local Alive', fontsize=20)
-plt.xticks(fontsize=20)
-plt.yticks(fontsize=20)
-plt.errorbar(zlx, zly, zle, linestyle='None', marker='^', elinewidth=7, capsize=8, capthick=7)
-plt.plot(zlx,zly)
-plt.plot(Ps, T_L_As, '.' , label='A', linewidth=1)
-plt.show()
-plt.savefig(str(str(RUN_ID) + "_3.png"))
-
-plt.figure(figsize=(20,10))
-plt.title('Number of Global Species Alive at different PHI Levels', fontsize=20)
-plt.xlabel('PHI', fontsize=20)
-plt.ylabel('Above Zero Number Global Alive', fontsize=20)
-plt.xticks(fontsize=20)
-plt.yticks(fontsize=20)
-plt.errorbar(zgx, zgy, zge, linestyle='None', marker='^', elinewidth=7, capsize=8, capthick=7)
-plt.plot(zgx,zgy)
-plt.plot(Ps, T_G_As, '.' , label='A', linewidth=1)
-plt.show()
-plt.savefig(str(str(RUN_ID) + "_4.png"))
-
-
+uniq_k.sort()
+print(uniq_k)
 
 def plot_stable_biotic():
     plt.figure(figsize=(20,10))
     plt.title('Number of Species vs Stable Points', fontsize=40)
-    plt.xlabel('Number of Species', fontsize=40)
-    plt.ylabel('Number of Stable Points', fontsize=40)
+    plt.xlabel('Species', fontsize=20)
+    plt.ylabel('Stable Points (mean)', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.axvline(x=0)
     plt.axhline(y=0)
-    plt.plot(biotic_elements_x,stable_points_y, '.',label = 'roots')
-    plt.savefig('stable_biotic.png')
+
+    # This Set Does Total Abundance Sum, Mean and Standard Deviation (Error Bar Plot)
+    x = np.array([])
+    y = np.array([])
+    e = np.array([])
+
+    biotic_elements_x   = []
+    stable_points_y     = []
+
+    #for each_N in uniq_n:
+    #    for each_data_point in data_points:
+    #        if(each_data_point[1] == each_N):
+    #            biotic_elements_x.append(each_data_point[0])
+    #            stable_points_y.append(each_data_point[2])
+        #plt.plot(biotic_elements_x,stable_points_y, '.',label = each_N)
+
+    #    biotic_elements_x.clear()
+    #    stable_points_y.clear()
+
+    #print(data_points)
+    stable_points_data = []
+
+    k_x = []
+    s_y = []
+    plot_k_x = []
+    plot_s_y = []
+
+    for each_N in uniq_n:
+        for each_K in uniq_k:
+            for each_data_point in data_points:
+                # (K, N, stable_point)
+                if(each_K == each_data_point[0] and each_N == each_data_point[1]):
+                    stable_points_data.append(each_data_point[2])
+            k_x.append(each_K)
+            s_y.append(statistics.mean(stable_points_data))
+            stable_points_data.clear()
+
+            #x = np.append(x, each_K)
+            #y = np.append(y, statistics.mean(stable_points_data))
+            #e = np.append(e, statistics.stdev(stable_points_data))
+            #print("N: ", each_N)
+            #print("K: ", k_x)
+            #print("S: ", s_y)
+            #print()
+        plot_k_x.append(k_x.copy())
+        plot_s_y.append(s_y.copy())
+        k_x.clear()
+        s_y.clear()
+        index_num = 0
+        #print("PlotK : ", plot_k_x)
+        #print("PlotS : ", plot_s_y)
+    marker = ""
+    for each_N in uniq_n:
+        if(each_N == 5):
+            marker = "r-"
+        elif(each_N == 7):
+            marker = "b-"
+        elif(each_N == 10):
+            marker = "k-"
+        plt.plot(plot_k_x[index_num], plot_s_y[index_num], marker, label = str(each_N))
+        index_num +=1
+        #plt.errorbar(x, y, e, linestyle='None', marker='^', elinewidth=7, capsize=8, capthick=7)
+
+    plt.legend(loc="upper right")
+    #plt.savefig('stable_biotic.png')
     plt.show()
 
+plot_stable_biotic()
 
-def plot_stable_points():
-    plt.figure(figsize=(20,10))
-    plt.title('Stable Points', fontsize=40)
-    plt.xlabel('temperature', fontsize=40)
-    plt.ylabel('biotic force', fontsize=40)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    for stable in zeros_uniq:
-        plt.axvline(x=stable)
-    plt.axvline(x=0)
-    plt.axhline(y=0)
-    plt.plot(x,y, 'r-',label = 'temperature')
-    plt.legend(loc=5, prop={'size': 30})
-    plt.show()
 
-def plot_function():
-    plt.figure(figsize=(20,10))
-    plt.title('Number of Species vs Stable Points', fontsize=40)
-    plt.xlabel('Number of Species', fontsize=40)
-    plt.ylabel('Number of Stable Points', fontsize=40)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    plt.axvline(x=0)
-    plt.axhline(y=0)
-    print("Total Points : ",total_points)
-    plt.plot(total_points[0][0],total_points[0][1], 'r-',label = '5')
-    plt.plot(total_points[1][0],total_points[1][1], 'b-',label = '7')
-    plt.plot(total_points[2][0],total_points[2][1], 'k-',label = '10')
-    plt.legend(loc='lower right')
-    plt.savefig('stable_biotic_5_7_10.png')
-    plt.show()

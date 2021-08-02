@@ -171,7 +171,7 @@ def stable_point_return():
 stable_points_average = []
 total_points = []
 
-stable_point_return()
+stable_point = stable_point_return()
 
 os.mkdir(data_directory)
 s = shelve.open(data_directory + "/" + exp_name + ".data")
@@ -182,6 +182,7 @@ try :
     s['u']              = u
     s['K']              = K
     s['N']              = N
+    s['stable_point']   = stable_point
     s['RUN_ID']         = RUN_ID
 
 finally:
