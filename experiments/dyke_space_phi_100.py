@@ -219,8 +219,8 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(1,100,30):
-        for El_temp in np.arange(1,100,30):
+    for Eg_temp in np.arange(1,100,10):
+        for El_temp in np.arange(1,100,10):
             print("Init : ", Eg_temp, El_temp)
             simulation_run.append((Eg_temp,El_temp))
             time.append(0)
@@ -374,8 +374,8 @@ def stable_points_space():
 
     fig = plt.figure(figsize=(10,10))
     ax = fig.add_subplot(111, projection='3d')
-    #ax.view_init(0, 60)
-
+    ax.view_init(0, 0)
+    #ax.set_axis_off()
     #ax.set_xlim3d(0,2000)
     #ax.set_ylim3d(-10,120)
     #ax.set_zlim3d(0,200)
@@ -384,9 +384,26 @@ def stable_points_space():
     ax.set_ylabel('EL')
     ax.set_zlabel('EG')
 
+    stable_locations = []
+
     for row in rE_prime:
         ax.plot(time_prime[1],row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
+        print("time : ",len(time_prime[1]))
+        print("EG : ", len(row[0]))
+        print("EL : ", len(row[1]))
+        print("EGs : ", row[0][0], "EGe : ", row[0][-1])
+        print("ELs : ", row[1][0], "ELe : ", row[1][-1])
+        # x, y
+        if((int(row[1][-1]),int(row[0][-1])) not in stable_locations):
+            stable_locations.append((int(row[1][-1]),int(row[0][-1])))
 
+    print("Stable Locations: ", stable_locations)
+    valid_stable_locations = []
+    for stable_point_xy in stable_locations:
+        if(stable_point_xy[0] >= 0 and stable_point_xy[1] >= 0 and stable_point_xy[0] <= K and stable_point_xy[1] <= K):
+            valid_stable_locations.append((stable_point_xy[0], stable_point_xy[1]))
+
+    print("Valid Stable Locations: ", valid_stable_locations)
     plt.show()
 
 stable_points_space()
@@ -422,9 +439,9 @@ try :
     s['N']              = N
     s['OEn']            = OEn
 
-    s['a_t']                = a_t
-    s['a_l']                = a_l
-    s['a_g']                = a_g
+    #s['a_t']                = a_t
+    #s['a_l']                = a_l
+    #s['a_g']                = a_g
     s['simulation_run']     = simulation_run
     s['RUN_ID']             = RUN_ID
     s['local_population_']  = local_population_
