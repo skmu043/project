@@ -163,14 +163,27 @@ def update(step):
         else:
             new_alpha = al[0]       # Else take the first one as Eg
 
+        #------------------------------------------------------------------------------------------------------------------
 
-        newAlpha = alpha[_][-1] + ((new_alpha - alpha[_][-1]) * step)
-        alpha[_].append(alpha[_][-1] + ((newAlpha - alpha[_][-1]) * alpha_time_scale))
+        #newAlpha = alpha[_][-1] + ((new_alpha - alpha[_][-1]) * step)
+        #alpha[_].append(alpha[_][-1] + ((newAlpha - alpha[_][-1]) * alpha_time_scale))
+
+        #rAx[_].append(alpha[_][-1])
+        #rAxR[_].append(alpha[_][-1] * R)
+
+        #------------------------------------------------------------------------------------------------------------------
+
+        k1 = new_alpha
+        k2 = k1 + (k1 * step/2)
+        k3 = k1 + (k2 * step/2)
+        k4 = k1 + (k3 * step)
+        yt = alpha[_][-1] + (((k1 + (2*k2) + (2*k3) + k4)/6) -  alpha[_][-1]) * step
+        alpha[_].append(yt)
 
         rAx[_].append(alpha[_][-1])
         rAxR[_].append(alpha[_][-1] * R)
 
-
+        #------------------------------------------------------------------------------------------------------------------
 # The above for loop has concluded ============ new code block below ============
 
 # Issue Detected : multiplying all Fs from both - no differentiation given to sub population
@@ -179,12 +192,13 @@ def update(step):
 # All sub-pop K affect only El - Fl
 # F [0 is Fg and 1 is Fl same as abundance above]
 
+
     # w[0] affects EG whereas a subset of w[1] affects EL only
     for _ in range(K):
         fSUM[0] = fSUM[0] + (alpha[_][-1] * w[0][_])
 
-    F[0] = fSUM[0] * 10
-    newE = E[0] + (((0 + F[0]) * step))
+    F[0] = fSUM[0] #* 10                #FINALLY 10 has been removed !
+    newE = E[0] + (((0 + F[0]) * 1))    # [* 1] changes to [* step] -> if [* 10] is brought back above
     E[0] = E[0] + ((newE-E[0]) * temperature_time_scale)
     rF[0].append(F[0])
     rE[0].append(E[0])
@@ -195,8 +209,8 @@ def update(step):
         if( _ in local_population_1_index):
             fSUM[1] = fSUM[1] + (alpha[_][-1] * w[1][_])
 
-    F[1] = fSUM[1] * 10
-    newE = E[1] + (((0 + F[1]) * step))
+    F[1] = fSUM[1] #* 10                #FINALLY 10 has been removed !
+    newE = E[1] + (((0 + F[1]) * 1))    # [* 1] changes to [* step] -> if [* 10] is brought back above
     E[1] = E[1] + ((newE-E[1]) * temperature_time_scale)
     rF[1].append(F[1])
     rE[1].append(E[1])
@@ -207,8 +221,8 @@ def update(step):
         if( _ in local_population_2_index):
             fSUM[2] = fSUM[2] + (alpha[_][-1] * w[2][_])
 
-    F[2] = fSUM[2] * 10
-    newE = E[2] + (((0 + F[2]) * step))
+    F[2] = fSUM[2] #* 10                #FINALLY 10 has been removed !
+    newE = E[2] + (((0 + F[2]) * 1)) # [* 1] changes to [* step] -> if [* 10] is brought back above
     E[2] = E[2] + ((newE-E[2]) * temperature_time_scale)
     rF[2].append(F[2])
     rE[2].append(E[2])
@@ -216,16 +230,6 @@ def update(step):
     # ============ END EL2 ==============
 
 
-    #for _ in range(K):
-    #    for ei in range(N):
-    #        fSUM[ei] = fSUM[ei] + (alpha[_][-1] * w[ei][_])
-
-    #for ei in range(N):
-    #    F[ei] = fSUM[ei] * 10
-    #    newE = E[ei] + (((0 + F[ei]) * step))
-    #    E[ei] = E[ei] + ((newE-E[ei]) * temperature_time_scale)
-    #    rF[ei].append(F[ei])
-    #    rE[ei].append(E[ei])
 
 
 if __name__ == '__main__':
@@ -339,8 +343,8 @@ if __name__ == '__main__':
         for species in row:
             plt.plot(time[0],species)
 
-    plt.savefig('aot_1.png')
-    #plt.show()
+    #plt.savefig('aot_1.png')
+    plt.show()
 
     plt.figure(figsize=(20,10))
     plt.title('Abundance over Time', fontsize=20)
@@ -398,8 +402,8 @@ if __name__ == '__main__':
         abundance_local_1.clear()
         abundance_local_2.clear()
         abundance_not_local.clear()
-    plt.savefig('aot_2.png')
-    #plt.show()
+    #plt.savefig('aot_2.png')
+    plt.show()
 
 #print("total: ", a_t)
 #print("total L: ", a_l)
