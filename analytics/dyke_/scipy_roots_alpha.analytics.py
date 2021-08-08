@@ -49,7 +49,7 @@ uniq_k.sort()
 print(uniq_k)
 
 def plot_stable_biotic():
-    plt.figure(figsize=(20,10))
+    ax = plt.figure(figsize=(20,10))
     plt.title('Number of Species vs Stable Points', fontsize=40)
     plt.xlabel('Species', fontsize=20)
     plt.ylabel('Stable Points (mean)', fontsize=20)
@@ -57,6 +57,7 @@ def plot_stable_biotic():
     plt.yticks(fontsize=20)
     plt.axvline(x=0)
     plt.axhline(y=0)
+    plt.xticks([2, 5, 10, 20, 50, 100, 200])
 
     # This Set Does Total Abundance Sum, Mean and Standard Deviation (Error Bar Plot)
     x = np.array([])
@@ -120,8 +121,9 @@ def plot_stable_biotic():
         index_num +=1
         #plt.errorbar(x, y, e, linestyle='None', marker='^', elinewidth=7, capsize=8, capthick=7)
 
+
     plt.legend(loc="upper right")
-    #plt.savefig('stable_biotic.png')
+    plt.savefig('stable_biotic_x.png')
     plt.show()
 
 plot_stable_biotic()

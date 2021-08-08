@@ -10,10 +10,10 @@ def print_time():
     current_time = time.strftime("%H:%M:%S", t)
     print(current_time)
 
-K = 30
+K = 10
 N = [5,7,10]
 
-SAMPLE = 2
+SAMPLE = 3
 
 def run_it(K, N):
     Krun = K
