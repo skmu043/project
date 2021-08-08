@@ -290,14 +290,13 @@ if __name__ == '__main__':
             ######################################### END RE INIT #####################################################################
 
 
-
+def aot():
     plt.figure(figsize=(20,10))
     plt.title('Abundance over Time', fontsize=20)
     plt.xlabel('Time', fontsize=20)
     plt.ylabel('Abundance', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-
 
     time = time_prime
 
@@ -308,7 +307,9 @@ if __name__ == '__main__':
         for species in row:
             plt.plot(time[0],species)
 
-    #plt.show()
+    plt.show()
+
+def aot_l_g():
 
     plt.figure(figsize=(20,10))
     plt.title('Local vs Global Abundance over Time', fontsize=20)
@@ -358,10 +359,9 @@ if __name__ == '__main__':
         abundance_local.clear()
         abundance_not_local.clear()
 
-    #plt.show()
+    plt.show()
 
-
-
+def stable_points_space():
 
     plt.figure(figsize=(30,20))
     plt.title('Stable Points', fontsize=40)
@@ -389,6 +389,7 @@ if __name__ == '__main__':
 
     plt.show()
 
+stable_points_space()
 
 #print("total: ", a_t)
 #print("total L: ", a_l)
