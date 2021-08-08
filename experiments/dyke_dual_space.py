@@ -5,8 +5,8 @@ import numpy as np
 
 
 exp_name = "dyke_dual_space"
-data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + exp_name
-
+data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
+# str(random.randint(100, 999)) added above to remove the condition where directory is not created as it exists (scheduler running at the same time step)
 # Arguments Check
 
 if(len(sys.argv)!=13):

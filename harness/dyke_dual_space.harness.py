@@ -16,7 +16,7 @@ def print_time():
     current_time = time.strftime("%H:%M:%S", t)
     print(current_time)
 
-SAMPLE = 100
+SAMPLE = 1
 
 K = 100
 
