@@ -442,6 +442,8 @@ def stable_points_space():
         plt.plot(region_plots_x[_], region_plots_y[_], '.', color = colors[color_i])
         color_i +=1
 
+    for _ in range(len(valid_stable_locations)):
+        plt.plot(valid_stable_locations[_][0],valid_stable_locations[_][1], 'ko',  markersize = 20)
     plt.show()
 
     #plt.plot(row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
