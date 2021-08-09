@@ -219,8 +219,8 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(1,100,10):
-        for El_temp in np.arange(1,100,10):
+    for Eg_temp in np.arange(1,100,30):
+        for El_temp in np.arange(1,100,30):
             print("Init : ", Eg_temp, El_temp)
             simulation_run.append((Eg_temp,El_temp))
             time.append(0)
@@ -364,38 +364,49 @@ def aot_l_g():
 def stable_points_space():
 
     plt.figure(figsize=(30,20))
-    plt.title('Stable Points', fontsize=40)
-    plt.xlabel('E Values', fontsize=40)
-    plt.ylabel('E Values', fontsize=40)
+    plt.title('Trajectories', fontsize=40)
+    plt.xlabel('EL', fontsize=40)
+    plt.ylabel('EG', fontsize=40)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
-    plt.ylim(-50, R+20)
-    plt.xlim(0, end)
+    plt.ylim(-20, R+20)
+    plt.xlim(-20, R+20)
 
-    fig = plt.figure(figsize=(10,10))
-    ax = fig.add_subplot(111, projection='3d')
-    ax.view_init(0, 0)
+    #fig = plt.figure(figsize=(10,10))
+    #ax = fig.add_subplot(111, projection='3d')
+    #ax.view_init(0, 0)
     #ax.set_axis_off()
     #ax.set_xlim3d(0,2000)
     #ax.set_ylim3d(-10,120)
     #ax.set_zlim3d(0,200)
 
-    ax.set_xlabel('Time')
-    ax.set_ylabel('EL')
-    ax.set_zlabel('EG')
+    #ax.set_xlabel('Time')
+    #ax.set_ylabel('EL')
+    #ax.set_zlabel('EG')
 
     stable_locations = []
 
     for row in rE_prime:
-        ax.plot(time_prime[1],row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
-        print("time : ",len(time_prime[1]))
-        print("EG : ", len(row[0]))
-        print("EL : ", len(row[1]))
+        #ax.plot(time_prime[1],row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
+        plt.plot(row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
+
         print("EGs : ", row[0][0], "EGe : ", row[0][-1])
         print("ELs : ", row[1][0], "ELe : ", row[1][-1])
         # x, y
         if((int(row[1][-1]),int(row[0][-1])) not in stable_locations):
             stable_locations.append((int(row[1][-1]),int(row[0][-1])))
+
+    plt.show()
+
+    plt.figure(figsize=(30,20))
+    plt.title('Regions', fontsize=40)
+    plt.xlabel('EL', fontsize=40)
+    plt.ylabel('EG', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.ylim(-20, R+20)
+    plt.xlim(-20, R+20)
+
 
     print("Stable Locations: ", stable_locations)
     valid_stable_locations = []
@@ -404,7 +415,37 @@ def stable_points_space():
             valid_stable_locations.append((stable_point_xy[0], stable_point_xy[1]))
 
     print("Valid Stable Locations: ", valid_stable_locations)
+
+    region_plots_x = [[] for _ in range(len(valid_stable_locations))]
+    region_plots_y = [[] for _ in range(len(valid_stable_locations))]
+
+    stable_index = 0
+    for each_stable_point in valid_stable_locations:
+        for row in rE_prime:
+            #print("-----")
+            #print(each_stable_point[0], each_stable_point[1])
+            #print(int(row[1][-1]), int(row[0][-1]))
+
+            if(int(row[1][-1]) == each_stable_point[0] and int(row[0][-1]) == each_stable_point[1]):
+                    region_plots_x[stable_index].append(row[1])
+                    region_plots_y[stable_index].append(row[0])
+                    #print("stable found !")
+
+            #print("Each Stable Point : ", each_stable_point)
+        stable_index +=1
+
+    colors = ['r','g','c','m','b','k','y']
+    color_i = 0
+    for _ in range(len(valid_stable_locations)):
+        if(color_i == 7):
+            color_i = 0
+        plt.plot(region_plots_x[_], region_plots_y[_], '.', color = colors[color_i])
+        color_i +=1
+
     plt.show()
+
+    #plt.plot(row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
+
 
 stable_points_space()
 
