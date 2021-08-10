@@ -2,7 +2,8 @@
 import math, random, sys, os, shelve, time
 import matplotlib.pyplot as plt
 import numpy as np
-
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 
 exp_name = "dyke_space"
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
@@ -47,7 +48,7 @@ for x in range(local_population_size):
 
 
 local_population_index.sort()
-print(local_population_index)
+#print(local_population_index)
 
 # print("Local Population Index : ", local_population_index)
 # Local Population #############################################
@@ -219,8 +220,8 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(1,100,30):
-        for El_temp in np.arange(1,100,30):
+    for Eg_temp in np.arange(1,100,20):
+        for El_temp in np.arange(1,100,20):
             print("Init : ", Eg_temp, El_temp)
             simulation_run.append((Eg_temp,El_temp))
             time.append(0)
@@ -390,8 +391,8 @@ def stable_points_space():
         #ax.plot(time_prime[1],row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
         plt.plot(row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
 
-        print("EGs : ", row[0][0], "EGe : ", row[0][-1])
-        print("ELs : ", row[1][0], "ELe : ", row[1][-1])
+        #print("EGs : ", row[0][0], "EGe : ", row[0][-1])
+        #print("ELs : ", row[1][0], "ELe : ", row[1][-1])
         # x, y
         if((int(row[1][-1]),int(row[0][-1])) not in stable_locations):
             stable_locations.append((int(row[1][-1]),int(row[0][-1])))
@@ -416,37 +417,139 @@ def stable_points_space():
 
     print("Valid Stable Locations: ", valid_stable_locations)
 
+    ############### KMeans Clusters #################################
+    # Gets Number of Clusters
+    sil = []
+    kmax = int(len(valid_stable_locations))
+
+    for k in range(2, kmax):
+        kmeans = KMeans(n_clusters = k).fit(valid_stable_locations)
+        labels = kmeans.labels_
+        sil.append(silhouette_score(valid_stable_locations, labels, metric = 'euclidean'))
+
+    print("Sil Vals : ", sil)
+
+    max_value = max(sil)
+    max_index = sil.index(max_value)
+    print("Number of Clusters Needed for Kmeans : ", max_index+1)
+
+    # Finds the points from the number of clusters defined above
+
+    kmeans = KMeans(n_clusters=int(max_index+1), init='k-means++', max_iter=300, n_init=10, random_state=0)
+    pred_y = kmeans.fit_predict(valid_stable_locations)
+    plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], s=300, c='red')
+    plt.show()
+
+
+    cluster_i = 0
+
+    reduced_stable_points = []
+
+    for _ in range(len(kmeans.cluster_centers_[:, 0])):
+        reduced_stable_points.append((int(kmeans.cluster_centers_[:, 0][_]), int(kmeans.cluster_centers_[:, 1][_])))
+        cluster_i+=1
+
     region_plots_x = [[] for _ in range(len(valid_stable_locations))]
     region_plots_y = [[] for _ in range(len(valid_stable_locations))]
+    region_plots_x_ = [[] for _ in range(len(valid_stable_locations))]
+    region_plots_y_ = [[] for _ in range(len(valid_stable_locations))]
+
+
+    print("Reduced Stable Point : ", reduced_stable_points)
 
     stable_index = 0
+
+    reduced_stack = [([],[]) for _ in len(reduced_stable_points)]
+
+    for item in reduced_stable_points:
+        reduced_stack.append((item,[]))
+
+    current_shortest_distance = 1000
+    current_shortest_distance_xy = (0,0)
+
+
+    ################################################################################################################################
+    ################################################################################################################################
+    ################################################################################################################################
+    ################################################################################################################################
+    ################################################################################################################################
+
+    # Notes : We get valid_stable_locations > these are anything in the 0 - 100 0 - 100 grid : anything venturing off to the outside are not tracked
+    # now with higher sample points, and increased times, clusters form i.e they stabilize at points around a region not converging to a single point
+    # that's ok so with that -> we are doing KMeans to get clusters -> and their centers so we can graph lines converging to that cluster
+    # to converge to that point (same color type things)
+    # reduced_stable_points are the coordinates for those points
+
+    # Pending work : map valid_stable_locations to reduced_stable_points
+    # Produce :
+    # [
+    # (reduced_stable_point), [(valid_stable_location), (valid_stable_location), (valid_stable_location)],
+    # (reduced_stable_point), [(valid_stable_location)],
+    # (reduced_stable_point), [(valid_stable_location), (valid_stable_location), (valid_stable_location)],
+    # (reduced_stable_point), [(valid_stable_location), (valid_stable_location)]
+    # ]
+    # and then graph, for each valid_stable_location, graph to its corresponding reduced_stable_point for very high numbers
+
+
+
     for each_stable_point in valid_stable_locations:
-        for row in rE_prime:
-            #print("-----")
-            #print(each_stable_point[0], each_stable_point[1])
-            #print(int(row[1][-1]), int(row[0][-1]))
+        for each_reduced_stable_point in reduced_stable_points:
+            #/ (x2 - x1) + (y2 - y1)
+            dist = (math.sqrt( (each_stable_point[1] - each_reduced_stable_point[0]) + (each_stable_point[0] - each_reduced_stable_point[1]) ))
+            if ( dist <  current_shortest_distance ):
+                current_shortest_distance = dist
+                current_shortest_distance_xy = (each_reduced_stable_point[0], each_reduced_stable_point[1])
+        current_shortest_distance = 1000
+        reduced_stack_i = 0
+        for item in reduced_stack:
+            if(item[0] == current_shortest_distance_xy):
+                reduced_stack[reduced_stack_i].append(current_shortest_distance_xy)
+            reduced_stack_i += 1
 
-            if(int(row[1][-1]) == each_stable_point[0] and int(row[0][-1]) == each_stable_point[1]):
-                    region_plots_x[stable_index].append(row[1])
-                    region_plots_y[stable_index].append(row[0])
-                    #print("stable found !")
 
-            #print("Each Stable Point : ", each_stable_point)
-        stable_index +=1
+    for row in rE_prime:
+        if(int(row[1][-1]) == each_stable_point[0] and int(row[0][-1]) == each_stable_point[1]):
+                region_plots_x[stable_index].append(row[1])
+                region_plots_y[stable_index].append(row[0])
+                region_plots_x_.append(row[1][-1])
+                region_plots_y_.append(row[0][-1])
 
+
+
+
+    ################################################################################################################################
+    ################################################################################################################################
+    ################################################################################################################################
+    ################################################################################################################################
+    ################################################################################################################################
+
+
+    stable_index +=1
+    print("Each Stable Point Done")
     colors = ['r','g','c','m','b','k','y']
     color_i = 0
-    for _ in range(len(valid_stable_locations)):
+
+    print("Valid Stable Locations : ", valid_stable_locations)
+    print("Valid X : ", region_plots_x_)
+    print("Valid Y : ", region_plots_y_)
+
+
+
+    for _ in range(len(reduced_stable_points)):
         if(color_i == 7):
             color_i = 0
-        plt.plot(region_plots_x[_], region_plots_y[_], '.', color = colors[color_i])
+        plt.plot(region_plots_x[_], region_plots_y[_], '.', color = colors[color_i], markersize="1", zorder=0)
         color_i +=1
+    print("Plotting Regions Done")
+    for _ in range(len(reduced_stable_points)):
 
-    for _ in range(len(valid_stable_locations)):
-        plt.plot(valid_stable_locations[_][0],valid_stable_locations[_][1], 'ko',  markersize = 20)
+        #plt.scatter(valid_stable_locations[_][0],valid_stable_locations[_][1], s=180, facecolors='none', edgecolors='k', zorder=10)
+        plt.scatter(reduced_stable_points[_][0],reduced_stable_points[_][1], s=180, facecolors='none', edgecolors='k', zorder=10)
+
     plt.show()
 
     #plt.plot(row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
+
 
 
 stable_points_space()
