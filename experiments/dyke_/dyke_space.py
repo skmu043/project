@@ -387,7 +387,7 @@ if __name__ == '__main__':
     for row in rE_prime:
         ax.plot(time_prime[1],row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
 
-    plt.show()
+    #plt.show()
 
 
 #print("total: ", a_t)
