@@ -10,15 +10,15 @@ def print_time():
     current_time = time.strftime("%H:%M:%S", t)
     print(current_time)
 
-K = 10
+K = 100
 N = [5,7,10]
 
-SAMPLE = 3
+SAMPLE = 1
 
 def run_it(K, N):
     Krun = K
     Nrun = N
-    print(Krun,Nrun)
+    #print(Krun,Nrun)
     os.system("python3.9 " + os.getcwd() + "/experiments/scipy_roots_alpha.py " + str(Krun) + " " + str(Nrun) + " " + str(epoch_time))
 
 if __name__ == '__main__':

@@ -39,7 +39,6 @@ for x in data_points:
 
 uniq_n.sort()
 print(uniq_n)
-
 uniq_k = []
 for x in data_points:
     if x[0] not in uniq_k:

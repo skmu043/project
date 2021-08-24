@@ -128,6 +128,7 @@ def stable_point_return():
         if(sol.x >=0 and sol.x <= R):
             true_zeros.append(sol.x)
 
+
     zeros_uniq = []
     for xi in true_zeros:
         if(int(xi) not in zeros_uniq):
@@ -135,7 +136,6 @@ def stable_point_return():
 
     #print("Unique Points ...")
     zeros_uniq.sort()
-    #print(zeros_uniq)
 
     idx=0
     current_sign = "?"
@@ -165,8 +165,31 @@ def stable_point_return():
             #print(y[idx])
 
         idx+=1
-    #print("Stable Points: ", stable_points)
-    return(len(stable_points))
+
+    print(K)
+    if(K > 80):
+        plt.figure(figsize=(25,15))
+        plt.title('Combined Biotic over Time', fontsize=40)
+        plt.xlabel('Temperature', fontsize=40)
+        plt.ylabel('biotic force (a * w)', fontsize=40)
+        plt.xticks(fontsize=20)
+        plt.yticks(fontsize=20)
+        plt.axhline(y=0, color='r', linestyle='-')
+        plt.plot(x,y)
+        plt.show()
+
+        print(true_zeros)
+        print("----->>>>>", zeros_uniq)
+        print("Stable Points: ", stable_points)
+
+    reduced_stable_points=[]
+    for each_point in stable_points:
+        if(each_point >=0 and each_point <= R):
+            reduced_stable_points.append(each_point)
+
+    print("Final Return : ", len(reduced_stable_points))
+
+    return(len(reduced_stable_points))
 
 stable_points_average = []
 total_points = []
@@ -187,5 +210,3 @@ try :
 
 finally:
     s.close()
-
-
