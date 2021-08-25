@@ -167,7 +167,7 @@ def stable_point_return():
         idx+=1
 
     print(K)
-    if(K > 80):
+    if(K > 120):
         plt.figure(figsize=(25,15))
         plt.title('Combined Biotic over Time', fontsize=40)
         plt.xlabel('Temperature', fontsize=40)
