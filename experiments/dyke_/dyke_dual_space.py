@@ -58,9 +58,7 @@ for _ in range(K):
 
 # Local Population 2 #############################################
 
-
 RUN_ID = int(sys.argv[12])
-
 
 #populates affects values
 
@@ -230,8 +228,6 @@ def update(step):
     # ============ END EL2 ==============
 
 
-
-
 if __name__ == '__main__':
 
     E_prime             =[]
@@ -251,10 +247,10 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(1,100,50):
-        for El_temp in np.arange(1,100,50):
-            for El_temp2 in np.arange(1,100,50):
-                #print("Init : ", Eg_temp, El_temp, El_temp2)
+    for Eg_temp in np.arange(1,100,80):
+        for El_temp in np.arange(1,100,80):
+            for El_temp2 in np.arange(1,100,80):
+                print("Init : ", Eg_temp, El_temp, El_temp2)
                 simulation_run.append((Eg_temp,El_temp, El_temp2))
                 time.append(0)
                 # xtime should should start from one timestep + 0
@@ -326,38 +322,38 @@ if __name__ == '__main__':
 
 
 
-    plt.figure(figsize=(20,10))
-    plt.title('Abundance over Time', fontsize=20)
-    plt.xlabel('Time', fontsize=20)
-    plt.ylabel('Abundance', fontsize=20)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
+    #plt.figure(figsize=(20,10))
+    #plt.title('Abundance over Time', fontsize=20)
+    #plt.xlabel('Time', fontsize=20)
+    #plt.ylabel('Abundance', fontsize=20)
+    #plt.xticks(fontsize=20)
+    #plt.yticks(fontsize=20)
 
 
-    time = time_prime
+    #time = time_prime
 
-    if(len(time[0]) > len(rAx_prime[0][0])):
-        time[0].pop(0)
+    #if(len(time[0]) > len(rAx_prime[0][0])):
+    #    time[0].pop(0)
 
-    for row in rAx_prime:
-        for species in row:
-            plt.plot(time[0],species)
+    #for row in rAx_prime:
+    #    for species in row:
+    #        plt.plot(time[0],species)
 
     #plt.savefig('aot_1.png')
-    plt.show()
+    #plt.show()
 
-    plt.figure(figsize=(20,10))
-    plt.title('Abundance over Time', fontsize=20)
-    plt.xlabel('Time', fontsize=20)
-    plt.ylabel('Abundance', fontsize=20)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
+    #plt.figure(figsize=(20,10))
+    #plt.title('Abundance over Time', fontsize=20)
+    #plt.xlabel('Time', fontsize=20)
+    #plt.ylabel('Abundance', fontsize=20)
+    #plt.xticks(fontsize=20)
+    #plt.yticks(fontsize=20)
 
 
-    abundance           = []
-    abundance_local_1     = []
-    abundance_local_2     = []
-    abundance_not_local = []
+    #abundance           = []
+    #abundance_local_1     = []
+    #abundance_local_2     = []
+    #abundance_not_local = []
 
     a_t = []
     a_l = []
@@ -365,50 +361,82 @@ if __name__ == '__main__':
     a_2 = []
 
 
-    for row in rAx_prime:
-        for _ in range(len(time[0])):
-            sum_abundance           = 0
-            sum_abundance_local_1     = 0
-            sum_abundance_local_2     = 0
-            sum_abundance_not_local = 0
+    #for row in rAx_prime:
+    #    for _ in range(len(time[0])):
+    #        sum_abundance           = 0
+    #        sum_abundance_local_1     = 0
+    #        sum_abundance_local_2     = 0
+    #        sum_abundance_not_local = 0
 
-            num = 0
-            for species_block in row: #(K species)
-                sum_abundance += species_block[_]
-                if(num in local_population_1_index):
-                    sum_abundance_local_1 += species_block[num]
-                elif(num in local_population_2_index):
-                    sum_abundance_local_2 += species_block[num]
-                else:
-                    sum_abundance_not_local += species_block[num]
+    #        num = 0
+    #        for species_block in row: #(K species)
+    #            sum_abundance += species_block[_]
+    #            if(num in local_population_1_index):
+    #                sum_abundance_local_1 += species_block[num]
+    #            elif(num in local_population_2_index):
+    #                sum_abundance_local_2 += species_block[num]
+    #            else:
+    #                sum_abundance_not_local += species_block[num]
 
-                num+=1
-            abundance.append(sum_abundance)
-            abundance_local_1.append(sum_abundance_local_1)
-            abundance_local_2.append(sum_abundance_local_2)
-            abundance_not_local.append(sum_abundance_not_local)
+    #            num+=1
+    #        abundance.append(sum_abundance)
+    #        abundance_local_1.append(sum_abundance_local_1)
+    #        abundance_local_2.append(sum_abundance_local_2)
+    #        abundance_not_local.append(sum_abundance_not_local)
 
-        plt.plot(time[0],abundance, linewidth=5)
-        plt.plot(time[0],abundance_local_1, linewidth=5)
-        plt.plot(time[0],abundance_local_2, linewidth=5)
-        plt.plot(time[0],abundance_not_local, linewidth=5)
+    #    plt.plot(time[0],abundance, linewidth=5)
+    #    plt.plot(time[0],abundance_local_1, linewidth=5)
+    #    plt.plot(time[0],abundance_local_2, linewidth=5)
+    #    plt.plot(time[0],abundance_not_local, linewidth=5)
 
-        a_t.append(abundance[-1])
-        a_l.append(abundance_local_1[-1])
-        a_2.append(abundance_local_2[-1])
-        a_g.append(abundance_not_local[-1])
+    #    a_t.append(abundance[-1])
+    #    a_l.append(abundance_local_1[-1])
+    #    a_2.append(abundance_local_2[-1])
+    #    a_g.append(abundance_not_local[-1])
 
-        abundance.clear()
-        abundance_local_1.clear()
-        abundance_local_2.clear()
-        abundance_not_local.clear()
+    #    abundance.clear()
+    #    abundance_local_1.clear()
+    #    abundance_local_2.clear()
+    #    abundance_not_local.clear()
     #plt.savefig('aot_2.png')
-    plt.show()
+    #plt.show()
 
-#print("total: ", a_t)
-#print("total L: ", a_l)
-#print("total G: ", a_g)
-#print("simulation: ", simulation_run)
+    fig = plt.figure(figsize=(10, 10),dpi=500)
+
+    ax = fig.add_subplot(111, projection='3d', adjustable='box')
+    ax.set_title(label = str(local_population_1_size) + "-" + str(local_population_2_size))
+    ax.set_xlabel('X', fontsize=10)
+    ax.set_ylabel('Y', fontsize=10)
+    ax.set_zlabel('Z', fontsize=10)
+
+    start = []
+    end = []
+
+    for row in rE_prime:
+        c_r = int(row[1][-1])
+        c_g = int(row[0][-1])
+        c_b = int(row[2][-1])
+        #print((row[1][0], row[0][0], row[2][0]))
+        #print((row[1][-1], row[0][-1], row[2][-1]))
+        #print(c_r, c_g, c_b)
+        if(c_r < 0 or c_g < 0 or c_b < 0 or c_r > 100 or c_g > 100 or c_b > 100):
+            # float color must be between 0 and 1
+            # trajectories outside 0 R
+            plt.plot(row[1],row[0],row[2], label='E', linewidth=1, color=(float(1), float(1), float(1)))
+        else:
+            plt.plot(row[1],row[0],row[2], label='E', linewidth=1, color=(float(c_r/100), float(c_g/100), float(c_b/100)))
+            start.append((row[1][0], row[0][0], row[2][0]))
+            end.append((row[1][-1], row[0][-1], row[2][-1]))
+
+    for point in start:
+        ax.scatter(point[1], point[0], point[2], marker='.')
+    for one in end:
+        ax.scatter(one[1], one[0], one[2], marker='3')
+
+    plt.savefig("3d_" + str(RUN_ID) + str(random.randint(100, 999)) + ".png")
+    #plt.show()
+
+
 
 os.mkdir(data_directory)
 # inputs used : sys.argv + date + other metadata

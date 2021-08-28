@@ -220,8 +220,8 @@ if __name__ == '__main__':
 
 
     # sampling
-    for Eg_temp in np.arange(1,100,20):
-        for El_temp in np.arange(1,100,20):
+    for Eg_temp in np.arange(1,100,5):
+        for El_temp in np.arange(1,100,5):
             print("Init : ", Eg_temp, El_temp)
             simulation_run.append((Eg_temp,El_temp))
             time.append(0)
@@ -362,7 +362,16 @@ def aot_l_g():
 
     plt.show()
 
-def stable_points_space():
+
+    ################################################################################################################################
+    ################################################################################################################################
+    ################################################################################################################################
+    ################################################################################################################################
+    ################################################################################################################################
+
+def stable_points_space_kmeans():
+
+    ### NEEDS COMPLETING IF NEEDED - not fully implemented !!! ###
 
     plt.figure(figsize=(30,20))
     plt.title('Trajectories', fontsize=40)
@@ -468,11 +477,6 @@ def stable_points_space():
     current_shortest_distance_xy = (0,0)
 
 
-    ################################################################################################################################
-    ################################################################################################################################
-    ################################################################################################################################
-    ################################################################################################################################
-    ################################################################################################################################
 
     # Notes : We get valid_stable_locations > these are anything in the 0 - 100 0 - 100 grid : anything venturing off to the outside are not tracked
     # now with higher sample points, and increased times, clusters form i.e they stabilize at points around a region not converging to a single point
@@ -517,13 +521,6 @@ def stable_points_space():
 
 
 
-    ################################################################################################################################
-    ################################################################################################################################
-    ################################################################################################################################
-    ################################################################################################################################
-    ################################################################################################################################
-
-
     stable_index +=1
     print("Each Stable Point Done")
     colors = ['r','g','c','m','b','k','y']
@@ -551,13 +548,72 @@ def stable_points_space():
     #plt.plot(row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
 
 
+    ################################################################################################################################
+    ################################################################################################################################
+    ################################################################################################################################
+    ################################################################################################################################
+    ################################################################################################################################
+
+
+
+def stable_points_space():
+
+    plt.figure(figsize=(30,20))
+    plt.title('Trajectories', fontsize=40)
+    plt.xlabel('EL', fontsize=40)
+    plt.ylabel('EG', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.ylim(-20, R+20)
+    plt.xlim(-20, R+20)
+
+    stable_locations = []
+
+    for row in rE_prime:
+        plt.plot(row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
+
+        if((int(row[1][-1]),int(row[0][-1])) not in stable_locations):
+            stable_locations.append((int(row[1][-1]),int(row[0][-1])))
+    plt.savefig('tra_reg_vanilla.png')
+    plt.show()
+
+
+    plt.figure(figsize=(30,20))
+    plt.title('Regions', fontsize=40)
+    plt.xlabel('EL', fontsize=40)
+    plt.ylabel('EG', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.ylim(-20, R+20)
+    plt.xlim(-20, R+20)
+
+    ### HOW THIS IS DONE ###
+    # EG EL GRID -> 100 x 100
+    # RGB value for each refined (0.1 or 0.01) point on the grid
+    # The trajectory gets the color of which ever mini RGB grid it arrives at
+    # Idea by Matthew
+
+    # 3
+    # 2
+    # 1
+    # 0 1 2 3 .... 100
+
+    for row in rE_prime:
+        if(int(row[1][-1]) >= 0 and int(row[1][-1]) <= 100 and int(row[0][-1]) >= 0 and int(row[0][-1]) <= 100):
+            c_r = int(row[1][-1])
+            c_g = int(row[0][-1])
+            c_b = int(0)
+            plt.plot(row[1],row[0], label='E', linewidth=2, color=(float(c_r/100), float(c_g/100), 0.0))
+            # rE[0] is global and goes on the y axis
+
+        if((int(row[1][-1]),int(row[0][-1])) not in stable_locations):
+            stable_locations.append((int(row[1][-1]),int(row[0][-1])))
+
+    plt.savefig('tra_reg_rgb.png')
+    plt.show()
 
 stable_points_space()
 
-#print("total: ", a_t)
-#print("total L: ", a_l)
-#print("total G: ", a_g)
-#print("simulation: ", simulation_run)
 
 os.mkdir(data_directory)
 # inputs used : sys.argv + date + other metadata
