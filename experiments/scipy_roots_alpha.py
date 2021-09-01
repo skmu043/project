@@ -83,11 +83,11 @@ temperatures = []
 
 #plot abundance of species over temperature
 def plot_alphas():
-    for x in np.arange (0, R, step):
+    for x in np.arange (-30, R+30, step):
         temperatures.append(x)
 
     for y in range(K):
-        for x in np.arange (0, R, step):
+        for x in np.arange (-30, R+30, step):
             biotic_force[y].append((math.e) ** ((-1) * (((abs(x-u[y])) ** 2) / (2*(OE[y]**2)))) * w[y])
 
     plt.figure(figsize=(25,15))
@@ -96,6 +96,8 @@ def plot_alphas():
     plt.ylabel('biotic force (a * w)', fontsize=40)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
+    #plt.ylim(-20, R+20)
+    plt.xlim(-20, R+20)
     for _ in range(K):
         plt.plot(temperatures,biotic_force[_])
 
@@ -128,7 +130,6 @@ def stable_point_return():
         if(sol.x >=0 and sol.x <= R):
             true_zeros.append(sol.x)
 
-
     zeros_uniq = []
     for xi in true_zeros:
         if(int(xi) not in zeros_uniq):
@@ -137,37 +138,37 @@ def stable_point_return():
     #print("Unique Points ...")
     zeros_uniq.sort()
 
-    idx=0
-    current_sign = "?"
-    if(y[idx]>0):
-        current_sign = "+"
-    elif(y[idx]<0):
-        current_sign = "-"
+    #idx=0
+    #current_sign = "?"
+    #if(y[idx]>0):
+    #    current_sign = "+"
+    #elif(y[idx]<0):
+    #    current_sign = "-"
 
-    stable_points = []
+    #stable_points = []
 
-    for xi in np.arange(X1, Y1, 0.1):
+    #for xi in np.arange(X1, Y1, 0.1):
         #print(x[idx])
-        loopy_sign="?"
+    #    loopy_sign="?"
         #print(y[idx])
-        if(y[idx]>0):
-            loopy_sign = "+"
-        elif(y[idx]<0):
-            loopy_sign = "-"
+    #    if(y[idx]>0):
+    #        loopy_sign = "+"
+    #    elif(y[idx]<0):
+    #        loopy_sign = "-"
 
-        if(loopy_sign != current_sign):
+    #    if(loopy_sign != current_sign):
             #print("Sign Change Detected!")
             #print("From : ", current_sign , " To : ", loopy_sign)
-            if(current_sign == "+" and loopy_sign == "-"):
+    #        if(current_sign == "+" and loopy_sign == "-"):
                 #print(">>>>> Stable Point : ", x[idx])
-                stable_points.append(int(x[idx]))
-            current_sign = loopy_sign
+    #            stable_points.append(int(x[idx]))
+    #        current_sign = loopy_sign
             #print(y[idx])
 
-        idx+=1
+    #    idx+=1
 
-    print(K)
-    if(K > 120):
+    #print(K)
+    if(K == 100):
         plt.figure(figsize=(25,15))
         plt.title('Combined Biotic over Time', fontsize=40)
         plt.xlabel('Temperature', fontsize=40)
@@ -176,25 +177,35 @@ def stable_point_return():
         plt.yticks(fontsize=20)
         plt.axhline(y=0, color='r', linestyle='-')
         plt.plot(x,y)
-        plt.show()
+        #plt.show()
 
-        print(true_zeros)
-        print("----->>>>>", zeros_uniq)
-        print("Stable Points: ", stable_points)
 
-    reduced_stable_points=[]
-    for each_point in stable_points:
-        if(each_point >=0 and each_point <= R):
-            reduced_stable_points.append(each_point)
+    #reduced_stable_points=[]
+    #for each_point in stable_points:
+    #    if(each_point >=0 and each_point <= R):
+    #        reduced_stable_points.append(each_point)
+    new_reduced_stable_points = []
 
-    print("Final Return : ", len(reduced_stable_points))
+    #print(true_zeros)
+    #print("----->>>>>", zeros_uniq)
+    #print("Stable Points: ", stable_points)
+    #print("Final Return : ", len(reduced_stable_points))
 
-    return(len(reduced_stable_points))
+    for each_point in zeros_uniq:
+        #print(each_point, ">>>" ,f1(each_point-1), int(f1(each_point)), f1(each_point+1))
+        if(f1(each_point-1) > 0 and f1(each_point+1) < 0):
+            new_reduced_stable_points.append(each_point)
+
+    #print("New Stable Points", new_reduced_stable_points)
+
+    return(len(new_reduced_stable_points))
+
 
 stable_points_average = []
 total_points = []
 
 stable_point = stable_point_return()
+#print("K + N + Stable : ",K , N, stable_point)
 
 os.mkdir(data_directory)
 s = shelve.open(data_directory + "/" + exp_name + ".data")

@@ -2,6 +2,7 @@ import os
 from multiprocessing import Process, Pool
 import time
 import numpy as np
+import sys
 
 epoch_time = int(time.time())
 
@@ -11,7 +12,7 @@ def print_time():
     print(current_time)
 
 K = 100
-N = [5,7,10]
+N = [5]
 
 SAMPLE = 1
 
@@ -22,6 +23,10 @@ def run_it(K, N):
     os.system("python3.9 " + os.getcwd() + "/experiments/scipy_roots_alpha.py " + str(Krun) + " " + str(Nrun) + " " + str(epoch_time))
 
 if __name__ == '__main__':
+
+
+    #os.system("python3.9 " + os.getcwd() + "/experiments/scipy_roots_alpha.py " + str(K) + " " + str(N[0]) + " " + str(epoch_time))
+    #sys.exit()
 
     pool = Pool(processes=8)
 
