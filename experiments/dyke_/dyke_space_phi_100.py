@@ -23,6 +23,7 @@ if(len(sys.argv)!=12):
     print("e.g K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN=2, OE=5, LP_Z = (10 - 100), RUN_ID : epoch")
     print("exit")
     sys.exit()
+
 SAMPLE_STEP=50
 K = int(sys.argv[1])          #Number of Biotic Components
 R = int(sys.argv[2])          #Essential Range (defines where Biotic Components can be present)
