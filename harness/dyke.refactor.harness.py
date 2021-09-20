@@ -6,7 +6,7 @@ import time
 
 # Generating ALL Parameters
 
-SAMPLE_SIZE = int(10)
+SAMPLE_SIZE = int(20)
 SAMPLE_STEP = int(50)
 RUN_ID = int(time.time())
 
@@ -41,15 +41,17 @@ for ui in range(environment_components_N):
         optimum_condition_u[ui] = [random.uniform(0, essential_range_R) for _ in range(biotic_components_K)]
 # End Generating Parameters
 
+# Create Shelve to store parameters being sent to experiment run
 exp_name = "dyke.refactor"
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
 shelve_file = data_directory + "/" + exp_name + ".data"
-# Create Shelve to store parameters being sent to experiment run
-
 
 def init_shelve():
+
     os.mkdir(data_directory)
     s = shelve.open(shelve_file)
+    print(data_directory, shelve_file)
+
     try:
         s['SAMPLE_SIZE'] = SAMPLE_SIZE
         s['SAMPLE_STEP'] = SAMPLE_STEP
@@ -83,14 +85,15 @@ def print_time():
     print(current_time)
 
 
-def run_it(phi):
-    print("Running with PHI : ", phi)
-    os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(RUN_ID))
-
+def run_it(shelve_file):
+    print("Running with PHI : ", shelve_file)
+    os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(shelve_file))
+    print(shelve_file)
 
 if __name__ == '__main__':
+
     init_shelve()
     print_time()
 
-    pool = Pool(processes=1)
-    pool.map(run_it, [100 for x in range(SAMPLE_SIZE)])
+    pool = Pool(processes=8)
+    pool.map(run_it, [shelve_file for x in range(SAMPLE_SIZE)])
