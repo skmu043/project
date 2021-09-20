@@ -5,6 +5,14 @@ import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
+import matplotlib as mpl
+mpl.use('macosx')
+#mpl.use('TkAgg')
+
+print(mpl.rcsetup.interactive_bk)
+print(mpl.rcsetup.non_interactive_bk)
+print(mpl.rcsetup.all_backends)
+
 exp_name = "dyke_space"
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
 # str(random.randint(100, 999)) added above to remove the condition where directory is not created as it exists (scheduler running at the same time step)
@@ -15,7 +23,7 @@ if(len(sys.argv)!=12):
     print("e.g K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN=2, OE=5, LP_Z = (10 - 100), RUN_ID : epoch")
     print("exit")
     sys.exit()
-SAMPLE_STEP=20
+SAMPLE_STEP=50
 K = int(sys.argv[1])          #Number of Biotic Components
 R = int(sys.argv[2])          #Essential Range (defines where Biotic Components can be present)
 P = int(sys.argv[3])          #Perturbation
@@ -574,23 +582,23 @@ def stable_points_space_kmeans():
 
 def stable_points_space():
 
-    plt.figure(figsize=(30,30))
-    plt.title('Trajectories', fontsize=40)
-    plt.xlabel('EL', fontsize=40)
-    plt.ylabel('EG', fontsize=40)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    plt.ylim(-20, R+20)
-    plt.xlim(-20, R+20)
+    #plt.figure(figsize=(30,30))
+    #plt.title('Trajectories', fontsize=40)
+    #plt.xlabel('EL', fontsize=40)
+    #plt.ylabel('EG', fontsize=40)
+    #plt.xticks(fontsize=20)
+    #plt.yticks(fontsize=20)
+    #plt.ylim(-20, R+20)
+    #plt.xlim(-20, R+20)
 
     stable_locations = []
 
-    for row in rE_prime:
-        plt.plot(row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
+    #for row in rE_prime:
+    #    plt.plot(row[1],row[0], label='E', linewidth=2) # rE[0] is global and goes on the y axis
 
-        if((int(row[1][-1]),int(row[0][-1])) not in stable_locations):
-            stable_locations.append((int(row[1][-1]),int(row[0][-1])))
-    plt.savefig("tra_reg_vanilla" + str(RUN_ID) + str(random.randint(100, 999)) +".png")
+    #    if((int(row[1][-1]),int(row[0][-1])) not in stable_locations):
+    #        stable_locations.append((int(row[1][-1]),int(row[0][-1])))
+    #plt.savefig("tra_reg_vanilla" + str(RUN_ID) + str(random.randint(100, 999)) +".png")
     #plt.show()
 
 
@@ -634,16 +642,16 @@ def stable_points_space():
         if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
             # float color must be between 0 and 1
             # trajectories outside 0 R
-            plt.plot(row[1][0], row[0][0], marker='.', markersize = "10") # Plots Start but not the Ends
+            plt.plot(row[1][0], row[0][0], marker='.', markersize = "10", color=(float(0), float(0), float(1))) # Plots Start but not the Ends
             plt.plot(row[1],row[0], label='E', linewidth=1, color=(float(0), float(0), float(1)))
         else:
             plt.plot(row[1],row[0], label='E', linewidth=1, color=(float(c_r/100), float(c_g/100), float(0.5)))
 
-            plt.plot(row[1][0], row[0][0], marker='.', markersize = "10")
-            plt.plot(row[1][-1], row[0][-1], marker='*', markersize = "10")
+            plt.plot(row[1][0], row[0][0], marker='.', markersize = "10" , color=(float(c_r/100), float(c_g/100), float(0.5)))
+            plt.plot(row[1][-1], row[0][-1], marker='*', markersize = "10" , color=(float(c_r/100), float(c_g/100), float(0.5)))
 
-    plt.savefig("tra_reg_rgb" + str(RUN_ID) + str(random.randint(100, 999)) +".png")
-    plt.show()
+    plt.savefig("tra_reg_rgb" + str(RUN_ID) + "-" + str(random.randint(100, 999)) +".png")
+    #plt.show()
 
 #stable_points_space()
 
@@ -659,12 +667,12 @@ def stable_points_space():
 
 def stable_points_space_3d():
 
-    fig = plt.figure(figsize=(10, 10),dpi=500)
+    fig = plt.figure(figsize=(30,30), dpi=200)
     ax = fig.add_subplot(111, projection='3d', adjustable='box')
-    ax.set_title(label = "Regions with total abundance")
-    ax.set_xlabel('X', fontsize=10)
-    ax.set_ylabel('Y', fontsize=10)
-    ax.set_zlabel('Z', fontsize=10)
+    ax.set_title(label = "EL/EG with Total Abundance")
+    ax.set_xlabel('X - EL', fontsize=10)
+    ax.set_ylabel('Y - EG', fontsize=10)
+    ax.set_zlabel('Z - Total Abundance', fontsize=10)
     ax.set_xlim([-10,100])
     ax.set_ylim([-10,100])
     #ax.set_zlim([0,50])
@@ -709,49 +717,115 @@ def stable_points_space_3d():
         #print(len(row[1]))
 
         if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
-            #ax.scatter(row[1][0], row[0][0], row_abundance[0] , marker='.', s=10)
-            plt.plot(row[1][0], row[0][0], row_abundance[0], marker='x')
-            #ax.scatter(row[1],row[0], row_abundance , color=(float(0), float(0), float(1)), s=1)
+            ax.scatter(row[1][0], row[0][0], row_abundance[0],s=10, marker='.', color=(float(0), float(0), float(1)))
+            #ax.scatter(row[1][0], row[0][0], row_abundance[0],s=10, marker='*', color=(float(0), float(0), float(1)))
+            #plt.plot(row[1][0], row[0][0], row_abundance[0], marker='x')
+            plt.plot(row[1],row[0], row_abundance , color=(float(0), float(0), float(1)))
         else:
             #ax.scatter(row[1],row[0],row_abundance, color=(float(c_r/100), float(c_g/100), float(0.5)), s=1)
             plt.plot(row[1],row[0],row_abundance, color=(float(c_r/100), float(c_g/100), float(0.5)))
-            ####plt.plot(row[1][0], row[0][0],0 , marker='.', markersize = "10")
-            ####plt.plot(row[1][-1], row[0][-1], rAxS_prime[index_A][-1],  marker='*', markersize = "10")
             ax.scatter(row[1][0], row[0][0], 0, marker='.', s=10, color=(float(c_r/100), float(c_g/100), float(0.5)))
             ax.scatter(row[1][-1], row[0][-1], row_abundance[-1], marker='*', s=15, color=(float(c_r/100), float(c_g/100), float(0.5)))
 
+    index_A +=1
+
+    plt.savefig("3d_abundance_" + str(RUN_ID)  + "-" +  str(random.randint(100, 999)) + ".png")
+    #plt.show()
+
+#stable_points_space_3d()
+
+
+def stable_points_space_3d_rotate():
+
+    fig = plt.figure(figsize=(50,50))
+    ax = fig.add_subplot(111, projection='3d', adjustable='box')
+    ax.set_title(label = "EL/EG with Total Abundance")
+    ax.set_xlabel('X - EL', fontsize=10)
+    ax.set_ylabel('Y - EG', fontsize=10)
+    ax.set_zlabel('Z - Total Abundance', fontsize=10)
+    ax.set_xlim([-10,100])
+    ax.set_ylim([-10,100])
+    #ax.set_zlim([0,50])
+
+
+    # Abundance is captured like so:
+    # [[1,2,3],[1,2,3],[1,2,3]... K]
+    # and packed for each sample run into rAxS_prime
+    # so should look like this
+    #[
+    #    [[1,2,3],[1,2,3],[1,2,3]... K],
+    #    [[1,2,3],[1,2,3],[1,2,3]... K],
+    #    [[1,2,3],[1,2,3],[1,2,3]... K],
+    #    .
+    #    .
+    #    .
+    #    SAMPLE_STEP
+    #]
+
+    index_A = 0
+
+    for row in rE_prime:
+        c_r = int(row[1][-1])
+        c_g = int(row[0][-1])
+
+        row_abundance = []
+        row_abundance.append(0)
+        decompose = rAx_prime[index_A]
+        #print(decompose)
+        run_length = len(decompose[0])
+        #print(run_length)
+
+
+        for x in range(run_length):
+            current_sum = 0
+            for item in decompose:
+                current_sum += item[x]
+            row_abundance.append(current_sum)
+
+        #print(len(row_abundance))
+        #print(len(row[1]))
+        #print(len(row[1]))
+
+        if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
+            ax.scatter(row[1][0], row[0][0], row_abundance[0],s=10, marker='.', color=(float(0), float(0), float(1)))
+            #plt.plot(row[1][0], row[0][0], row_abundance[0], marker='x')
+            plt.plot(row[1],row[0], row_abundance , color=(float(0), float(0), float(1)))
+        else:
+            #ax.scatter(row[1],row[0],row_abundance, color=(float(c_r/100), float(c_g/100), float(0.5)), s=1)
+            plt.plot(row[1],row[0],row_abundance, color=(float(c_r/100), float(c_g/100), float(0.5)))
+            ax.scatter(row[1][0], row[0][0], 0, marker='.', s=10, color=(float(c_r/100), float(c_g/100), float(0.5)))
+            ax.scatter(row[1][-1], row[0][-1], row_abundance[-1], marker='*', s=15, color=(float(c_r/100), float(c_g/100), float(0.5)))
 
     index_A +=1
 
-    plt.savefig("3d_abundance_" + str(RUN_ID) + str(random.randint(100, 999)) + ".png")
+    #plt.savefig("3d_abundance_" + str(RUN_ID)  + "-" +  str(random.randint(100, 999)) + ".png")
     plt.show()
 
-stable_points_space_3d()
-
+#stable_points_space_3d_rotate()
 
 os.mkdir(data_directory)
 # inputs used : sys.argv + date + other metadata
 # temperatures, biotic_force, w, u, rAxR, time, rE, rF, rP, rE, rEt
-#print(data_directory)
+print(data_directory)
 s = shelve.open(data_directory + "/" + exp_name + ".data")
 try :
     s['sys.argv']       = sys.argv
-    #s['temperatures']   = temperatures
-    #s['biotic_force']   = biotic_force
+    s['temperatures']   = temperatures
+    s['biotic_force']   = biotic_force
     s['w']              = w
     s['u']              = u
-    #s['rAx_prime']      = rAx_prime
-    #s['rAxR_prime']     = rAxR_prime
-    #s['time_prime']     = time_prime
-    #s['rE_prime']       = rE_prime
-    #s['rF_prime']       = rF_prime
+    s['rAx_prime']      = rAx_prime
+    s['rAxR_prime']     = rAxR_prime
+    s['time_prime']     = time_prime
+    s['rE_prime']       = rE_prime
+    s['rF_prime']       = rF_prime
 
     s['K']              = K
     s['R']              = R
     s['E']              = E
-    #s['start']          = start
-    #s['end']            = end
-    #s['step']           = step
+    s['start']          = start
+    s['end']            = end
+    s['step']           = step
     s['N']              = N
     s['OEn']            = OEn
 
