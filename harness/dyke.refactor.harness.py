@@ -41,7 +41,7 @@ for ui in range(environment_components_N):
         optimum_condition_u[ui] = [random.uniform(0, essential_range_R) for _ in range(biotic_components_K)]
 # End Generating Parameters
 
-exp_name = "dyke_refactor"
+exp_name = "dyke.refactor"
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
 shelve_file = data_directory + "/" + exp_name + ".data"
 # Create Shelve to store parameters being sent to experiment run
