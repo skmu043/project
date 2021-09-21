@@ -5,7 +5,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-mpl.use('macosx')
+#mpl.use('macosx')
 
 if int(len(sys.argv)) != int(2):
     print("Args: shelve file name which contains all of > (K, R, P, E, start, end, step, EN, OE, LP_Z, RUN_ID)")
@@ -288,6 +288,73 @@ if __name__ == '__main__':
             ######################################### END RE INIT #####################################################################
 
 
+def plot_alphas():
+
+    for x in np.arange (-50, R+50, step):
+        temperatures.append(x)
+
+    plt.figure(figsize=(30,30))
+    plt.title('Biotic Force over Temperature', fontsize=40)
+    plt.xlabel('Temperature', fontsize=40)
+    plt.ylabel('biotic force (a * w)', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+
+    for each_env_var in range(N):
+        biotic_force = [[] for _ in range(K)]
+        for y in range(K):
+            for x in np.arange (-50, R+50, step):
+                biotic_force[y].append((math.e) ** ((-1) * (((abs(x-u[each_env_var][y])) ** 2) / (2*(OE[y]**2)))) * w[each_env_var][y])
+
+
+        for _ in range(K):
+            plt.plot(temperatures,biotic_force[_])
+
+        plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
+    plt.show()
+
+
+
+plot_alphas()
+
+
+def stable_points_space():
+
+    stable_locations = []
+
+    plt.figure(figsize=(30,30), dpi=200)
+    plt.title('Regions', fontsize=40)
+    plt.xlabel('EL', fontsize=40)
+    plt.ylabel('EG', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.ylim(-20, R+20)
+    plt.xlim(-20, R+20)
+
+    for row in rE_prime:
+
+        if((int(row[1][-1]),int(row[0][-1])) not in stable_locations):
+            stable_locations.append((int(row[1][-1]),int(row[0][-1])))
+
+        c_r = int(row[1][-1])
+        c_g = int(row[0][-1])
+
+        if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
+            # float color must be between 0 and 1
+            # trajectories outside 0 R
+            plt.plot(row[1][0], row[0][0], marker='.', markersize = "10", color=(float(0), float(0), float(1))) # Plots Start but not the Ends
+            plt.plot(row[1],row[0], label='E', linewidth=1, color=(float(0), float(0), float(1)))
+        else:
+            plt.plot(row[1],row[0], label='E', linewidth=1, color=(float(c_r/100), float(c_g/100), float(0.5)))
+
+            plt.plot(row[1][0], row[0][0], marker='.', markersize = "10" , color=(float(c_r/100), float(c_g/100), float(0.5)))
+            plt.plot(row[1][-1], row[0][-1], marker='*', markersize = "10" , color=(float(c_r/100), float(c_g/100), float(0.5)))
+
+    #plt.savefig("tra_reg_rgb" + str(RUN_ID) + "-" + str(random.randint(100, 999)) +".png")
+    plt.show()
+
+stable_points_space()
+
 def stable_points_space_3d_rotate():
 
     fig = plt.figure(figsize=(50,50))
@@ -299,21 +366,6 @@ def stable_points_space_3d_rotate():
     ax.set_xlim([-10,100])
     ax.set_ylim([-10,100])
     #ax.set_zlim([0,50])
-
-
-    # Abundance is captured like so:
-    # [[1,2,3],[1,2,3],[1,2,3]... K]
-    # and packed for each sample run into rAxS_prime
-    # so should look like this
-    #[
-    #    [[1,2,3],[1,2,3],[1,2,3]... K],
-    #    [[1,2,3],[1,2,3],[1,2,3]... K],
-    #    [[1,2,3],[1,2,3],[1,2,3]... K],
-    #    .
-    #    .
-    #    .
-    #    SAMPLE_STEP
-    #]
 
     index_A = 0
 

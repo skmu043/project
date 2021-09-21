@@ -544,8 +544,6 @@ def stable_points_space_kmeans():
                 region_plots_y_.append(row[0][-1])
 
 
-
-
     stable_index +=1
     print("Each Stable Point Done")
     colors = ['r','g','c','m','b','k','y']

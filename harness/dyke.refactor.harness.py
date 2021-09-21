@@ -6,8 +6,8 @@ import time
 
 # Generating ALL Parameters
 
-SAMPLE_SIZE = int(20)
-SAMPLE_STEP = int(50)
+SAMPLE_SIZE = int(1)
+SAMPLE_STEP = int(20)
 RUN_ID = int(time.time())
 
 biotic_components_K = int(100)
@@ -45,6 +45,7 @@ for ui in range(environment_components_N):
 exp_name = "dyke.refactor"
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
 shelve_file = data_directory + "/" + exp_name + ".data"
+
 
 def init_shelve():
 
@@ -90,10 +91,24 @@ def run_it(shelve_file):
     os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(shelve_file))
     print(shelve_file)
 
+
 if __name__ == '__main__':
 
     init_shelve()
     print_time()
 
-    pool = Pool(processes=8)
+    pool = Pool(processes=1)
     pool.map(run_it, [shelve_file for x in range(SAMPLE_SIZE)])
+
+    #     for Eg_temp in np.arange(1,100,SAMPLE_STEP):
+    #         for El_temp in np.arange(1,100,SAMPLE_STEP):
+    #             print("Init : ", Eg_temp, El_temp)
+    #             > Open Shelve and update and Close Shelve note run_it is its own run so open run_it's local shelve and update that
+    # which creates the problem of run_it using different w and u values
+    # so solution could be for this one shelve, generate the start pairs and then iterate ...
+
+    # start_trajectories = ((1,1, shelve_file), (5,5, shelve_file), (10,10, shelve_file), (15.15, shelve_file), (20,20, shelve_file))
+    #pool.map (run_it, start_trajectories)
+
+    # run_it(start_traj)
+    # 
