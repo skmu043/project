@@ -1,5 +1,7 @@
-import shelve, os
+import shelve, os, sys
 import matplotlib.pyplot as plt
+
+print("Python version: ", sys.version, "Version info: ", sys.version_info)
 
 #plot affects values for each species
 def plot_w():
@@ -121,9 +123,12 @@ for si in data_archives:
 select = int(input("Select [0-"+ str(len(data_archives) - 1)+ "]: "))
 
 if(select <= len(os.listdir(data_dr))-1):
-    #print(os.listdir(data_dr))
-    #print(data_dr + "/" + str(os.listdir(data_dr)[select]) + "/dyke.data.db")
+
+    print(os.listdir(data_dr))
+    print(data_dr + "/" + str(os.listdir(data_dr)[select]) + "/dyke.data.db")
     s = shelve.open(data_dr + "/" + str(data_archives[select]) + "/dyke.data.db")
+
+    print(s)
 
     try :
 
@@ -147,7 +152,6 @@ if(select <= len(os.listdir(data_dr))-1):
         start           = s['start']
         end             = s['end']
         step            = s['step']
-
 
 
         print("0 plot affects values for each species")

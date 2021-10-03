@@ -12,7 +12,7 @@ def print_time():
     print(current_time)
 
 
-SAMPLE = 10
+SAMPLE = 1
 
 def run_it(phi):
     #"e.g                                K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN = 2, OE = 5, LP_Z = (10 - 100), RUN_ID=epoch"

@@ -3,6 +3,9 @@ import math, random, sys, os, shelve, time
 import matplotlib.pyplot as plt
 import numpy as np
 
+print("Python version: ", sys.version, "Version info: ", sys.version_info)
+
+
 exp_name = "dyke"
 # the var time below conflicts with time here
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + exp_name
@@ -123,6 +126,7 @@ os.mkdir(data_directory)
 print(data_directory)
 s = shelve.open(data_directory + "/" + exp_name + ".data")
 try :
+
     s['sys.argv']       = sys.argv
     s['temperatures']   = temperatures
     s['biotic_force']   = biotic_force
@@ -144,6 +148,7 @@ try :
     s['end'] = end
     s['step'] = step
 
+    s.sync()
 
 finally:
     s.close()

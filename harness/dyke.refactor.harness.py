@@ -1,11 +1,10 @@
 import random
 import os
 import shelve
-from multiprocessing import Process, Pool
 import time
+from multiprocessing import Process, Pool
 
 # Generating ALL Parameters
-
 SAMPLE_SIZE = int(1)
 SAMPLE_STEP = int(20)
 RUN_ID = int(time.time())
@@ -39,7 +38,7 @@ for ui in range(environment_components_N):
         print("Duplicate u's detected: Regenerating ...")
         optimum_condition_u[ui].clear()
         optimum_condition_u[ui] = [random.uniform(0, essential_range_R) for _ in range(biotic_components_K)]
-# End Generating Parameters
+
 
 # Create Shelve to store parameters being sent to experiment run
 exp_name = "dyke.refactor"
@@ -86,10 +85,10 @@ def print_time():
     print(current_time)
 
 
-def run_it(shelve_file):
-    print("Running with PHI : ", shelve_file)
-    os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(shelve_file))
-    print(shelve_file)
+def run_it(shelve_file_):
+    print("Running with Shelve Input : ", shelve_file_)
+    os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(shelve_file_))
+    print(shelve_file_)
 
 
 if __name__ == '__main__':
@@ -103,12 +102,12 @@ if __name__ == '__main__':
     #     for Eg_temp in np.arange(1,100,SAMPLE_STEP):
     #         for El_temp in np.arange(1,100,SAMPLE_STEP):
     #             print("Init : ", Eg_temp, El_temp)
-    #             > Open Shelve and update and Close Shelve note run_it is its own run so open run_it's local shelve and update that
+    #             > Open Shelve and update and Close Shelve note run_it
+    #             is its own run so open run_it's local shelve and update that
     # which creates the problem of run_it using different w and u values
     # so solution could be for this one shelve, generate the start pairs and then iterate ...
-
-    # start_trajectories = ((1,1, shelve_file), (5,5, shelve_file), (10,10, shelve_file), (15.15, shelve_file), (20,20, shelve_file))
-    #pool.map (run_it, start_trajectories)
-
+    # start_trajectories = ((1,1, shelve_file), (5,5, shelve_file),
+    # (10,10, shelve_file), (15.15, shelve_file), (20,20, shelve_file))
+    # pool.map (run_it, start_trajectories)
     # run_it(start_traj)
     # 

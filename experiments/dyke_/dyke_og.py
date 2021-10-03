@@ -8,7 +8,7 @@ R = 100        #Essential Range (defines where Biotic Components can be present)
 P = 0          #Perturbation
 OE = []        #Niche
 start = 0      #Time Start
-end = 500      #Time End
+end = 200      #Time End
 step= 0.1      #Time Step
 w = []         #Affects Parameter (ranges between -1 and 1 for each K)
 u = []         #Ideal Temperature for species (between 0 and R -> the essential range)
@@ -213,8 +213,8 @@ def plot_efp():
 for xtime in np.arange (start, end, step):
     update(step)
     time.append(xtime)
-    if(xtime == 100):
-        P += 20
+    #if(xtime == 100):
+    #    P += 20
 
 #    if(xtime == 70):
 #        P -= 10
