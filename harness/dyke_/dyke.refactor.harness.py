@@ -6,19 +6,19 @@ from multiprocessing import Process, Pool
 
 # Generating ALL Parameters
 SAMPLE_SIZE = int(1)
-SAMPLE_STEP = int(20)
+SAMPLE_STEP = int(10)
 RUN_ID = int(time.time())
 
 biotic_components_K = int(100)
 essential_range_R = int(100)
 external_perturbation_rate_P = int(0)
 time_start = int(0)
-time_end = int(200)
+time_end = int(100)
 time_step = float(0.1)
 environment_components_N = int(2)
 truncated_gaussian_ROUND = int(10)
 niche_width = int(5)
-local_population_size = int(10)
+local_population_size = int(50)
 biotic_force_F = [0 for _ in range(environment_components_N)]
 
 affects_w = [[] for _ in range(environment_components_N)]
