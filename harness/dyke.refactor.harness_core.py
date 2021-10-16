@@ -4,6 +4,7 @@ import shelve
 import time
 from multiprocessing import Process, Pool
 import numpy as np
+import time
 
 # Generating ALL Parameters
 SAMPLE_SIZE = int(1)
@@ -53,31 +54,10 @@ local_population_index.sort()
 
 # Create Shelve to store parameters being sent to experiment run
 exp_name = "dyke.refactor_core"
-data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
-shelve_file = data_directory + "/" + exp_name + ".data"
 
-# Store source shelve file to read common
-control_data = str(os.getcwd())+"/data/" + exp_name + "_control"
-control_shelve_file = control_data + "/" + exp_name + ".control.data"
-
-print("Control Shelve: "+control_shelve_file)
-
-if(not os.path.isdir(control_data)):
-    print("gate one")
-    if(not os.path.exists(control_shelve_file)):
-        os.mkdir(control_data)
-        control_shelve = shelve.open(control_shelve_file)
-        print("WRITING !!!")
-        try:
-            control_shelve['affects_w'] = affects_w
-            control_shelve['optimum_condition_u'] = optimum_condition_u
-            control_shelve['local_population_index'] = local_population_index
-        finally:
-            control_shelve.close()
-            print("CLOSING SHELVE")
-
-print("Control Shelve End")
 def init_shelve():
+    data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
+    shelve_file = data_directory + "/" + exp_name + ".data"
 
     os.mkdir(data_directory)
     s = shelve.open(shelve_file)
@@ -119,40 +99,37 @@ def print_time():
 print_time()
 
 
-def run_it(global_local_start_temp):
-    #open control shelve and pack common vars for individual simulation runs
-    control_shelve = shelve.open(control_shelve_file)
+def run_it(simulation_run_shelve):
 
-    simulation_run_shelve = init_shelve()
-    simulation_shelve = shelve.open(simulation_run_shelve)
-
-
-    try:
-        simulation_shelve['affects_w'] = control_shelve['affects_w']
-        simulation_shelve['optimum_condition_u'] = control_shelve['optimum_condition_u']
-        simulation_shelve['local_population_index'] = control_shelve['local_population_index']
-        simulation_shelve['global_start_temp'] = global_local_start_temp[0]
-        simulation_shelve['local_start_temp'] = global_local_start_temp[1]
-    finally:
-        simulation_shelve.close()
-        control_shelve.close()
-
+    print("Running : ", simulation_run_shelve)
     os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(simulation_run_shelve))
 
 if __name__ == '__main__':
 
-
-
-    simulation_start_temperatures = []
+    shelve_files = []
 
     for Eg_temp in np.arange(1,essential_range_R,SAMPLE_STEP):
         for El_temp in np.arange(1,essential_range_R,SAMPLE_STEP):
-            simulation_start_temperatures.append((Eg_temp, El_temp))
 
-    print(simulation_start_temperatures)
+            simulation_run_shelve = init_shelve()
+            shelve_files.append(simulation_run_shelve)
+            print("InLoopCreates: ",simulation_run_shelve)
+            simulation_shelve = shelve.open(simulation_run_shelve)
 
-    pool = Pool(processes=1)
-    pool.map(run_it, [x for x in simulation_start_temperatures])
+            try:
+                simulation_shelve['affects_w'] = affects_w
+                simulation_shelve['optimum_condition_u'] = optimum_condition_u
+                simulation_shelve['local_population_index'] = local_population_index
+                simulation_shelve['global_start_temp'] = Eg_temp
+                simulation_shelve['local_start_temp'] = El_temp
+            finally:
+                simulation_shelve.close()
+
+            #time.sleep(1)
+
+    pool = Pool(processes=2)
+
+    pool.map(run_it, [_ for _ in shelve_files])
 
     #     for Eg_temp in np.arange(1,100,SAMPLE_STEP):
     #         for El_temp in np.arange(1,100,SAMPLE_STEP):

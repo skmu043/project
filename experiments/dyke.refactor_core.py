@@ -34,6 +34,9 @@ try:
     biotic_force_F = s['biotic_force_F']
     local_population_index = s['local_population_index']
 
+    global_start_temp = s['global_start_temp']
+    local_start_temp = s['local_start_temp']
+
     exp_name = s['exp_name']
     data_directory = s['data_directory']
     shelve_file = s['shelve_file']
@@ -49,7 +52,7 @@ start = time_start
 end = time_end
 step = time_step
 N = environment_components_N
-E = [0, 0]
+E = [global_start_temp, global_start_temp]
 F = biotic_force_F
 
 ROUND = truncated_gaussian_ROUND
@@ -196,22 +199,12 @@ def update(step):
 
 if __name__ == '__main__':
 
-    # First Set of calculations have occurred during initilization so appending time 0
+    time.append(0)
+    post_init_start = start + step
 
-
-    # sampling
-    for Eg_temp in np.arange(1,100,S_STEP):
-        for El_temp in np.arange(1,100,S_STEP):
-            print("Init : ", Eg_temp, El_temp)
-
-            time.append(0)
-            # xtime should should start from one timestep + 0
-            post_init_start = start + step
-            for xtime in np.arange (post_init_start, end, step):
-                update(step)
-                time.append(xtime)
-
-
+    for xtime in np.arange (post_init_start, end, step):
+        update(step)
+        time.append(xtime)
 
 def init_shelve():
 
