@@ -14,7 +14,7 @@ def print_time():
 K = 201
 N = [5, 7, 10]
 
-SAMPLE = 1
+SAMPLE = 10
 
 def run_it(K, N):
     Krun = K

@@ -547,7 +547,7 @@ def stable_points_space_heat_global():
 
     plt.show()
 
-stable_points_space_heat_global()
+#stable_points_space_heat_global()
 
 def stable_points_space_heat_local():
 
@@ -595,8 +595,47 @@ def stable_points_space_heat_local():
 
     plt.show()
 
-stable_points_space_heat_local()
+#stable_points_space_heat_local()
 
+def stable_points_space_final_abundance_rgb():
+
+    stable_locations = []
+    plt.figure(figsize=(30,30), dpi=200)
+    plt.title('Final Abundance Map', fontsize=40)
+    plt.xlabel('EL', fontsize=40)
+    plt.ylabel('EG', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.ylim(-20, R+20)
+    plt.xlim(-20, R+20)
+
+    index_A = 0
+    for row in rE_prime:
+        c_r = int(row[1][-1])
+        c_g = int(row[0][-1])
+
+        row_abundance = []
+        decompose = rAx_prime[index_A]
+        run_length = len(decompose[0])
+
+        for x in range(run_length):
+            current_sum = 0
+            for item in decompose:
+                current_sum += item[x]
+            row_abundance.append(current_sum)
+
+        if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
+            plt.scatter(row[1][0], row[0][0],s=10, marker='.', color=(float(row_abundance[0]), float(1), float(1)))
+            #plt.plot(row[1],row[0], row_abundance , color=(float(0), float(0), float(1)))
+        else:
+            #plt.plot(row[1],row[0],row_abundance, color=(float(c_r/100), float(c_g/100), float(0.5)))
+            #plt.scatter(row[1][0], row[0][0], row_abundance[0], marker='.', s=20, color=(float(c_r/100), float(c_g/100), float(0.5)))
+            plt.scatter(row[1][-1], row[0][-1], marker='*', s=20, color=(float(c_r/100), float(c_g/100), float(row_abundance[-1])))
+
+        index_A +=1
+    plt.show()
+
+stable_points_space_final_abundance_rgb()
 
 mpl.use('macosx') #for the 3D magic
 
