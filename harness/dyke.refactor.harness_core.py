@@ -8,7 +8,7 @@ import time
 
 # Generating ALL Parameters
 SAMPLE_SIZE = int(1)
-SAMPLE_STEP = int(1)
+SAMPLE_STEP = int(50)
 RUN_ID = int(time.time())
 
 biotic_components_K = int(100)
@@ -101,7 +101,7 @@ print_time()
 
 def run_it(simulation_run_shelve):
 
-    print("Running : ", simulation_run_shelve)
+    #print("Running : ", simulation_run_shelve)
     os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(simulation_run_shelve))
 
 if __name__ == '__main__':
@@ -110,6 +110,7 @@ if __name__ == '__main__':
 
     for Eg_temp in np.arange(1,essential_range_R,SAMPLE_STEP):
         for El_temp in np.arange(1,essential_range_R,SAMPLE_STEP):
+            print(Eg_temp, El_temp)
 
             simulation_run_shelve = init_shelve()
             shelve_files.append(simulation_run_shelve)
@@ -127,7 +128,11 @@ if __name__ == '__main__':
 
             #time.sleep(1)
 
-    pool = Pool(processes=2)
+    print("===")
+    for item in shelve_files:
+        print(item)
+
+    pool = Pool(processes=8)
 
     pool.map(run_it, [_ for _ in shelve_files])
 
