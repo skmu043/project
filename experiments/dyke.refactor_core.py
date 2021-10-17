@@ -208,13 +208,15 @@ def results_shelve():
         s['alpha'] = alpha
         s['rF'] = rF
         s['rE'] = rE
+        s['time'] = time
+        s['OE'] = OE
 
     finally:
         s.close()
 
 if __name__ == '__main__':
 
-    time.append(0)
+    #time.append(0)
     post_init_start = start + step
 
     for xtime in np.arange (post_init_start, end, step):

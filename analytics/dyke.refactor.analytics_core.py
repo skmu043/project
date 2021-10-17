@@ -1,4 +1,4 @@
-import sys
+import sys, os
 import shelve
 import random
 import math
@@ -7,48 +7,103 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 
-if int(len(sys.argv)) != int(2):
-    print("Args: shelve file name which contains all of > (K, R, P, E, start, end, step, EN, OE, LP_Z, RUN_ID)")
-    print("e.g K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN=2, OE=5, LP_Z = (10 - 100), RUN_ID : epoch")
-    print("exit")
-    sys.exit()
+E_prime             =[]
+F_prime             =[]
+alpha_prime         =[]
+rF_prime            =[]
+rE_prime            =[]
+rAx_prime           =[]
+rAxR_prime          =[]
+rAxS_prime          =[]
+time_prime          =[]
+biotic_force_prime  =[]
+temperatures_prime  =[]
+#simulation_run      =[]
+rNumberAlive_prime  =[]
 
-s = shelve.open(str(sys.argv[1]))
+data_dr = os.getcwd() + '/data'
+data_archives = os.listdir(data_dr)
 
-try:
-    SAMPLE_SIZE = s['SAMPLE_SIZE']
-    SAMPLE_STEP = s['SAMPLE_STEP']
-    RUN_ID = s['RUN_ID']
+for si in data_archives:
+    print(si)
+    s = shelve.open(data_dr + "/" + str(si) + "/dyke.refactor_core.data")
+    try:
+        #SAMPLE_SIZE = s['SAMPLE_SIZE']
+        #SAMPLE_STEP = s['SAMPLE_STEP']
+        #RUN_ID = s['RUN_ID']
 
-    biotic_components_K = s['biotic_components_K']
-    essential_range_R = s['essential_range_R']
-    external_perturbation_rate_P = s['external_perturbation_rate_P']
-    time_start = s['time_start']
-    time_end = s['time_end']
-    time_step = s['time_step']
-    environment_components_N = s['environment_components_N']
-    truncated_gaussian_ROUND = s['truncated_gaussian_ROUND']
-    niche_width = s['niche_width']
-    local_population_size = s['local_population_size']
-    affects_w = s['affects_w']
-    optimum_condition_u = s['optimum_condition_u']
-    biotic_force_F = s['biotic_force_F']
+        biotic_components_K = s['biotic_components_K']
+        essential_range_R = s['essential_range_R']
+        #external_perturbation_rate_P = s['external_perturbation_rate_P']
+        #time_start = s['time_start']
+        time_end = s['time_end']
+        time_step = s['time_step']
+        environment_components_N = s['environment_components_N']
+        truncated_gaussian_ROUND = s['truncated_gaussian_ROUND']
+        niche_width = s['niche_width']
+        local_population_size = s['local_population_size']
+        affects_w = s['affects_w']
+        optimum_condition_u = s['optimum_condition_u']
+        biotic_force_F = s['biotic_force_F']
 
-    exp_name = s['exp_name']
-    data_directory = s['data_directory']
-    shelve_file = s['shelve_file']
-    temperatures = s['temperatures']
-    time_step = s['time_step']
+        exp_name = s['exp_name']
+        data_directory = s['data_directory']
+        shelve_file = s['shelve_file']
 
-finally:
-    s.close()
+        time_step = s['time_step']
+        local_population_index = s['local_population_index']
 
-S_STEP = SAMPLE_STEP
+        global_start_temp = s['global_start_temp']
+        local_start_temp = s['local_start_temp']
+
+
+
+        rAx = s['rAx']
+        rAxR = s['rAxR']
+        rNumberAlive = s['rNumberAlive']
+        alpha = s['alpha']
+        rF = s['rF']
+        rE = s['rE']
+        time = s['time']
+
+        OE = s['OE']
+
+        #E_prime.append([global_start_temp, local_start_temp])
+        #F_prime.append(F)
+        for _ in range(biotic_components_K):
+            del alpha[_][-1]
+        for _ in range(biotic_components_K):
+            del rAx[_][-1]
+        for _ in range(biotic_components_K):
+            del rAxR[_][-1]
+        for _ in range(biotic_components_K):
+            del rNumberAlive[_][-1]
+
+
+        alpha_prime.append(alpha)
+        rF_prime.append(rF)
+        rE_prime.append(rE)
+        rNumberAlive_prime.append(rNumberAlive)
+        time_prime.append(time)
+        rAx_prime.append(rAx)
+        rAxR_prime.append(rAxR)
+
+        #biotic_force_prime.append(biotic_force)
+        #temperatures_prime.append(temperatures)
+
+
+    finally:
+        s.close()
+
+w = affects_w
+u = optimum_condition_u
+
+#S_STEP = SAMPLE_STEP
 K = biotic_components_K
 R = essential_range_R
-P = external_perturbation_rate_P
-start = time_start
-end = time_end
+#P = external_perturbation_rate_P
+#start = time_start
+#end = time_end
 step = time_step
 N = environment_components_N
 E = [0, 0]
@@ -134,7 +189,7 @@ def stable_points_space_heat():
 
 stable_points_space_heat()
 
-
+temperatures = []
 def plot_alphas():
 
     for x in np.arange (-50, R+50, step):
@@ -442,9 +497,9 @@ def stable_points_space_3d_rotate():
                 current_sum += item[x]
             row_abundance.append(current_sum)
 
-        #print(len(row_abundance))
-        #print(len(row[1]))
-        #print(len(row[1]))
+        print(len(row_abundance))
+        print(len(row[1]))
+        print(len(row[1]))
 
         if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
             ax.scatter(row[1][0], row[0][0], row_abundance[0],s=10, marker='.', color=(float(0), float(0), float(1)))
