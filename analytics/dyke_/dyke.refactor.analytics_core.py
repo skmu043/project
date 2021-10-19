@@ -5,7 +5,9 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-
+from multiprocessing import Process, Pool
+import gc
+from itertools import product
 
 E_prime             =[]
 F_prime             =[]
@@ -23,14 +25,54 @@ rNumberAlive_prime  =[]
 
 data_dr = os.getcwd() + '/data'
 data_archives = os.listdir(data_dr)
+total_to_be_processed = len(data_archives)
 
-for si in data_archives:
-    print(si)
-    s = shelve.open(data_dr + "/" + str(si) + "/dyke.refactor_core.data")
+biotic_components_K = 0
+essential_range_R = 0
+time_end = 0
+time_step = 0
+environment_components_N = 0
+truncated_gaussian_ROUND = 0
+niche_width = 0
+local_population_size = 0
+affects_w = []
+optimum_condition_u = []
+biotic_force_F  = 0
+exp_name = ""
+data_directory = ""
+shelve_file = ""
+time_step  = 0
+local_population_index = 0
+global_start_temp = 0
+local_start_temp = 0
+print(gc.isenabled())
+RUN_ID=0
+rF = []
+rE = []
+time = []
+OE = []
+rAx = []
+rAxR = []
+rNumberAlive = []
+
+def get_shelve(file):
+    print("Processing  : ",print(len(rAxR_prime)), " >>> ", file)
+    s = shelve.open(data_dr + "/" + str(file) + "/dyke.refactor_core.data")
+    return(s)
+
+def read_files_parallel(file):
+    print("Processing  : ",print(len(rAxR_prime)), " >>> ", file)
+    gc.collect()
+    s = shelve.open(data_dr + "/" + str(file) + "/dyke.refactor_core.data")
+    global biotic_components_K , essential_range_R, time_end, time_step, environment_components_N, \
+        truncated_gaussian_ROUND, niche_width, local_population_size, affects_w, optimum_condition_u, \
+        biotic_force_F, exp_name, data_directory, shelve_file, time_step, local_population_index, \
+        global_start_temp, local_start_temp, RUN_ID, rF, rE, time, OE, rAx, rAxR, rNumberAlive
+
     try:
         #SAMPLE_SIZE = s['SAMPLE_SIZE']
         #SAMPLE_STEP = s['SAMPLE_STEP']
-        #RUN_ID = s['RUN_ID']
+        RUN_ID = s['RUN_ID']
 
         biotic_components_K = s['biotic_components_K']
         essential_range_R = s['essential_range_R']
@@ -57,7 +99,6 @@ for si in data_archives:
         local_start_temp = s['local_start_temp']
 
 
-
         rAx = s['rAx']
         rAxR = s['rAxR']
         rNumberAlive = s['rNumberAlive']
@@ -80,17 +121,13 @@ for si in data_archives:
             del rNumberAlive[_][-1]
 
 
-        alpha_prime.append(alpha)
-        rF_prime.append(rF)
-        rE_prime.append(rE)
-        rNumberAlive_prime.append(rNumberAlive)
-        time_prime.append(time)
-        rAx_prime.append(rAx)
-        rAxR_prime.append(rAxR)
-
-        #biotic_force_prime.append(biotic_force)
-        #temperatures_prime.append(temperatures)
-
+        #alpha_prime.append(alpha)
+        #rF_prime.append(rF)
+        #rE_prime.append(rE)
+        #rNumberAlive_prime.append(rNumberAlive)
+        #time_prime.append(time)
+        #rAx_prime.append(rAx)
+        #rAxR_prime.append(rAxR)
 
     finally:
         s.close()
@@ -100,7 +137,9 @@ u = optimum_condition_u
 
 #S_STEP = SAMPLE_STEP
 K = biotic_components_K
+
 R = essential_range_R
+print("R", R)
 #P = external_perturbation_rate_P
 #start = time_start
 #end = time_end
@@ -112,6 +151,7 @@ F = biotic_force_F
 ROUND = truncated_gaussian_ROUND
 
 OEn = niche_width
+
 
 def stable_points_space_heat():
 
@@ -187,7 +227,7 @@ def stable_points_space_heat():
 
     plt.show()
 
-stable_points_space_heat()
+#stable_points_space_heat()
 
 temperatures = []
 def plot_alphas():
@@ -224,45 +264,6 @@ def plot_alphas():
     #plt.plot(temperatures, sum, lw=10)
     #plt.show()
 #plot_alphas()
-
-
-def stable_points_space():
-
-    stable_locations = []
-    plt.figure(figsize=(30,30), dpi=200)
-    plt.title('Regions', fontsize=40)
-    plt.xlabel('EL', fontsize=40)
-    plt.ylabel('EG', fontsize=40)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    plt.ylim(-20, R+20)
-    plt.xlim(-20, R+20)
-
-
-    for row in rE_prime:
-
-        if((int(row[1][-1]),int(row[0][-1])) not in stable_locations):
-            stable_locations.append((int(row[1][-1]),int(row[0][-1])))
-
-        c_r = int(row[1][-1])
-        c_g = int(row[0][-1])
-
-        if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
-            # float color must be between 0 and 1
-            # trajectories outside 0 R
-            plt.plot(row[1][0], row[0][0], marker='.', markersize = "10", color=(float(0), float(0), float(1))) # Plots Start but not the Ends
-            plt.plot(row[1],row[0], label='E', linewidth=1, color=(float(0), float(0), float(1)))
-        else:
-            plt.plot(row[1],row[0], label='E', linewidth=1, color=(float(c_r/100), float(c_g/100), float(0.5)))
-
-            plt.plot(row[1][0], row[0][0], marker='.', markersize = "10" , color=(float(c_r/100), float(c_g/100), float(0.5)))
-            plt.plot(row[1][-1], row[0][-1], marker='*', markersize = "10" , color=(float(c_r/100), float(c_g/100), float(0.5)))
-
-    #plt.savefig("tra_reg_rgb" + str(RUN_ID) + "-" + str(random.randint(100, 999)) +".png")
-    plt.show()
-
-stable_points_space()
-
 
 
 def stable_points_space_heat_global():
@@ -363,6 +364,9 @@ def stable_points_space_heat_local():
 
 def stable_points_space_final_abundance_rgb_heat():
 
+    R = 100
+    biotic_components_K = 100
+
     stable_locations = []
     plt.figure(figsize=(30,30), dpi=200)
     plt.title('Final Abundance HeatMap', fontsize=40)
@@ -373,45 +377,64 @@ def stable_points_space_final_abundance_rgb_heat():
     plt.ylim(-20, R+20)
     plt.xlim(-20, R+20)
 
-    index_A = 0
-    heatmap = [[0 for _ in range(R+7)] for _ in range(R+7)]
+    heatmap = [[0 for _ in range(R+10)] for _ in range(R+10)]
 
-    for row in rE_prime:
-        c_r = int(row[1][-1])
-        c_g = int(row[0][-1])
+    index = 1
+    for file in data_archives:
 
-        row_abundance = []
-        decompose = rAx_prime[index_A]
-        run_length = len(decompose[0])
+        s = shelve.open(data_dr + "/" + str(file) + "/dyke.refactor_core.data")
 
-        for x in range(run_length):
-            current_sum = 0
-            for item in decompose:
-                current_sum += item[x]
-            row_abundance.append(current_sum)
+        print("Processing: ", index, "/", len(data_archives)," >>> " , file)
+        index +=1
+        try :
+            row = s['rE']
+            decompose = s['rAx']
 
-        if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
-            #plt.scatter(row[1][0], row[0][0],s=50, marker='.', color=(float(row_abundance[0]/100), float(1), float(1)))
-            heatmap[int(row[1][0])][int(row[0][0])] = row_abundance[-1]
-            #plt.plot(row[1],row[0], row_abundance , color=(float(0), float(0), float(1)))
-        else:
-            #plt.plot(row[1],row[0],row_abundance, color=(float(c_r/100), float(c_g/100), float(0.5)))
-            #plt.scatter(row[1][0], row[0][0], row_abundance[0], marker='.', s=20, color=(float(c_r/100), float(c_g/100), float(0.5)))
-            #print(row_abundance[-1]/100)
-            #plt.scatter(row[1][0], row[0][0], marker='*', s=20, color=(float(c_r/100), float(c_g/100), float(row_abundance[-1]/100)))
-            #plt.scatter(row[1][0], row[0][0], marker='*', s=50, color=(float(0), float(row_abundance[-1]/100), float(0)))
-            heatmap[int(row[1][0])][int(row[0][0])] = row_abundance[-1]
-        index_A +=1
+            for _ in range(biotic_components_K):
+                del decompose[_][-1]
+
+            c_r = int(row[1][-1])
+            c_g = int(row[0][-1])
+
+            row_abundance = []
+
+            run_length = len(decompose[0])
+
+            for x in range(run_length):
+                current_sum = 0
+                for item in decompose:
+                    current_sum += item[x]
+                row_abundance.append(current_sum)
+
+            if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
+                #plt.scatter(row[1][0], row[0][0],s=50, marker='.', color=(float(row_abundance[0]/100), float(1), float(1)))
+
+                heatmap[int(row[1][0])][int(row[0][0])] = row_abundance[-1]
+                #plt.plot(row[1],row[0], row_abundance , color=(float(0), float(0), float(1)))
+            else:
+                #plt.plot(row[1],row[0],row_abundance, color=(float(c_r/100), float(c_g/100), float(0.5)))
+                #plt.scatter(row[1][0], row[0][0], row_abundance[0], marker='.', s=20, color=(float(c_r/100), float(c_g/100), float(0.5)))
+                #print(row_abundance[-1]/100)
+                #plt.scatter(row[1][0], row[0][0], marker='*', s=20, color=(float(c_r/100), float(c_g/100), float(row_abundance[-1]/100)))
+                #plt.scatter(row[1][0], row[0][0], marker='*', s=50, color=(float(0), float(row_abundance[-1]/100), float(0)))
+
+                heatmap[int(row[1][0])][int(row[0][0])] = row_abundance[-1]
+        finally:
+            s.close()
+
     plt.colorbar(plt.pcolor(heatmap))
     plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='upper')
-
+    #plt.imsave("abundanceheat.png",heatmap, cmap='hot', interpolation='nearest', origin='lower')
+    plt.savefig('abundanceheat.png')
     plt.show()
 
-stable_points_space_final_abundance_rgb_heat()
+#stable_points_space_final_abundance_rgb_heat()
 
 def stable_points_space_final_alive_rgb_heat():
 
     stable_locations = []
+    R = 100
+    biotic_components_K = 100
     plt.figure(figsize=(30,30), dpi=200)
     plt.title('Final Alive HeatMap', fontsize=40)
     plt.xlabel('EL', fontsize=40)
@@ -421,45 +444,112 @@ def stable_points_space_final_alive_rgb_heat():
     plt.ylim(-20, R+20)
     plt.xlim(-20, R+20)
 
-    index_A = 0
     heatmap = [[0 for _ in range(R+7)] for _ in range(R+7)]
 
-    for row in rE_prime:
-        c_r = int(row[1][-1])
-        c_g = int(row[0][-1])
+    index = 1
+    for file in data_archives:
 
-        row_alive = []
+        s = shelve.open(data_dr + "/" + str(file) + "/dyke.refactor_core.data")
+        print("Processing: ", index, "/", len(data_archives)," >>> " , file)
+        index +=1
+        try:
+            row = s['rE']
+            decompose = s['rNumberAlive']
 
-        decompose = rNumberAlive_prime[index_A]
-        run_length = len(decompose[0])
+            for _ in range(biotic_components_K):
+                del decompose[_][-1]
 
-        for x in range(run_length):
-            current_sum = 0
-            for item in decompose:
-                current_sum += item[x]
-            row_alive.append(current_sum)
+            c_r = int(row[1][-1])
+            c_g = int(row[0][-1])
+
+            row_alive = []
+
+            run_length = len(decompose[0])
+
+            for x in range(run_length):
+                current_sum = 0
+                for item in decompose:
+                    current_sum += item[x]
+                row_alive.append(current_sum)
 
 
-        if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
-            #plt.scatter(row[1][0], row[0][0],s=50, marker='.', color=(float(row_abundance[0]/100), float(1), float(1)))
-            heatmap[int(row[1][0])][int(row[0][0])] = row_alive[-1]
-            #plt.plot(row[1],row[0], row_abundance , color=(float(0), float(0), float(1)))
-        else:
-            #plt.plot(row[1],row[0],row_abundance, color=(float(c_r/100), float(c_g/100), float(0.5)))
-            #plt.scatter(row[1][0], row[0][0], row_abundance[0], marker='.', s=20, color=(float(c_r/100), float(c_g/100), float(0.5)))
-            #print(row_abundance[-1]/100)
-            #plt.scatter(row[1][0], row[0][0], marker='*', s=20, color=(float(c_r/100), float(c_g/100), float(row_abundance[-1]/100)))
-            #plt.scatter(row[1][0], row[0][0], marker='*', s=50, color=(float(0), float(row_abundance[-1]/100), float(0)))
-            heatmap[int(row[1][0])][int(row[0][0])] = row_alive[-1]
-        index_A +=1
+            if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
+                #plt.scatter(row[1][0], row[0][0],s=50, marker='.', color=(float(row_abundance[0]/100), float(1), float(1)))
+                heatmap[int(row[1][0])][int(row[0][0])] = row_alive[-1]
+                #plt.plot(row[1],row[0], row_abundance , color=(float(0), float(0), float(1)))
+            else:
+                #plt.plot(row[1],row[0],row_abundance, color=(float(c_r/100), float(c_g/100), float(0.5)))
+                #plt.scatter(row[1][0], row[0][0], row_abundance[0], marker='.', s=20, color=(float(c_r/100), float(c_g/100), float(0.5)))
+                #print(row_abundance[-1]/100)
+                #plt.scatter(row[1][0], row[0][0], marker='*', s=20, color=(float(c_r/100), float(c_g/100), float(row_abundance[-1]/100)))
+                #plt.scatter(row[1][0], row[0][0], marker='*', s=50, color=(float(0), float(row_abundance[-1]/100), float(0)))
+                heatmap[int(row[1][0])][int(row[0][0])] = row_alive[-1]
+
+        finally:
+            s.close()
+
     plt.colorbar(plt.pcolor(heatmap))
     plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='upper')
+    #plt.imsave("aliveheat.png",heatmap, cmap='hot', interpolation='nearest', origin='lower')
 
+    plt.savefig('aliveheat.png')
     plt.show()
 
-stable_points_space_final_alive_rgb_heat()
+#stable_points_space_final_alive_rgb_heat()
 
-mpl.use('macosx') #for the 3D magic
+def stable_points_global_local():
+
+    R = 100
+
+    plt.figure(figsize=(30,30), dpi=200)
+    plt.title('Regions', fontsize=40)
+    plt.xlabel('EL', fontsize=40)
+    plt.ylabel('EG', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.ylim(-20, R+20)
+    plt.xlim(-20, R+20)
+
+    index = 1
+
+    for file in data_archives:
+
+        print("Processing: ", index, "/", len(data_archives)," >>> " , file)
+        index+=1
+
+        s = shelve.open(data_dr + "/" + str(file) + "/dyke.refactor_core.data")
+
+        try:
+            row = s['rE']
+
+            stable_locations = []
+
+            if((int(row[1][-1]),int(row[0][-1])) not in stable_locations):
+                stable_locations.append((int(row[1][-1]),int(row[0][-1])))
+
+            c_r = int(row[1][-1])
+            c_g = int(row[0][-1])
+
+            if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
+                # float color must be between 0 and 1
+                # trajectories outside 0 R
+                plt.plot(row[1][0], row[0][0], marker='.', markersize = "10", color=(float(0), float(0), float(1))) # Plots Start but not the Ends
+                plt.plot(row[1],row[0], label='E', linewidth=1, color=(float(0), float(0), float(1)))
+            else:
+                plt.plot(row[1],row[0], label='E', linewidth=1, color=(float(c_r/100), float(c_g/100), float(0.5)))
+
+                plt.plot(row[1][0], row[0][0], marker='.', markersize = "10" , color=(float(c_r/100), float(c_g/100), float(0.5)))
+                plt.plot(row[1][-1], row[0][-1], marker='*', markersize = "10" , color=(float(c_r/100), float(c_g/100), float(0.5)))
+
+        finally:
+            s.close()
+
+    plt.savefig("tra_reg_rgb" + str(RUN_ID) + "-" + str(random.randint(100, 999)) +".png")
+    plt.show()
+
+
+
+#mpl.use('macosx') #for the 3D magic
 
 def stable_points_space_3d_rotate():
 
@@ -516,7 +606,7 @@ def stable_points_space_3d_rotate():
     #plt.savefig("3d_abundance_" + str(RUN_ID)  + "-" +  str(random.randint(100, 999)) + ".png")
     plt.show()
 
-stable_points_space_3d_rotate()
+#stable_points_space_3d_rotate()
 
 
 def stable_points_space_3d_rotate_number_alive():
@@ -569,4 +659,64 @@ def stable_points_space_3d_rotate_number_alive():
     #plt.savefig("3d_alive_" + str(RUN_ID)  + "-" +  str(random.randint(100, 999)) + ".png")
     plt.show()
 
-stable_points_space_3d_rotate_number_alive()
+#stable_points_space_3d_rotate_number_alive()
+
+
+
+
+if __name__ == '__main__':
+    #pool = Pool(processes=7)
+    #pool.map(read_files_parallel, [_ for _ in data_archives])
+
+    #def power_n(x, n):
+    #    return x ** n
+
+    #result = pool.starmap(power_n, [(x, 2) for x in range(20)])
+    #print(result)
+
+    #pool = Pool(processes=7)
+    #stable_points_space_heat()
+
+    #read_files_parallel(data_archives[0])
+    stable_points_global_local()
+    print("stable points global")
+    #stable_points_global_local()
+    print("abundance heat")
+    #stable_points_space_final_abundance_rgb_heat()
+    print("alive heat")
+    #stable_points_space_final_alive_rgb_heat()
+
+    ###### map_async call each function !
+
+
+    #print("points space")
+    #stable_points_space()
+    #print("abundance heat map")
+    #stable_points_space_final_abundance_rgb_heat()
+    #print("alive heat map")
+    #stable_points_space_final_alive_rgb_heat()
+
+    heatmap = [[0 for _ in range(10)] for _ in range(10)]
+
+    plt.colorbar(plt.pcolor(heatmap))
+    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower')
+    plt.show()
+    for line in heatmap:
+        print(line)
+
+    # rE[0] = global
+    # rE[1] = local
+    # heatmap[int(row[1][0])][int(row[0][0])] = row_alive[-1]
+    # lower
+    # heatmap [global] [local]
+
+    heatmap[1][5] = 10
+
+    print("---")
+
+    for line in heatmap:
+        print(line)
+
+    plt.colorbar(plt.pcolor(heatmap))
+    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower')
+    plt.show()

@@ -8,7 +8,7 @@ import time
 
 # Generating ALL Parameters
 SAMPLE_SIZE = int(1)
-SAMPLE_STEP = int(50)
+SAMPLE_STEP = int(1)
 RUN_ID = int(time.time())
 
 biotic_components_K = int(100)
