@@ -53,7 +53,7 @@ for x in range(int(local_population_size/100 * biotic_components_K)):
 local_population_index.sort()
 
 # Create Shelve to store parameters being sent to experiment run
-exp_name = "dyke.refactor_core"
+exp_name = "dyke.refactor_core_equilibrium_abundance_test"
 
 def init_shelve():
     data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name

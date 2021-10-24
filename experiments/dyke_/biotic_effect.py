@@ -4,15 +4,8 @@ import matplotlib.pyplot as plt
 import math, random, time, sys, os, shelve
 from multiprocessing import Process, Pool
 
-#def fun(x):
-#    return [x[0]  + 0.5 * (x[0] - x[1])**3 - 1.0,0.5 * (x[1] - x[0])**3 + x[1]]
-#def jac(x):
-#    return np.array([[1 + 1.5 * (x[0] - x[1])**2,-1.5 * (x[0] - x[1])**2],[-1.5 * (x[1] - x[0])**2,1 + 1.5 * (x[1] - x[0])**2]])
-#sol = optimize.root(fun, [0, 0], jac=jac, method='hybr')
-#print(sol.x)
 
-
-exp_name = "scipy_roots_alpha"
+exp_name = "biotic_effect"
 data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + exp_name
 
 # Arguments Check
@@ -104,7 +97,8 @@ def plot_alphas():
     plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
     plt.show()
 
-########################################################################################################################
+plot_alphas()
+
 def f1(x):
     biotic_force = []
 
@@ -135,39 +129,8 @@ def stable_point_return():
         if(int(xi) not in zeros_uniq):
             zeros_uniq.append(int(xi))
 
-    #print("Unique Points ...")
     zeros_uniq.sort()
 
-    #idx=0
-    #current_sign = "?"
-    #if(y[idx]>0):
-    #    current_sign = "+"
-    #elif(y[idx]<0):
-    #    current_sign = "-"
-
-    #stable_points = []
-
-    #for xi in np.arange(X1, Y1, 0.1):
-        #print(x[idx])
-    #    loopy_sign="?"
-        #print(y[idx])
-    #    if(y[idx]>0):
-    #        loopy_sign = "+"
-    #    elif(y[idx]<0):
-    #        loopy_sign = "-"
-
-    #    if(loopy_sign != current_sign):
-            #print("Sign Change Detected!")
-            #print("From : ", current_sign , " To : ", loopy_sign)
-    #        if(current_sign == "+" and loopy_sign == "-"):
-                #print(">>>>> Stable Point : ", x[idx])
-    #            stable_points.append(int(x[idx]))
-    #        current_sign = loopy_sign
-            #print(y[idx])
-
-    #    idx+=1
-
-    #print(K)
     if(K == 100):
         plt.figure(figsize=(25,15))
         plt.title('Combined Biotic over Time', fontsize=40)
@@ -179,33 +142,17 @@ def stable_point_return():
         plt.plot(x,y)
         plt.show()
 
-
-    #reduced_stable_points=[]
-    #for each_point in stable_points:
-    #    if(each_point >=0 and each_point <= R):
-    #        reduced_stable_points.append(each_point)
     new_reduced_stable_points = []
 
-    #print(true_zeros)
-    #print("----->>>>>", zeros_uniq)
-    #print("Stable Points: ", stable_points)
-    #print("Final Return : ", len(reduced_stable_points))
-
     for each_point in zeros_uniq:
-        #print(each_point, ">>>" ,f1(each_point-1), int(f1(each_point)), f1(each_point+1))
         if(f1(each_point-1) > 0 and f1(each_point+1) < 0):
             new_reduced_stable_points.append(each_point)
-
-    #print("New Stable Points", new_reduced_stable_points)
-
     return(len(new_reduced_stable_points))
 
 
 stable_points_average = []
 total_points = []
-
 stable_point = stable_point_return()
-#print("K + N + Stable : ",K , N, stable_point)
 
 os.mkdir(data_directory)
 s = shelve.open(data_directory + "/" + exp_name + ".data")

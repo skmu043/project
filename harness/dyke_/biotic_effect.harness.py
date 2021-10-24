@@ -20,13 +20,13 @@ def run_it(K, N):
     Krun = K
     Nrun = N
     print(Krun,Nrun)
-    os.system("python3.9 " + os.getcwd() + "/experiments/scipy_roots_alpha.py " + str(Krun) + " " + str(Nrun) + " " + str(epoch_time))
+    os.system("python3.9 " + os.getcwd() + "/experiments/biotic_effect.py " + str(Krun) + " " + str(Nrun) + " " + str(epoch_time))
 
 if __name__ == '__main__':
 
 
-    #os.system("python3.9 " + os.getcwd() + "/experiments/scipy_roots_alpha.py " + str(K) + " " + str(N[0]) + " " + str(epoch_time))
-    #sys.exit()
+    os.system("python3.9 " + os.getcwd() + "/experiments/biotic_effect.py " + str(100) + " " + str(5) + " " + str(epoch_time))
+    sys.exit()
 
     pool = Pool(processes=8)
 

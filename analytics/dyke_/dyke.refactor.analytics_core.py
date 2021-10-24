@@ -152,6 +152,7 @@ ROUND = truncated_gaussian_ROUND
 
 OEn = niche_width
 
+# =============================================================== Heat Map of Global and Local Species Distribution ====
 
 def stable_points_space_heat():
 
@@ -229,6 +230,8 @@ def stable_points_space_heat():
 
 #stable_points_space_heat()
 
+# =============================================================== Biotic Force over Temperature ========================
+
 temperatures = []
 def plot_alphas():
 
@@ -265,7 +268,7 @@ def plot_alphas():
     #plt.show()
 #plot_alphas()
 
-
+# =============================================================== Heat Map of Global Species Distribution ==============
 def stable_points_space_heat_global():
 
     stable_locations = []
@@ -314,6 +317,7 @@ def stable_points_space_heat_global():
 
 #stable_points_space_heat_global()
 
+# =============================================================== Heat Map of Local Species Distribution ===============
 def stable_points_space_heat_local():
 
     stable_locations = []
@@ -362,6 +366,7 @@ def stable_points_space_heat_local():
 
 #stable_points_space_heat_local()
 
+# =============================================================== Final Abundance HeatMap ==============================
 def stable_points_space_final_abundance_rgb_heat():
 
     R = 100
@@ -409,7 +414,7 @@ def stable_points_space_final_abundance_rgb_heat():
             if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
                 #plt.scatter(row[1][0], row[0][0],s=50, marker='.', color=(float(row_abundance[0]/100), float(1), float(1)))
 
-                heatmap[int(row[1][0])][int(row[0][0])] = row_abundance[-1]
+                heatmap[int(row[0][0])][int(row[1][0])] = row_abundance[-1]
                 #plt.plot(row[1],row[0], row_abundance , color=(float(0), float(0), float(1)))
             else:
                 #plt.plot(row[1],row[0],row_abundance, color=(float(c_r/100), float(c_g/100), float(0.5)))
@@ -418,7 +423,7 @@ def stable_points_space_final_abundance_rgb_heat():
                 #plt.scatter(row[1][0], row[0][0], marker='*', s=20, color=(float(c_r/100), float(c_g/100), float(row_abundance[-1]/100)))
                 #plt.scatter(row[1][0], row[0][0], marker='*', s=50, color=(float(0), float(row_abundance[-1]/100), float(0)))
 
-                heatmap[int(row[1][0])][int(row[0][0])] = row_abundance[-1]
+                heatmap[int(row[0][0])][int(row[1][0])] = row_abundance[-1]
         finally:
             s.close()
 
@@ -430,6 +435,7 @@ def stable_points_space_final_abundance_rgb_heat():
 
 #stable_points_space_final_abundance_rgb_heat()
 
+# =============================================================== Final Alive HeatMap ==================================
 def stable_points_space_final_alive_rgb_heat():
 
     stable_locations = []
@@ -475,7 +481,7 @@ def stable_points_space_final_alive_rgb_heat():
 
             if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
                 #plt.scatter(row[1][0], row[0][0],s=50, marker='.', color=(float(row_abundance[0]/100), float(1), float(1)))
-                heatmap[int(row[1][0])][int(row[0][0])] = row_alive[-1]
+                heatmap[int(row[0][0])][int(row[1][0])] = row_alive[-1]
                 #plt.plot(row[1],row[0], row_abundance , color=(float(0), float(0), float(1)))
             else:
                 #plt.plot(row[1],row[0],row_abundance, color=(float(c_r/100), float(c_g/100), float(0.5)))
@@ -483,13 +489,13 @@ def stable_points_space_final_alive_rgb_heat():
                 #print(row_abundance[-1]/100)
                 #plt.scatter(row[1][0], row[0][0], marker='*', s=20, color=(float(c_r/100), float(c_g/100), float(row_abundance[-1]/100)))
                 #plt.scatter(row[1][0], row[0][0], marker='*', s=50, color=(float(0), float(row_abundance[-1]/100), float(0)))
-                heatmap[int(row[1][0])][int(row[0][0])] = row_alive[-1]
+                heatmap[int(row[0][0])][int(row[1][0])] = row_alive[-1]
 
         finally:
             s.close()
 
     plt.colorbar(plt.pcolor(heatmap))
-    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='upper')
+    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower')
     #plt.imsave("aliveheat.png",heatmap, cmap='hot', interpolation='nearest', origin='lower')
 
     plt.savefig('aliveheat.png')
@@ -497,6 +503,7 @@ def stable_points_space_final_alive_rgb_heat():
 
 #stable_points_space_final_alive_rgb_heat()
 
+# =============================================================== Final Regions ========================================
 def stable_points_global_local():
 
     R = 100
@@ -546,8 +553,6 @@ def stable_points_global_local():
 
     plt.savefig("tra_reg_rgb" + str(RUN_ID) + "-" + str(random.randint(100, 999)) +".png")
     plt.show()
-
-
 
 #mpl.use('macosx') #for the 3D magic
 
@@ -678,16 +683,17 @@ if __name__ == '__main__':
     #stable_points_space_heat()
 
     #read_files_parallel(data_archives[0])
-    stable_points_global_local()
+
     print("stable points global")
-    #stable_points_global_local()
+    stable_points_global_local()
     print("abundance heat")
-    #stable_points_space_final_abundance_rgb_heat()
+    stable_points_space_final_abundance_rgb_heat()
     print("alive heat")
-    #stable_points_space_final_alive_rgb_heat()
+    stable_points_space_final_alive_rgb_heat()
 
+    print("Completed")
     ###### map_async call each function !
-
+    #stable_points_global_local()
 
     #print("points space")
     #stable_points_space()
@@ -695,28 +701,3 @@ if __name__ == '__main__':
     #stable_points_space_final_abundance_rgb_heat()
     #print("alive heat map")
     #stable_points_space_final_alive_rgb_heat()
-
-    heatmap = [[0 for _ in range(10)] for _ in range(10)]
-
-    plt.colorbar(plt.pcolor(heatmap))
-    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower')
-    plt.show()
-    for line in heatmap:
-        print(line)
-
-    # rE[0] = global
-    # rE[1] = local
-    # heatmap[int(row[1][0])][int(row[0][0])] = row_alive[-1]
-    # lower
-    # heatmap [global] [local]
-
-    heatmap[1][5] = 10
-
-    print("---")
-
-    for line in heatmap:
-        print(line)
-
-    plt.colorbar(plt.pcolor(heatmap))
-    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower')
-    plt.show()
