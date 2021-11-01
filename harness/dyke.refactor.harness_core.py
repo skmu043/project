@@ -5,6 +5,7 @@ import time
 from multiprocessing import Process, Pool
 import numpy as np
 import time
+import sys
 
 # Generating ALL Parameters
 SAMPLE_SIZE = int(1)
@@ -20,7 +21,7 @@ time_step = float(1)
 environment_components_N = int(2)
 truncated_gaussian_ROUND = int(10)
 niche_width = int(5)
-local_population_size = int(10)
+local_population_size = int(20)
 biotic_force_F = [0 for _ in range(environment_components_N)]
 
 affects_w = [[] for _ in range(environment_components_N)]
@@ -101,11 +102,33 @@ print_time()
 
 def run_it(simulation_run_shelve):
 
-    #print("Running : ", simulation_run_shelve)
+    # Main Experiment
     os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(simulation_run_shelve))
+    # Equilibrium Abundance (3 steps process ahead (because rate at which biota change different to that of env var))
     os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + "_equilibrium_abundance.py " + str(simulation_run_shelve))
 
+def run_once(simulation_run_shelve):
+    # 3D biotic effect graph for Local Populations (EL and EG with Biotic being on Z) and Global Population (classic 2D biotic effect graph)
+    os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + "_biotic_force_3d_local_2d_global.py " + str(simulation_run_shelve))
+
+    # doing it this was as analytics is crowded
+
 if __name__ == '__main__':
+
+    simulation_run_shelve = init_shelve()
+    simulation_shelve = shelve.open(simulation_run_shelve)
+
+    try:
+        simulation_shelve['affects_w'] = affects_w
+        simulation_shelve['optimum_condition_u'] = optimum_condition_u
+        simulation_shelve['local_population_index'] = local_population_index
+    finally:
+        simulation_shelve.close()
+
+    run_once(simulation_run_shelve)
+    sys.exit()
+
+    print("Biotic Force Done")
 
     shelve_files = []
 
@@ -150,4 +173,6 @@ if __name__ == '__main__':
     # pool.map (run_it, start_trajectories)
     # run_it(start_traj)
     #
+
+
     print("Completed")
