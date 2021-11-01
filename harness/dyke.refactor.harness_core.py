@@ -8,7 +8,7 @@ import time
 
 # Generating ALL Parameters
 SAMPLE_SIZE = int(1)
-SAMPLE_STEP = int(50)
+SAMPLE_STEP = int(1)
 RUN_ID = int(time.time())
 
 biotic_components_K = int(100)
@@ -16,7 +16,7 @@ essential_range_R = int(100)
 external_perturbation_rate_P = int(0)
 time_start = int(0)
 time_end = int(200)
-time_step = float(0.1)
+time_step = float(1)
 environment_components_N = int(2)
 truncated_gaussian_ROUND = int(10)
 niche_width = int(5)
@@ -103,6 +103,7 @@ def run_it(simulation_run_shelve):
 
     #print("Running : ", simulation_run_shelve)
     os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(simulation_run_shelve))
+    os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + "_equilibrium_abundance.py " + str(simulation_run_shelve))
 
 if __name__ == '__main__':
 
@@ -110,7 +111,7 @@ if __name__ == '__main__':
 
     for Eg_temp in np.arange(1,essential_range_R,SAMPLE_STEP):
         for El_temp in np.arange(1,essential_range_R,SAMPLE_STEP):
-            print(Eg_temp, El_temp)
+            #print(Eg_temp, El_temp)
 
             simulation_run_shelve = init_shelve()
             shelve_files.append(simulation_run_shelve)
@@ -132,7 +133,8 @@ if __name__ == '__main__':
     for item in shelve_files:
         print(item)
 
-    pool = Pool(processes=8)
+
+    pool = Pool(processes=16)
 
     pool.map(run_it, [_ for _ in shelve_files])
 
@@ -147,4 +149,5 @@ if __name__ == '__main__':
     # (10,10, shelve_file), (15.15, shelve_file), (20,20, shelve_file))
     # pool.map (run_it, start_trajectories)
     # run_it(start_traj)
-    # 
+    #
+    print("Completed")

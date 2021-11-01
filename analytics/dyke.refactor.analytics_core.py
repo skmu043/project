@@ -17,6 +17,7 @@ rE_prime            =[]
 rAx_prime           =[]
 rAxR_prime          =[]
 rAxS_prime          =[]
+rEquilibrium_Abundance = []
 time_prime          =[]
 biotic_force_prime  =[]
 temperatures_prime  =[]
@@ -98,7 +99,6 @@ def read_files_parallel(file):
         global_start_temp = s['global_start_temp']
         local_start_temp = s['local_start_temp']
 
-
         rAx = s['rAx']
         rAxR = s['rAxR']
         rNumberAlive = s['rNumberAlive']
@@ -106,7 +106,7 @@ def read_files_parallel(file):
         rF = s['rF']
         rE = s['rE']
         time = s['time']
-
+        rEquilibrium_Abundance = s['rEquilibrium_Abundance']
         OE = s['OE']
 
         #E_prime.append([global_start_temp, local_start_temp])
@@ -119,7 +119,8 @@ def read_files_parallel(file):
             del rAxR[_][-1]
         for _ in range(biotic_components_K):
             del rNumberAlive[_][-1]
-
+        for _ in range(biotic_components_K):
+            del rEquilibrium_Abundance[_][-1]
 
         #alpha_prime.append(alpha)
         #rF_prime.append(rF)
@@ -430,7 +431,7 @@ def stable_points_space_final_abundance_rgb_heat():
     plt.colorbar(plt.pcolor(heatmap))
     plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='upper')
     #plt.imsave("abundanceheat.png",heatmap, cmap='hot', interpolation='nearest', origin='lower')
-    plt.savefig('abundanceheat.png')
+    plt.savefig('final_abundance_heat.png')
     plt.show()
 
 #stable_points_space_final_abundance_rgb_heat()
@@ -450,7 +451,7 @@ def stable_points_space_final_alive_rgb_heat():
     plt.ylim(-20, R+20)
     plt.xlim(-20, R+20)
 
-    heatmap = [[0 for _ in range(R+7)] for _ in range(R+7)]
+    heatmap = [[0 for _ in range(R+10)] for _ in range(R+10)]
 
     index = 1
     for file in data_archives:
@@ -498,10 +499,108 @@ def stable_points_space_final_alive_rgb_heat():
     plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower')
     #plt.imsave("aliveheat.png",heatmap, cmap='hot', interpolation='nearest', origin='lower')
 
-    plt.savefig('aliveheat.png')
+    plt.savefig('final_alive_heat.png')
     plt.show()
 
 #stable_points_space_final_alive_rgb_heat()
+
+
+
+# =============================================================== Equilibrium Abundance Start HeatMap ==================
+def stable_points_space_equilibrium_abundance_start():
+
+    stable_locations = []
+    R = 100
+    biotic_components_K = 100
+    plt.figure(figsize=(30,30), dpi=200)
+    plt.title('Initial Equilibrium Abundance HeatMap', fontsize=40)
+    plt.xlabel('EL', fontsize=40)
+    plt.ylabel('EG', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.ylim(-20, R+20)
+    plt.xlim(-20, R+20)
+
+    heatmap = [[0 for _ in range(R+10)] for _ in range(R+10)]
+
+    index = 1
+    for file in data_archives:
+
+        s = shelve.open(data_dr + "/" + str(file) + "/dyke.refactor_core.data")
+        print("Processing: ", index, "/", len(data_archives)," >>> " , file)
+        index +=1
+        try:
+            row = s['rE']
+            decompose = s['rEquilibrium_Abundance']
+
+            row_equilibrium = []
+
+            run_length = len(decompose[0])
+
+            for x in range(run_length):
+                current_sum = 0
+                for item in decompose:
+                    current_sum += item[x]
+                row_equilibrium.append(current_sum)
+
+            heatmap[int(row[0][0])][int(row[1][0])] = row_equilibrium[-1]
+
+        finally:
+            s.close()
+
+    plt.colorbar(plt.pcolor(heatmap))
+    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower')
+    plt.savefig('initial_equilibrium_abundance_heat.png')
+    plt.show()
+
+# =============================================================== Equilibrium Abundance Start HeatMap ==================
+def stable_points_space_alive_start():
+
+    stable_locations = []
+    R = 100
+    biotic_components_K = 100
+    plt.figure(figsize=(30,30), dpi=200)
+    plt.title('Initial Alives HeatMap', fontsize=40)
+    plt.xlabel('EL', fontsize=40)
+    plt.ylabel('EG', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.ylim(-20, R+20)
+    plt.xlim(-20, R+20)
+
+    heatmap = [[0 for _ in range(R+10)] for _ in range(R+10)]
+
+    index = 1
+    for file in data_archives:
+
+        s = shelve.open(data_dr + "/" + str(file) + "/dyke.refactor_core.data")
+        print("Processing: ", index, "/", len(data_archives)," >>> " , file)
+        index +=1
+        try:
+            row = s['rE']
+            decompose = s['rStart_Alives']
+
+            row_equilibrium = []
+
+            run_length = len(decompose[0])
+
+            for x in range(run_length):
+                current_sum = 0
+                for item in decompose:
+                    current_sum += item[x]
+                row_equilibrium.append(current_sum)
+
+            heatmap[int(row[0][0])][int(row[1][0])] = row_equilibrium[-1]
+
+        finally:
+            s.close()
+
+    plt.colorbar(plt.pcolor(heatmap))
+    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower')
+    plt.savefig('initial_alive_heat.png')
+    plt.show()
+
+
 
 # =============================================================== Final Regions ========================================
 def stable_points_global_local():
@@ -690,6 +789,10 @@ if __name__ == '__main__':
     stable_points_space_final_abundance_rgb_heat()
     print("alive heat")
     stable_points_space_final_alive_rgb_heat()
+    print("init equilibrium abundance")
+    stable_points_space_equilibrium_abundance_start()
+    print("init alives")
+    stable_points_space_alive_start()
 
     print("Completed")
     ###### map_async call each function !
