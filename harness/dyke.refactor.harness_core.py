@@ -21,7 +21,7 @@ time_step = float(1)
 environment_components_N = int(2)
 truncated_gaussian_ROUND = int(10)
 niche_width = int(5)
-local_population_size = int(20)
+local_population_size = int(10)
 biotic_force_F = [0 for _ in range(environment_components_N)]
 
 affects_w = [[] for _ in range(environment_components_N)]

@@ -233,41 +233,9 @@ def stable_points_space_heat():
 
 # =============================================================== Biotic Force over Temperature ========================
 
-temperatures = []
-def plot_alphas():
-
-    for x in np.arange (-50, R+50, step):
-        temperatures.append(x)
-
-    plt.figure(figsize=(30,30))
-    plt.title('Biotic Force over Temperature', fontsize=40)
-    plt.xlabel('Temperature', fontsize=40)
-    plt.ylabel('biotic force (a * w)', fontsize=40)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-
-    super_biotic_force = []
-
-    for each_env_var in range(N):
-        biotic_force = [[] for _ in range(K)]
-        for y in range(K):
-            for x in np.arange (-50, R+50, step):
-                biotic_force[y].append((math.e) ** ((-1) * (((abs(x-u[each_env_var][y])) ** 2) / (2*(OE[y]**2)))) * w[each_env_var][y])
 
 
-        for _ in range(K):
-            plt.plot(temperatures,biotic_force[_])
 
-
-        plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
-        super_biotic_force.append(np.sum((np.array(biotic_force, dtype=float)), axis=0))
-
-    sum = []
-    #for _ in range(time_end/time_step):
-    #    sum.append(super_biotic_force[0][_] + super_biotic_force[1][_])
-    #plt.plot(temperatures, sum, lw=10)
-    #plt.show()
-#plot_alphas()
 
 # =============================================================== Heat Map of Global Species Distribution ==============
 def stable_points_space_heat_global():
@@ -507,6 +475,7 @@ def stable_points_space_final_alive_rgb_heat():
 
 
 # =============================================================== Equilibrium Abundance Start HeatMap ==================
+
 def stable_points_space_equilibrium_abundance_start():
 
     stable_locations = []
@@ -600,9 +569,8 @@ def stable_points_space_alive_start():
     plt.savefig('initial_alive_heat.png')
     plt.show()
 
-
-
 # =============================================================== Final Regions ========================================
+
 def stable_points_global_local():
 
     R = 100
@@ -767,6 +735,246 @@ def stable_points_space_3d_rotate_number_alive():
 
 
 
+def biotic_effect_global_population():
+
+    s = shelve.open(data_dr + "/" + str(data_archives[0]) + "/dyke.refactor_core.data")
+
+    try:
+        biotic_components_K = s['biotic_components_K']
+        essential_range_R = s['essential_range_R']
+        truncated_gaussian_ROUND = s['truncated_gaussian_ROUND']
+        niche_width = s['niche_width']
+        affects_w = s['affects_w']
+        optimum_condition_u = s['optimum_condition_u']
+
+        time_step = s['time_step']
+        local_population_index = s['local_population_index']
+
+
+    finally:
+        s.close()
+
+    w = affects_w
+    u = optimum_condition_u
+    K = biotic_components_K
+    R = essential_range_R
+    step = time_step
+    ROUND = truncated_gaussian_ROUND
+    OEn = niche_width
+    OE = [OEn for _ in range(K)]
+
+    temperatures=[]
+    for temp_value in np.arange (-50, R+50, step):
+        temperatures.append(temp_value)
+
+    plt.figure(figsize=(30,30))
+    plt.title('Biotic Force at Temperature : Global Species', fontsize=40)
+    plt.xlabel('Temperature', fontsize=40)
+    plt.ylabel('biotic force (a * w)', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+
+    super_biotic_force = []
+    biotic_force = []
+
+    print(u,w)
+
+
+    for each_species in range(K):
+        if each_species not in local_population_index:
+            biotic_force_run = []
+            for temp_value in np.arange(-50,R+50,step):
+                biotic_force_run.append( round((math.e) ** ((-1) * (((abs((temp_value)-u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND) * w[0][each_species])
+            biotic_force.append(biotic_force_run)
+
+    for global_species in biotic_force:
+        plt.plot(temperatures,global_species)
+
+    plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
+    super_biotic_force.append(np.sum((np.array(biotic_force, dtype=float)), axis=0))
+
+    plt.savefig("biotic_effect_global_population.png", format = "png", dpi = 100)
+    #plt.show()
+
+mpl.use('agg') #for the 3D magic
+
+def biotic_effect_local_population():
+
+    s = shelve.open(data_dr + "/" + str(data_archives[0]) + "/dyke.refactor_core.data")
+
+    try:
+        biotic_components_K = s['biotic_components_K']
+        essential_range_R = s['essential_range_R']
+        truncated_gaussian_ROUND = s['truncated_gaussian_ROUND']
+        niche_width = s['niche_width']
+        affects_w = s['affects_w']
+        optimum_condition_u = s['optimum_condition_u']
+
+        time_step = s['time_step']
+        local_population_index = s['local_population_index']
+
+
+    finally:
+        s.close()
+
+    w = affects_w
+    u = optimum_condition_u
+    K = biotic_components_K
+    R = essential_range_R
+    step = time_step
+    ROUND = truncated_gaussian_ROUND
+    OEn = niche_width
+    OE = [OEn for _ in range(K)]
+
+
+    fig = plt.figure(figsize=(10,10), dpi=500)
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_title(label = "Biotic Force at Temperature : Local Species (affected by Eg and El)")
+    ax.set_xlabel('X - EL')
+    ax.set_ylabel('Y - EG')
+    ax.set_zlabel('Z - Species Biotic Force')
+    ax.set_xlim([-10,100])
+    ax.set_ylim([-10,100])
+
+
+    for each_species in range(K):
+        if each_species in local_population_index:
+            biotic_force_run = []
+            global_temperatures = []
+            local_temperatures = []
+            for global_var_temp in np.arange(-50,R+50,step):      # Env Var that affects Global and Local
+                for local_var_temp in np.arange(-50,R+50,step):  # Env Var that affects Local Only
+
+                    biotic_effect_local = (
+                            (round((math.e) ** ((-1) * (((abs((global_var_temp)-u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND))
+                            *
+                            (round((math.e) ** ((-1) * (((abs((local_var_temp)-u[1][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND))
+                            *
+                            w[1][each_species]
+                    )
+
+                    if(biotic_effect_local > 0.01 or biotic_effect_local < -0.01):
+                        global_temperatures.append(global_var_temp)
+                        local_temperatures.append(local_var_temp)
+                        biotic_force_run.append (biotic_effect_local)
+
+            ax.scatter(local_temperatures, global_temperatures, biotic_force_run, s=1)
+
+    plt.savefig("biotic_effect_local_population.png", format = "png" , bbox_inches="tight")
+    ax.view_init(elev=10., azim=100)
+    plt.savefig("biotic_effect_local_population_r.png", format = "png" , bbox_inches="tight")
+
+    #plt.show()
+
+
+    #plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
+    #super_biotic_force.append(np.sum((np.array(biotic_force, dtype=float)), axis=0))
+
+
+
+def biotic_effect_local_sum():
+
+    s = shelve.open(data_dr + "/" + str(data_archives[0]) + "/dyke.refactor_core.data")
+
+    try:
+        biotic_components_K = s['biotic_components_K']
+        essential_range_R = s['essential_range_R']
+        truncated_gaussian_ROUND = s['truncated_gaussian_ROUND']
+        niche_width = s['niche_width']
+        affects_w = s['affects_w']
+        optimum_condition_u = s['optimum_condition_u']
+
+        time_step = s['time_step']
+        local_population_index = s['local_population_index']
+
+
+    finally:
+        s.close()
+
+    w = affects_w
+    u = optimum_condition_u
+    K = biotic_components_K
+    R = essential_range_R
+    step = time_step
+    ROUND = truncated_gaussian_ROUND
+    OEn = niche_width
+    OE = [OEn for _ in range(K)]
+
+
+    # Heat Map
+
+    fig = plt.figure(figsize=(10,10), dpi=500)
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_title(label = "Total Biotic Force at Temperature : Local Species (affected by Eg and El)")
+    ax.set_xlabel('X - EL')
+    ax.set_ylabel('Y - EG')
+    ax.set_zlabel('Z - Total Biotic Force')
+    ax.set_xlim([-10,100])
+    ax.set_ylim([-10,100])
+
+
+    heatmap = [[0 for _ in np.arange(-50,R+50,step)] for _ in np.arange(-50,R+50,step)]
+
+    for each_species in range(K):
+        if each_species in local_population_index:
+            for global_var_temp in np.arange(-50,R+50,step):      # Env Var that affects Global and Local
+                for local_var_temp in np.arange(-50,R+50,step):  # Env Var that affects Local Only
+                    #print("BioticRun : ", global_var_temp,":",local_var_temp)
+                    biotic_effect_local = (
+                            (round((math.e) ** ((-1) * (((abs((global_var_temp)-u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND))
+                            *
+                            (round((math.e) ** ((-1) * (((abs((local_var_temp)-u[1][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND))
+                            *
+                            w[1][each_species]
+                    )
+
+                    heatmap[int(local_var_temp)][int(global_var_temp)] += biotic_effect_local
+
+
+    number_of_points = 0
+
+    biotic_force_run = []
+    global_temperatures = []
+    local_temperatures = []
+
+    for global_var_temp in np.arange(-50,R+50,step):      # Env Var that affects Global and Local
+        for local_var_temp in np.arange(-50,R+50,step):  # Env Var that affects Local Only
+            #print("PlotRun : ", global_var_temp,":",local_var_temp)
+            if(heatmap[int(local_var_temp)][int(global_var_temp)] > 0.01 or heatmap[int(local_var_temp)][int(global_var_temp)] < -0.01):
+                #ax.scatter(local_var_temp, global_var_temp, heatmap[int(local_var_temp)][int(global_var_temp)], s=1, color="yellowgreen")
+                #print("Points : ", number_of_points)
+                number_of_points += 1
+
+                global_temperatures.append(global_var_temp)
+                local_temperatures.append(local_var_temp)
+                biotic_force_run.append(heatmap[int(local_var_temp)][int(global_var_temp)])
+
+    ax.plot_trisurf(local_temperatures, global_temperatures, biotic_force_run,linewidth=0.2, antialiased=True,cmap=mpl.cm.jet)
+
+    plt.savefig("biotic_effect_local_sum.png", format = "png", bbox_inches="tight")
+    ax.view_init(elev=10., azim=100)
+    plt.savefig("biotic_effect_local_sum_r.png", format = "png", bbox_inches="tight")
+
+
+    plt.figure(figsize=(30,30), dpi=200)
+    plt.title('Local Species Biotic Force', fontsize=40)
+    plt.xlabel('EL', fontsize=40)
+    plt.ylabel('EG', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.ylim(-20, R+20)
+    plt.xlim(-20, R+20)
+
+
+    plt.colorbar(plt.pcolor(heatmap))
+    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower')
+    plt.savefig('local_species_biotic_force_heatmap.png')
+
+#plt.show()
+
+
+
+
 
 if __name__ == '__main__':
     #pool = Pool(processes=7)
@@ -784,23 +992,21 @@ if __name__ == '__main__':
     #read_files_parallel(data_archives[0])
 
     print("stable points global")
-    stable_points_global_local()
+    #stable_points_global_local()
     print("abundance heat")
-    stable_points_space_final_abundance_rgb_heat()
+    #stable_points_space_final_abundance_rgb_heat()
     print("alive heat")
-    stable_points_space_final_alive_rgb_heat()
+    #stable_points_space_final_alive_rgb_heat()
     print("init equilibrium abundance")
-    stable_points_space_equilibrium_abundance_start()
+    #stable_points_space_equilibrium_abundance_start()
     print("init alives")
-    stable_points_space_alive_start()
+    #stable_points_space_alive_start()
+
+
+    biotic_effect_global_population()
+
+    biotic_effect_local_population()
+
+    biotic_effect_local_sum()
 
     print("Completed")
-    ###### map_async call each function !
-    #stable_points_global_local()
-
-    #print("points space")
-    #stable_points_space()
-    #print("abundance heat map")
-    #stable_points_space_final_abundance_rgb_heat()
-    #print("alive heat map")
-    #stable_points_space_final_alive_rgb_heat()

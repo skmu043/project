@@ -121,20 +121,19 @@ def biotic_effect_global_population():
     plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
     super_biotic_force.append(np.sum((np.array(biotic_force, dtype=float)), axis=0))
 
-    plt.show()
+    plt.savefig("biotic_effect_global_population.png", format = "png", dpi = 100)
+    #plt.show()
 
-biotic_effect_global_population()
-
-mpl.use('macosx') #for the 3D magic
+mpl.use('agg') #for the 3D magic
 
 def biotic_effect_local_population():
 
-    fig = plt.figure(figsize=(300,300))
-    ax = fig.add_subplot(111, projection='3d', adjustable='box')
+    fig = plt.figure(figsize=(10,10), dpi=500)
+    ax = fig.add_subplot(111, projection='3d')
     ax.set_title(label = "Biotic Force at Temperature : Local Species (affected by Eg and El)")
-    ax.set_xlabel('X - EL', fontsize=10)
-    ax.set_ylabel('Y - EG', fontsize=10)
-    ax.set_zlabel('Z - Species Biotic Force', fontsize=10)
+    ax.set_xlabel('X - EL')
+    ax.set_ylabel('Y - EG')
+    ax.set_zlabel('Z - Species Biotic Force')
     ax.set_xlim([-10,100])
     ax.set_ylim([-10,100])
 
@@ -161,25 +160,29 @@ def biotic_effect_local_population():
                         biotic_force_run.append (biotic_effect_local)
 
             ax.scatter(local_temperatures, global_temperatures, biotic_force_run, s=1)
-    plt.show()
+
+    plt.savefig("biotic_effect_local_population.png", format = "png" , bbox_inches="tight")
+    ax.view_init(elev=10., azim=100)
+    plt.savefig("biotic_effect_local_population_r.png", format = "png" , bbox_inches="tight")
+
+    #plt.show()
 
 
     #plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
     #super_biotic_force.append(np.sum((np.array(biotic_force, dtype=float)), axis=0))
 
-biotic_effect_local_population()
+
 
 def biotic_effect_local_sum():
 
-
     # Heat Map
 
-    fig = plt.figure(figsize=(300,300))
-    ax = fig.add_subplot(111, projection='3d', adjustable='box')
+    fig = plt.figure(figsize=(10,10), dpi=500)
+    ax = fig.add_subplot(111, projection='3d')
     ax.set_title(label = "Total Biotic Force at Temperature : Local Species (affected by Eg and El)")
-    ax.set_xlabel('X - EL', fontsize=10)
-    ax.set_ylabel('Y - EG', fontsize=10)
-    ax.set_zlabel('Z - Total Biotic Force', fontsize=10)
+    ax.set_xlabel('X - EL')
+    ax.set_ylabel('Y - EG')
+    ax.set_zlabel('Z - Total Biotic Force')
     ax.set_xlim([-10,100])
     ax.set_ylim([-10,100])
 
@@ -190,7 +193,7 @@ def biotic_effect_local_sum():
         if each_species in local_population_index:
             for global_var_temp in np.arange(-50,R+50,step):      # Env Var that affects Global and Local
                 for local_var_temp in np.arange(-50,R+50,step):  # Env Var that affects Local Only
-                    print("BioticRun : ", global_var_temp,":",local_var_temp)
+                    #print("BioticRun : ", global_var_temp,":",local_var_temp)
                     biotic_effect_local = (
                             (round((math.e) ** ((-1) * (((abs((global_var_temp)-u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND))
                             *
@@ -213,19 +216,41 @@ def biotic_effect_local_sum():
             #print("PlotRun : ", global_var_temp,":",local_var_temp)
             if(heatmap[int(local_var_temp)][int(global_var_temp)] > 0.01 or heatmap[int(local_var_temp)][int(global_var_temp)] < -0.01):
                 #ax.scatter(local_var_temp, global_var_temp, heatmap[int(local_var_temp)][int(global_var_temp)], s=1, color="yellowgreen")
-                print("Points : ", number_of_points)
+                #print("Points : ", number_of_points)
                 number_of_points += 1
 
                 global_temperatures.append(global_var_temp)
                 local_temperatures.append(local_var_temp)
-                biotic_force_run.append (heatmap[int(local_var_temp)][int(global_var_temp)])
+                biotic_force_run.append(heatmap[int(local_var_temp)][int(global_var_temp)])
 
     ax.plot_trisurf(local_temperatures, global_temperatures, biotic_force_run,linewidth=0.2, antialiased=True,cmap=mpl.cm.jet)
 
-    plt.show()
+    plt.savefig("biotic_effect_local_sum.png", format = "png", bbox_inches="tight")
+    ax.view_init(elev=10., azim=100)
+    plt.savefig("biotic_effect_local_sum_r.png", format = "png", bbox_inches="tight")
 
 
-    #plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
-    #super_biotic_force.append(np.sum((np.array(biotic_force, dtype=float)), axis=0))
+    plt.figure(figsize=(30,30), dpi=200)
+    plt.title('Local Species Biotic Force', fontsize=40)
+    plt.xlabel('EL', fontsize=40)
+    plt.ylabel('EG', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.ylim(-20, R+20)
+    plt.xlim(-20, R+20)
+
+
+    plt.colorbar(plt.pcolor(heatmap))
+    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower')
+    plt.savefig('local_species_biotic_force_heatmap.png')
+
+#plt.show()
+
+
+
+
+biotic_effect_global_population()
+
+biotic_effect_local_population()
 
 biotic_effect_local_sum()
