@@ -115,20 +115,6 @@ def run_once(simulation_run_shelve):
 
 if __name__ == '__main__':
 
-    simulation_run_shelve = init_shelve()
-    simulation_shelve = shelve.open(simulation_run_shelve)
-
-    try:
-        simulation_shelve['affects_w'] = affects_w
-        simulation_shelve['optimum_condition_u'] = optimum_condition_u
-        simulation_shelve['local_population_index'] = local_population_index
-    finally:
-        simulation_shelve.close()
-
-    run_once(simulation_run_shelve)
-    sys.exit()
-
-    print("Biotic Force Done")
 
     shelve_files = []
 

@@ -140,7 +140,7 @@ u = optimum_condition_u
 K = biotic_components_K
 
 R = essential_range_R
-print("R", R)
+
 #P = external_perturbation_rate_P
 #start = time_start
 #end = time_end
@@ -659,9 +659,9 @@ def stable_points_space_3d_rotate():
                 current_sum += item[x]
             row_abundance.append(current_sum)
 
-        print(len(row_abundance))
-        print(len(row[1]))
-        print(len(row[1]))
+        #print(len(row_abundance))
+        #print(len(row[1]))
+        #print(len(row[1]))
 
         if(c_r < 0 or c_g < 0 or c_r > 100 or c_g > 100 ):
             ax.scatter(row[1][0], row[0][0], row_abundance[0],s=10, marker='.', color=(float(0), float(0), float(1)))
@@ -776,9 +776,6 @@ def biotic_effect_global_population():
 
     super_biotic_force = []
     biotic_force = []
-
-    print(u,w)
-
 
     for each_species in range(K):
         if each_species not in local_population_index:
@@ -974,6 +971,415 @@ def biotic_effect_local_sum():
 
 
 
+def biotic_effect_local_and_globalsum():
+
+    s = shelve.open(data_dr + "/" + str(data_archives[0]) + "/dyke.refactor_core.data")
+
+    try:
+        biotic_components_K = s['biotic_components_K']
+        essential_range_R = s['essential_range_R']
+        truncated_gaussian_ROUND = s['truncated_gaussian_ROUND']
+        niche_width = s['niche_width']
+        affects_w = s['affects_w']
+        optimum_condition_u = s['optimum_condition_u']
+
+        time_step = s['time_step']
+        local_population_index = s['local_population_index']
+
+
+    finally:
+        s.close()
+
+    w = affects_w
+    u = optimum_condition_u
+    K = biotic_components_K
+    R = essential_range_R
+    step = time_step
+    ROUND = truncated_gaussian_ROUND
+    OEn = niche_width
+    OE = [OEn for _ in range(K)]
+
+    # Heat Map
+
+    fig = plt.figure(figsize=(10,10), dpi=500)
+    ax = fig.gca(projection='3d')
+    ax.set_title(label = "Total Biotic Force at EL + EG (Global Local Combined)")
+    ax.set_xlabel('X - EL')
+    ax.set_ylabel('Y - EG')
+    ax.set_zlabel('Z - Total Biotic Force')
+    ax.set_xlim([-50,R+50])
+    ax.set_ylim([-50,R+50])
+
+
+    heatmap = [[0 for _ in np.arange(-50,R+50,step)] for _ in np.arange(-50,R+50,step)]
+
+    ########### LOCAL
+
+    for each_species in range(K):
+        if each_species in local_population_index:
+            for global_var_temp in np.arange(-50,R+50,step):      # Env Var that affects Global and Local
+                for local_var_temp in np.arange(-50,R+50,step):  # Env Var that affects Local Only
+                    #print("BioticRun : ", global_var_temp,":",local_var_temp)
+                    biotic_effect_local = (
+                            (round((math.e) ** ((-1) * (((abs((global_var_temp)-u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND))
+                            *
+                            (round((math.e) ** ((-1) * (((abs((local_var_temp)-u[1][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND))
+                            *
+                            w[1][each_species]
+                    )
+
+                    heatmap[int(local_var_temp)][int(global_var_temp)] += biotic_effect_local
+
+
+    ##### GLOBAL
+    temperatures=[]
+    for temp_value in np.arange (-50, R+50, step):
+        temperatures.append(temp_value)
+
+    temperatures_local_e=[]
+    for temp_value in np.arange (-50, R+50, step):
+        temperatures_local_e.append(temp_value)
+
+    biotic_force = []
+    for each_species in range(K):
+        if each_species not in local_population_index:
+            biotic_force_run = []
+            for temp_value in np.arange(-50,R+50,step):
+                biotic_force_run.append( round((math.e) ** ((-1) * (((abs((temp_value)-u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND) * w[0][each_species])
+            biotic_force.append(biotic_force_run)
+
+    biotic_index = 0
+    for each_global_temp_unit in temperatures:
+        #print(biotic_index)
+        for each_local_temp_unit in temperatures_local_e:
+            sum_biotic_force = 0
+            for curve in biotic_force:
+                sum_biotic_force += curve[biotic_index]
+            heatmap[int(each_local_temp_unit)][int(each_global_temp_unit)] += sum_biotic_force
+
+        biotic_index+=1
+
+    number_of_points = 0
+
+    biotic_force_run = []
+    global_temperatures = []
+    local_temperatures = []
+
+    for global_var_temp in np.arange(-50,R+50,step):      # Env Var that affects Global and Local
+        for local_var_temp in np.arange(-50,R+50,step):  # Env Var that affects Local Only
+            #print("PlotRun : ", global_var_temp,":",local_var_temp)
+            if(heatmap[int(local_var_temp)][int(global_var_temp)] > 0.01 or heatmap[int(local_var_temp)][int(global_var_temp)] < -0.01):
+                #ax.scatter(local_var_temp, global_var_temp, heatmap[int(local_var_temp)][int(global_var_temp)], s=1, color="yellowgreen")
+                #print("Points : ", number_of_points)
+                number_of_points += 1
+
+                global_temperatures.append(global_var_temp)
+                local_temperatures.append(local_var_temp)
+                biotic_force_run.append(heatmap[int(local_var_temp)][int(global_var_temp)])
+
+
+    #ax.quiver(local_temperatures, global_temperatures, biotic_force_run)
+    #plt.savefig("biotic_effect_local_and_globalsum_quiver.png", format = "png", bbox_inches="tight")
+    #ax.contour(local_temperatures, global_temperatures, biotic_force_run,stride=5)
+    #plt.savefig("biotic_effect_local_and_globalsum_contour.png", format = "png", bbox_inches="tight")
+    #ax.contourf(local_temperatures, global_temperatures, biotic_force_run)
+    #plt.savefig("biotic_effect_local_and_globalsum_contourf.png", format = "png", bbox_inches="tight")
+
+    ax.plot_trisurf(local_temperatures, global_temperatures, biotic_force_run,linewidth=0.2, antialiased=True,cmap=mpl.cm.jet)
+    plt.savefig("biotic_effect_local_and_globalsum.png", format = "png", bbox_inches="tight")
+
+    ax.view_init(elev=10., azim=10)
+    plt.savefig("biotic_effect_local_and_globalsum_0.png", format = "png", bbox_inches="tight")
+
+    #ax.view_init(elev=40., azim=0)
+    #plt.savefig("biotic_effect_local_and_globalsum_490.png", format = "png", bbox_inches="tight")
+
+    #ax.view_init(elev=-40., azim=0)
+    #plt.savefig("biotic_effect_local_and_globalsum490.png", format = "png", bbox_inches="tight")
+
+
+
+
+
+    plt.figure(figsize=(30,30), dpi=200)
+    plt.title('Global + Local Species Biotic Force', fontsize=40)
+    plt.xlabel('EL', fontsize=40)
+    plt.ylabel('EG', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.ylim(-10, R+10)
+    plt.xlim(-10, R+10)
+
+
+    plt.colorbar(plt.pcolor(heatmap))
+    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower')
+    plt.savefig('biotic_effect_local_and_globalsum_heatmap.png')
+
+#plt.show()
+
+
+
+def biotic_effect_local_population():
+
+    s = shelve.open(data_dr + "/" + str(data_archives[0]) + "/dyke.refactor_core.data")
+
+    try:
+        biotic_components_K = s['biotic_components_K']
+        essential_range_R = s['essential_range_R']
+        truncated_gaussian_ROUND = s['truncated_gaussian_ROUND']
+        niche_width = s['niche_width']
+        affects_w = s['affects_w']
+        optimum_condition_u = s['optimum_condition_u']
+
+        time_step = s['time_step']
+        local_population_index = s['local_population_index']
+
+
+    finally:
+        s.close()
+
+    w = affects_w
+    u = optimum_condition_u
+    K = biotic_components_K
+    R = essential_range_R
+    step = time_step
+    ROUND = truncated_gaussian_ROUND
+    OEn = niche_width
+    OE = [OEn for _ in range(K)]
+
+    fig = plt.figure(figsize=(10,10), dpi=500)
+    ax = fig.gca(projection='3d')
+    ax.set_title(label = "Biotic Force at Temperature : Local Species (affected by Eg and El)")
+    ax.set_xlabel('X - EL')
+    ax.set_ylabel('Y - EG')
+    ax.set_zlabel('Z - Species Biotic Force')
+    ax.set_xlim([-10,100])
+    ax.set_ylim([-10,100])
+
+
+    for each_species in range(K):
+        if each_species in local_population_index:
+            biotic_force_run = []
+            global_temperatures = []
+            local_temperatures = []
+            for global_var_temp in np.arange(-50,R+50,step):      # Env Var that affects Global and Local
+                for local_var_temp in np.arange(-50,R+50,step):  # Env Var that affects Local Only
+
+                    biotic_effect_local = (
+                            (round((math.e) ** ((-1) * (((abs((global_var_temp)-u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND))
+                            *
+                            (round((math.e) ** ((-1) * (((abs((local_var_temp)-u[1][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND))
+                            *
+                            w[1][each_species]
+                    )
+
+                    if(biotic_effect_local > 0.01 or biotic_effect_local < -0.01):
+                        global_temperatures.append(global_var_temp)
+                        local_temperatures.append(local_var_temp)
+                        biotic_force_run.append (biotic_effect_local)
+
+            ax.scatter(local_temperatures, global_temperatures, biotic_force_run, s=1)
+
+    plt.savefig("biotic_effect_local_population.png", format = "png" , bbox_inches="tight")
+    ax.view_init(elev=10., azim=100)
+    plt.savefig("biotic_effect_local_population_r.png", format = "png" , bbox_inches="tight")
+
+    #plt.show()
+
+
+    #plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
+    #super_biotic_force.append(np.sum((np.array(biotic_force, dtype=float)), axis=0))
+
+
+
+def biotic_effect_global_population_extended_local():
+
+
+    s = shelve.open(data_dr + "/" + str(data_archives[0]) + "/dyke.refactor_core.data")
+
+    try:
+        biotic_components_K = s['biotic_components_K']
+        essential_range_R = s['essential_range_R']
+        truncated_gaussian_ROUND = s['truncated_gaussian_ROUND']
+        niche_width = s['niche_width']
+        affects_w = s['affects_w']
+        optimum_condition_u = s['optimum_condition_u']
+
+        time_step = s['time_step']
+        local_population_index = s['local_population_index']
+
+
+    finally:
+        s.close()
+
+    w = affects_w
+    u = optimum_condition_u
+    K = biotic_components_K
+    R = essential_range_R
+    step = time_step
+    ROUND = truncated_gaussian_ROUND
+    OEn = niche_width
+    OE = [OEn for _ in range(K)]
+
+
+
+    temperatures=[]
+    for temp_value in np.arange (-50, R+50, step):
+        temperatures.append(temp_value)
+
+    temperatures_local_e=[]
+    for temp_value in np.arange (-50, R+50, step):
+        temperatures_local_e.append(temp_value)
+
+
+    fig = plt.figure(figsize=(20,20), dpi=500)
+    ax = fig.gca(projection='3d')
+    ax.set_title(label = "Biotic Force at Temperature : Global Species with El")
+    ax.set_xlabel('X - EL')
+    ax.set_ylabel('Y - EG')
+    ax.set_zlabel('Z - Species Biotic Force')
+    ax.set_xlim([-10,100])
+    ax.set_ylim([-10,100])
+
+    super_biotic_force = []
+    biotic_force = []
+
+    for each_species in range(K):
+        if each_species not in local_population_index:
+            biotic_force_run = []
+            for temp_value in np.arange(-50,R+50,step):
+                biotic_force_run.append( round((math.e) ** ((-1) * (((abs((temp_value)-u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND) * w[0][each_species])
+            biotic_force.append(biotic_force_run)
+
+
+
+    global_sum_temp_biotic = [[],[],[]] # local temp + global temp + biotic force
+    biotic_index = 0
+    for each_global_temp_unit in temperatures:
+
+        for each_local_temp_unit in temperatures_local_e:
+            sum_biotic_force = 0
+            for curve in biotic_force:
+                sum_biotic_force += curve[biotic_index]
+
+            global_sum_temp_biotic[0].append(each_local_temp_unit)
+            global_sum_temp_biotic[1].append(each_global_temp_unit)
+            global_sum_temp_biotic[2].append(sum_biotic_force)
+
+            ax.scatter(each_local_temp_unit,each_global_temp_unit,sum_biotic_force, s=1, color="aquamarine")
+        biotic_index+=1
+
+
+    super_biotic_force.append(np.sum((np.array(biotic_force, dtype=float)), axis=0))
+
+    plt.savefig("biotic_effect_global_population_local_e.png", format = "png", dpi = 100)
+    #plt.show()
+
+##############################################################################################################################
+
+
+
+def biotic_effect_local_sum():
+
+
+
+    s = shelve.open(data_dr + "/" + str(data_archives[0]) + "/dyke.refactor_core.data")
+
+    try:
+        biotic_components_K = s['biotic_components_K']
+        essential_range_R = s['essential_range_R']
+        truncated_gaussian_ROUND = s['truncated_gaussian_ROUND']
+        niche_width = s['niche_width']
+        affects_w = s['affects_w']
+        optimum_condition_u = s['optimum_condition_u']
+
+        time_step = s['time_step']
+        local_population_index = s['local_population_index']
+
+
+    finally:
+        s.close()
+
+    w = affects_w
+    u = optimum_condition_u
+    K = biotic_components_K
+    R = essential_range_R
+    step = time_step
+    ROUND = truncated_gaussian_ROUND
+    OEn = niche_width
+    OE = [OEn for _ in range(K)]
+
+
+    # Heat Map
+
+    fig = plt.figure(figsize=(10,10), dpi=500)
+    ax = fig.gca(projection='3d')
+    ax.set_title(label = "Total Biotic Force at Temperature : Local Species (affected by Eg and El)")
+    ax.set_xlabel('X - EL')
+    ax.set_ylabel('Y - EG')
+    ax.set_zlabel('Z - Total Biotic Force')
+    ax.set_xlim([-10,100])
+    ax.set_ylim([-10,100])
+
+
+    heatmap = [[0 for _ in np.arange(-50,R+50,step)] for _ in np.arange(-50,R+50,step)]
+
+    for each_species in range(K):
+        if each_species in local_population_index:
+            for global_var_temp in np.arange(-50,R+50,step):      # Env Var that affects Global and Local
+                for local_var_temp in np.arange(-50,R+50,step):  # Env Var that affects Local Only
+                    #print("BioticRun : ", global_var_temp,":",local_var_temp)
+                    biotic_effect_local = (
+                            (round((math.e) ** ((-1) * (((abs((global_var_temp)-u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND))
+                            *
+                            (round((math.e) ** ((-1) * (((abs((local_var_temp)-u[1][each_species])) ** 2) / (2*(OE[each_species]**2)))),ROUND))
+                            *
+                            w[1][each_species]
+                    )
+
+                    heatmap[int(local_var_temp)][int(global_var_temp)] += biotic_effect_local
+
+
+    number_of_points = 0
+
+    biotic_force_run = []
+    global_temperatures = []
+    local_temperatures = []
+
+    for global_var_temp in np.arange(-50,R+50,step):      # Env Var that affects Global and Local
+        for local_var_temp in np.arange(-50,R+50,step):  # Env Var that affects Local Only
+            #print("PlotRun : ", global_var_temp,":",local_var_temp)
+            if(heatmap[int(local_var_temp)][int(global_var_temp)] > 0.01 or heatmap[int(local_var_temp)][int(global_var_temp)] < -0.01):
+                #ax.scatter(local_var_temp, global_var_temp, heatmap[int(local_var_temp)][int(global_var_temp)], s=1, color="yellowgreen")
+                #print("Points : ", number_of_points)
+                number_of_points += 1
+
+                global_temperatures.append(global_var_temp)
+                local_temperatures.append(local_var_temp)
+                biotic_force_run.append(heatmap[int(local_var_temp)][int(global_var_temp)])
+
+    ax.plot_trisurf(local_temperatures, global_temperatures, biotic_force_run,linewidth=0.2, antialiased=True,cmap=mpl.cm.jet)
+
+    plt.savefig("biotic_effect_local_sum.png", format = "png", bbox_inches="tight")
+    ax.view_init(elev=10., azim=100)
+    plt.savefig("biotic_effect_local_sum_r.png", format = "png", bbox_inches="tight")
+
+
+    plt.figure(figsize=(30,30), dpi=200)
+    plt.title('Local Species Biotic Force', fontsize=40)
+    plt.xlabel('EL', fontsize=40)
+    plt.ylabel('EG', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.ylim(-20, R+20)
+    plt.xlim(-20, R+20)
+
+
+    plt.colorbar(plt.pcolor(heatmap))
+    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower')
+    plt.savefig('local_species_biotic_force_heatmap.png')
+
+#plt.show()
 
 
 if __name__ == '__main__':
@@ -991,6 +1397,9 @@ if __name__ == '__main__':
 
     #read_files_parallel(data_archives[0])
 
+
+
+
     print("stable points global")
     #stable_points_global_local()
     print("abundance heat")
@@ -1002,11 +1411,18 @@ if __name__ == '__main__':
     print("init alives")
     #stable_points_space_alive_start()
 
-
+    print("biotic_effect_global_population")
     biotic_effect_global_population()
-
-    biotic_effect_local_population()
-
+    print("biotic_effect_local_sum")
     biotic_effect_local_sum()
+    print("biotic_effect_local_population")
+    biotic_effect_local_population()
+    print("biotic_effect_local_and_globalsum")
+    biotic_effect_local_and_globalsum()
+
+
+    #print("biotic_effect_global_population_extended_local")
+    #biotic_effect_global_population_extended_local()
+
 
     print("Completed")
