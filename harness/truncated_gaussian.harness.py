@@ -12,16 +12,16 @@ SAMPLE_SIZE = int(1)
 SAMPLE_STEP = int(1)
 RUN_ID = int(time.time())
 
-biotic_components_K = int(100)
+biotic_components_K = int(1)
 essential_range_R = int(100)
 external_perturbation_rate_P = int(0)
 time_start = int(0)
 time_end = int(200)
 time_step = float(1)
 environment_components_N = int(2)
-truncated_gaussian_ROUND = int(10)
+truncated_gaussian_ROUND = int(100)
 niche_width = int(5)
-local_population_size = int(10)
+local_population_size = int(50)
 biotic_force_F = [0 for _ in range(environment_components_N)]
 
 affects_w = [[] for _ in range(environment_components_N)]
@@ -35,12 +35,17 @@ for wi in range(environment_components_N):
 
 optimum_condition_u = [[] for _ in range(environment_components_N)]
 for ui in range(environment_components_N):
+    ######################################################### BIG CHANGE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    #optimum_condition_u[ui] = [random.uniform(0, essential_range_R-1) for _ in range(biotic_components_K)]
     optimum_condition_u[ui] = [random.uniform(0, essential_range_R) for _ in range(biotic_components_K)]
 for ui in range(environment_components_N):
     while int(len(optimum_condition_u[ui])) != int(len(set(optimum_condition_u[ui]))):
         print("Duplicate u's detected: Regenerating ...")
         optimum_condition_u[ui].clear()
         optimum_condition_u[ui] = [random.uniform(0, essential_range_R) for _ in range(biotic_components_K)]
+
+for item in optimum_condition_u:
+    print(item)
 
 local_population_index = []
 uniq_k = []
@@ -54,7 +59,7 @@ for x in range(int(local_population_size/100 * biotic_components_K)):
 local_population_index.sort()
 
 # Create Shelve to store parameters being sent to experiment run
-exp_name = "dyke.refactor_core"
+exp_name = "truncated_gaussian"
 
 def init_shelve():
     data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
@@ -90,7 +95,7 @@ def init_shelve():
 
 def run_once(simulation_run_shelve):
 
-    os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + "truncated_gaussian.py " + str(simulation_run_shelve))
+    os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(simulation_run_shelve))
 
 if __name__ == '__main__':
 
