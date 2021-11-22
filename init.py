@@ -17,8 +17,6 @@ while True:
     select = int(input("Select [0-"+ str(len(structure_) - 1)+ "]: "))
 
     if(select <= len(structure_)-1):
-        #print(len(structure_))
-        #print(os.listdir(structure_check[0]))
         for si in os.listdir(structure_[select]):
             print(os.listdir(structure_[select]).index(si),si)
         run_select = int(input("Select [0-"+ str(len(os.listdir(structure_[select])) - 1)+ "]: "))

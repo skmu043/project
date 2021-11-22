@@ -61,22 +61,21 @@ rNumberAlive = [[] for x in range(K)]
 alpha = [[] for _ in range(K)]
 
 
-if __name__ == '__main__':
+alive_threshold = 0.5
 
-    alive_threshold = 0.5
+#inputs = range(1000)
+#def processInput(i):
+#    return i * i
+#num_cores = multiprocessing.cpu_count()
+#results = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs)
 
-    inputs = range(1000)
-    def processInput(i):
-        return i * i
-    num_cores = multiprocessing.cpu_count()
-    results = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs)
-
+def alive_species_count_no_gaussian():
 
     heatmap = [[0 for _ in np.arange(0,essential_range_R,step)] for _ in np.arange(0,essential_range_R,step)]
 
 
     plt.figure(figsize=(8,8), dpi=200)
-    plt.title('Alive Species Count - no Truncation')
+    plt.title('Alive Species Count - no Gaussian Truncation, AT = ' +  str(alive_threshold))
     plt.xlabel('EL')
     plt.ylabel('EG')
     #EG yAxis - EL xAxis
@@ -95,6 +94,7 @@ if __name__ == '__main__':
                 abundance = 0
                 if each_species in local_population_index:
                     abundance = (
+
                             (math.e) ** ((-1) * (((abs((Global)-optimum_condition_u[0][each_species])) ** 2) / (2*(OE[each_species]**2))))
                             *
                             (math.e) ** ((-1) * (((abs((Local)-optimum_condition_u[1][each_species])) ** 2) / (2*(OE[each_species]**2))))
@@ -120,11 +120,14 @@ if __name__ == '__main__':
 
     print("Alive non Truncated")
 
+def alive_species_count_truncated_gaussian_red():
+
     heatmap = [[0 for _ in np.arange(0,essential_range_R,step)] for _ in np.arange(0,essential_range_R,step)]
 
+    alive_threshold = 0
 
     plt.figure(figsize=(8,8), dpi=200)
-    plt.title('Alive Species Count - Truncated Gaussian (Red Example)')
+    plt.title('Alive Species Count - Truncated Gaussian (Red) with AT = ' +  str(alive_threshold))
     plt.xlabel('EL')
     plt.ylabel('EG')
 
@@ -133,7 +136,7 @@ if __name__ == '__main__':
 
     for Global in np.arange(0,essential_range_R,step):
         for Local in np.arange(0,essential_range_R,step):
-
+            print(Global, Local)
             ###################################################
             for each_species in range(biotic_components_K):
                 abundance = 0
@@ -144,10 +147,13 @@ if __name__ == '__main__':
                             *
                             round((math.e) ** ((-1) * (((abs((Local)-optimum_condition_u[1][each_species])) ** 2) / (2*(OE[each_species]**2)))),truncated_gaussian_ROUND)
                     )
+
                 else:
                     abundance = round((math.e) ** ((-1) * (((abs((Global)-optimum_condition_u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),truncated_gaussian_ROUND)
+                    #finding threshold with rounding ...
 
-                ###################################################
+
+                            ###################################################
 
                 if abundance > alive_threshold:
                     heatmap[Gindex][Lindex] += 1
@@ -161,12 +167,25 @@ if __name__ == '__main__':
     plt.savefig('alive_species_count_truncation_red_' +  str(truncated_gaussian_ROUND) + '_LPsz_'+ str(local_population_size) + '.png')
     plt.show()
 
+    plt.figure(figsize=(8,8), dpi=200)
+    plt.title('Alive Threshold')
+    plt.xlabel('EL')
+    plt.ylabel('EG')
 
+    for each_species in range(biotic_components_K):
+        for _ in np.arange(0,R, 0.1):
+            if(round((math.e) ** ((-1) * (((abs((_)-optimum_condition_u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),truncated_gaussian_ROUND)>0):
+                plt.axhline(y=(round((math.e) ** ((-1) * (((abs((_)-optimum_condition_u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),truncated_gaussian_ROUND)), color='r', linestyle='-')
+                break;
+
+    plt.show()
+
+def alive_species_count_truncated_gaussian_green():
     heatmap = [[0 for _ in np.arange(0,essential_range_R,step)] for _ in np.arange(0,essential_range_R,step)]
 
 
     plt.figure(figsize=(8,8), dpi=200)
-    plt.title('Alive Species Count - * Truncation (Green Example)')
+    plt.title('Alive Species Count - * Truncation (Green) with AT = ' +  str(alive_threshold))
     plt.xlabel('EL')
     plt.ylabel('EG')
 
@@ -206,6 +225,11 @@ if __name__ == '__main__':
     plt.show()
 
 
+def others():
+
+
+
+
     print("Alive Truncated")
 
 
@@ -215,7 +239,7 @@ if __name__ == '__main__':
     heatmap = [[0 for _ in np.arange(0,essential_range_R,step)] for _ in np.arange(0,essential_range_R,step)]
 
     plt.figure(figsize=(8,8), dpi=200)
-    plt.title('Abundance of Species - no Truncation')
+    plt.title('Abundance of Species - no Gaussian Truncation with AT = ' +  str(alive_threshold))
     plt.xlabel('EL')
     plt.ylabel('EG')
 
@@ -236,16 +260,16 @@ if __name__ == '__main__':
                 abundance = 0
                 if each_species in local_population_index:
                     abundance = (
-                        round((math.e) ** ((-1) * (((abs((Global)-optimum_condition_u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),truncated_gaussian_ROUND)
-                    *
-                        round((math.e) ** ((-1) * (((abs((Local)-optimum_condition_u[1][each_species])) ** 2) / (2*(OE[each_species]**2)))),truncated_gaussian_ROUND)
+                            round((math.e) ** ((-1) * (((abs((Global)-optimum_condition_u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),truncated_gaussian_ROUND)
+                            *
+                            round((math.e) ** ((-1) * (((abs((Local)-optimum_condition_u[1][each_species])) ** 2) / (2*(OE[each_species]**2)))),truncated_gaussian_ROUND)
                     )
                 else:
                     abundance = round((math.e) ** ((-1) * (((abs((Global)-optimum_condition_u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),truncated_gaussian_ROUND)
 
                 sum_abundance += abundance
 
-            ###################################################
+                ###################################################
 
                 if sum_abundance > alive_threshold:
                     heatmap[Gindex][Lindex] += sum_abundance
@@ -263,7 +287,7 @@ if __name__ == '__main__':
 
 
     plt.figure(figsize=(8,8), dpi=200)
-    plt.title('Abundance of Species - Truncated Gaussian (Red Example)')
+    plt.title('Abundance of Species - Truncated Gaussian (Red) with AT = '+  str(alive_threshold))
     plt.xlabel('EL')
     plt.ylabel('EG')
 
@@ -289,7 +313,7 @@ if __name__ == '__main__':
                 else:
                     abundance = (math.e) ** ((-1) * (((abs((Global)-optimum_condition_u[0][each_species])) ** 2) / (2*(OE[each_species]**2))))
                 sum_abundance += abundance
-            ###################################################
+                ###################################################
 
                 #print(Gindex, Lindex, Global, Local, sum_abundance)
                 if sum_abundance > alive_threshold:
@@ -309,7 +333,7 @@ if __name__ == '__main__':
 
 
     plt.figure(figsize=(8,8), dpi=200)
-    plt.title('Abundance of Species - * Truncation (Green Example)')
+    plt.title('Abundance of Species - * Truncation (Green) with AT = ' +  str(alive_threshold))
     plt.xlabel('EL')
     plt.ylabel('EG')
 
@@ -507,11 +531,11 @@ if __name__ == '__main__':
                 abundance = 0
                 if each_species in local_population_index:
                     abundance = (
-                            round(
-                                (math.e) ** ((-1) * (((abs((Global)-optimum_condition_u[0][each_species])) ** 2) / (2*(OE[each_species]**2))))
+                        round(
+                            (math.e) ** ((-1) * (((abs((Global)-optimum_condition_u[0][each_species])) ** 2) / (2*(OE[each_species]**2))))
                             *
-                                (math.e) ** ((-1) * (((abs((Local)-optimum_condition_u[1][each_species])) ** 2) / (2*(OE[each_species]**2))))
-                                ,truncated_gaussian_ROUND)
+                            (math.e) ** ((-1) * (((abs((Local)-optimum_condition_u[1][each_species])) ** 2) / (2*(OE[each_species]**2))))
+                            ,truncated_gaussian_ROUND)
                     )
                 else:
                     abundance = round((math.e) ** ((-1) * (((abs((Global)-optimum_condition_u[0][each_species])) ** 2) / (2*(OE[each_species]**2)))),truncated_gaussian_ROUND)
@@ -556,3 +580,9 @@ if __name__ == '__main__':
     print("Plotting ...")
     plt.savefig('z_alives_abundance_' +  str(truncated_gaussian_ROUND) + '_LPsz_'+ str(local_population_size) + '.png')
     plt.show()
+
+
+if __name__ == '__main__':
+    alive_species_count_no_gaussian()
+    alive_species_count_truncated_gaussian_red()
+    alive_species_count_truncated_gaussian_green()

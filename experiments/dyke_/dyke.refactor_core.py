@@ -155,6 +155,7 @@ def update(step):
         else:
             new_alpha = al[0]
 
+
         k1 = new_alpha
         k2 = k1 + (k1 * step/2)
         k3 = k1 + (k2 * step/2)
