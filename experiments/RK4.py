@@ -160,7 +160,7 @@ for _ in range(biotic_components_K):
 plt.show()
 
 ################## INITIAL STATE
-E = 30
+E = 50
 system_state[-1] = E
 for _ in range(biotic_components_K):
     system_state[_] = ((math.e) ** ((-1) * (((abs((E)-(optimum_condition_u[0][_]))) ** 2) / (2*(5**2)))))
@@ -196,7 +196,7 @@ d = 0.1 # small step
 
 x=[]
 start = 0
-end = 100
+end = 400
 
 biotic = []
 
@@ -211,8 +211,6 @@ for step in np.arange(start, end, d):
     for _ in range(biotic_components_K):
         force += (system_state[_] * affects_w[0][_])
     biotic.append(force)
-    print("BForce: ",force)
-    print("E:       ", system_state[-1])
 
     k1 = d * (rates_of_change_system_state(system_state))
     k2 = d * rates_of_change_system_state(system_state + k1 * 0.5)
@@ -220,8 +218,6 @@ for step in np.arange(start, end, d):
     k4 = d * rates_of_change_system_state(system_state + k3)
 
     system_state += ((k1 + (2*k2) + (2*k3) + k4)/6)
-
-
 
 
 plt.figure(figsize=(8,8), dpi=200)
