@@ -9,8 +9,6 @@ x = np.linspace(1,2,2)
 y = np.linspace(3,4,2)
 xx,yy = np.meshgrid(x,y)
 result = xx * 2 + yy * 5
-print(result)
-
 
 SAMPLE_SIZE = int(1)
 SAMPLE_STEP = int(1)
@@ -23,16 +21,11 @@ time_end = int(200)
 time_step = float(1)
 environment_components_N = int(2)
 niche_width = int(5)
-local_population_size = int(50)
+local_population_size = int(40)
 
 En = []
 for ei in range(environment_components_N):
     En.append((random.uniform(10, essential_range_R)))
-
-print(En[0])
-
-
-print(En[1])
 
 affects_w = [[] for _ in range(environment_components_N)]
 for wi in range(environment_components_N):
@@ -61,8 +54,8 @@ print(optimum_condition_u)
 
 plt.figure(figsize=(8,8), dpi=200)
 plt.title('Gaussians')
-plt.xlabel('x')
-plt.ylabel('y')
+plt.xlabel('Temperature')
+plt.ylabel('Biotic Effect')
 
 for E_idx in range(environment_components_N):
     for _ in range(biotic_components_K):
@@ -129,10 +122,7 @@ d = 0.1 # small step
 
 x=[]
 start = 0
-end = 200
-
-biotic1 = []
-biotic2 = []
+end = 300
 
 for step in np.arange(start, end, d):
 
@@ -150,28 +140,28 @@ for step in np.arange(start, end, d):
 
 
 plt.figure(figsize=(8,8), dpi=200)
-plt.title('Alpha Rates')
-plt.xlabel('x')
-plt.ylabel('alpha rates')
+plt.title('Abundance')
+plt.xlabel('Time Steps')
+plt.ylabel('abundance rates of change')
 
 for _ in range(biotic_components_K):
-    plt.plot(x, results[_], '-')
+    if _ in local_population_index:
+        plt.plot(x, results[_], 'r-')
+    else:
+        plt.plot(x, results[_], 'b-')
 
 plt.show()
 
 plt.figure(figsize=(8,8), dpi=200)
-plt.title('Environment Variable')
-plt.xlabel('x')
-plt.ylabel('E1')
+plt.title('Environment Variables')
+plt.xlabel('Time Steps')
+plt.ylabel('Temp/PH')
 
-#plt.xlim([0, 100])
-#plt.ylim([-100, 100])
+plt.xlim([0, end])
+plt.ylim([0, essential_range_R])
 
-for _ in range(len(x)):
-    plt.plot(x, results[-2], '-')
-
-for _ in range(len(x)):
-    plt.plot(x, results[-1], '-')
-
+plt.plot(x, results[-2], 'k-', label = 'global')
+plt.plot(x, results[-1], 'b-', label = 'local')
+plt.legend()
 plt.show()
 
