@@ -13,42 +13,34 @@ result = xx * 2 + yy * 5
 SAMPLE_SIZE = 1
 SAMPLE_STEP = 1
 RUN_ID      = time.time()
-SPECIES_K   = 100 # ----------- Number of Biotic Components
-RANGE_R     = 100 # ----------- Essential Range
-TIME_START  = 0   # ----------- Start of Simulation
-TIME_END    = 200 # ----------- Length of Simulation
-TIME_STEP   = 0.1 # ----------- Time Step
-ENV_VARS    = 2   # ----------- Number of Environment Variables
-NICHE_WIDTH = 5   # ----------- Niche Size
-LOCAL_SIZE  = 0 # ----------- Local Population Size
+SPECIES_K   = 10                   # ----------- Number of Biotic Components
+RANGE_R     = 100                   # ----------- Essential Range
+TIME_START  = 0                     # ----------- Start of Simulation
+TIME_END    = 200                   # ----------- Length of Simulation
+TIME_STEP   = 0.1                   # ----------- Time Step
+ENV_VARS    = 2                     # ----------- Number of Environment Variables
+NICHE_WIDTH = 5                     # ----------- Niche Size
+LOCAL_SIZE  = 50                    # ----------- Local Population Size (%)
 
-En = []
-for ei in range(ENV_VARS):
-    En.append((random.uniform(10, RANGE_R)))
-print(En)
+En = [(random.uniform(10, RANGE_R)) for env_start_temp in range(ENV_VARS)]
 
-affects_w = [[] for _ in range(ENV_VARS)]
-for wi in range(ENV_VARS):
-    affects_w[wi] = [random.uniform(-1, 1) for _ in range(SPECIES_K)]
+affects_w = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 
-optimum_condition_u = [[] for _ in range(ENV_VARS)]
-for ui in range(ENV_VARS):
-    optimum_condition_u[ui] = [random.uniform(0, RANGE_R) for _ in range(SPECIES_K)]
+optimum_condition_u = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 
 local_population_index = []
 uniq_k = []
-for x in range(int(LOCAL_SIZE/100 * SPECIES_K)):
-    one = random.randint(0,SPECIES_K-1)
-    while one in uniq_k:
-        one = random.randint(0,SPECIES_K-1)
-    uniq_k.append(one)
-    local_population_index.append(one)
+for _ in range(int(LOCAL_SIZE/100 * SPECIES_K)):
+    local_species = random.randint(0,SPECIES_K-1)
+    while local_species in local_population_index:
+        local_species = random.randint(0,SPECIES_K-1)
+    local_population_index.append(local_species)
 local_population_index.sort()
 
 system_state = np.zeros(SPECIES_K+ENV_VARS)
 
 plt.figure(figsize=(8,8), dpi=200)
-plt.title('Gaussians')
+plt.title('Biotic Effect of Each Species (a*w)')
 plt.xlabel('Temperature')
 plt.ylabel('Biotic Effect')
 
@@ -57,18 +49,15 @@ for E_index in range(ENV_VARS):
         tem = []
         abundance = []
         affects = []
-        abundance_sum = 0
 
         for temp in np.arange(0,RANGE_R, 0.001):
             tem.append(temp)
             abundance.append(((math.e) ** ((-1) * (((abs((temp)-(optimum_condition_u[E_index][_]))) ** 2) / (2*(NICHE_WIDTH**2))))))
             affects.append(abundance[-1] * affects_w[0][_])
-            abundance_sum += abundance[-1] * affects_w[0][_]
         plt.plot(tem,affects)
 
 plt.show()
 
-print(optimum_condition_u)
 ################## INITIAL STATE
 # Abundance Init
 for E_index in range(ENV_VARS):
@@ -134,13 +123,9 @@ for step in np.arange(TIME_START, TIME_END, TIME_STEP):
 
     system_state += ((k1 + (2*k2) + (2*k3) + k4)/6)
 
-    #if step == 100:
-    #    system_state[-1] += 10
-    #    system_state[-2] -= 10
-
 
 plt.figure(figsize=(8,8), dpi=200)
-plt.title('Abundance')
+plt.title('Abundance for each Species')
 plt.xlabel('Time Steps')
 plt.ylabel('abundance values')
 
@@ -160,3 +145,61 @@ plt.plot(times_steps, results[-2], 'k-', label = 'global')
 plt.plot(times_steps, results[-1], 'b-', label = 'local')
 plt.legend()
 plt.show()
+
+
+alive_threshold = 0.1
+
+def alive_species_count_no_at_truncation_start():
+
+    heatmap = [[0 for _ in np.arange(0,RANGE_R,TIME_STEP)] for _ in np.arange(0,RANGE_R,TIME_STEP)]
+
+    plt.figure(figsize=(8,8), dpi=200)
+    plt.title('Alive Species Count : with AT Truncation, AT = ' +  str(alive_threshold))
+    plt.xlabel('EL - PH')
+    plt.ylabel('EG - Temp')
+
+    xticks = np.round(np.linspace(0,RANGE_R/TIME_STEP, 7), 1)
+    xtick_labels = [str(round(i)) for i in np.linspace(0, RANGE_R, 7)]
+    plt.xticks(xticks, xtick_labels)
+
+    yticks = np.round(np.linspace(0,RANGE_R/TIME_STEP, 7), 1)
+    ytick_labels = [str(round(i)) for i in np.linspace(0, RANGE_R, 7)]
+    plt.yticks(yticks, ytick_labels)
+
+    Gindex = 0
+    Lindex = 0
+
+
+    for Global in np.arange(0,RANGE_R,TIME_STEP):
+        for Local in np.arange(0,RANGE_R,TIME_STEP):
+
+            ###################################################
+            for each_species in range(SPECIES_K):
+                abundance = 0
+                if each_species in local_population_index:
+                    abundance = (
+
+                            (math.e) ** ((-1) * (((abs((Global)-optimum_condition_u[0][each_species])) ** 2) / (2*(NICHE_WIDTH**2))))
+                            *
+                            (math.e) ** ((-1) * (((abs((Local)-optimum_condition_u[1][each_species])) ** 2) / (2*(NICHE_WIDTH**2))))
+                    )
+                else:
+                    abundance = (math.e) ** ((-1) * (((abs((Global)-optimum_condition_u[0][each_species])) ** 2) / (2*(NICHE_WIDTH**2))))
+            ###################################################
+
+                if abundance > alive_threshold:
+                    heatmap[Gindex][Lindex] += 1
+
+            Lindex += 1
+        Lindex = 0
+        Gindex += 1
+
+
+    plt.colorbar(plt.pcolor(heatmap))
+    plt.imshow(heatmap, cmap='hot', origin='lower')
+    plt.show()
+
+    print("Alive non Truncated")
+
+if __name__ == '__main__':
+    alive_species_count_no_at_truncation_start()
