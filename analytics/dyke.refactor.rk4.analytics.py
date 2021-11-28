@@ -56,6 +56,104 @@ rAx = []
 rAxR = []
 rNumberAlive = []
 
+
+
+def alive_species_count_no_at_truncation_start():
+
+    heatmap = [[0 for _ in np.arange(0,RANGE_R,TIME_STEP)] for _ in np.arange(0,RANGE_R,TIME_STEP)]
+
+    plt.figure(figsize=(8,8), dpi=200)
+    plt.title('Alive Species Count : with AT Truncation, AT = ' +  str(alive_threshold))
+    plt.xlabel('EL - PH')
+    plt.ylabel('EG - Temp')
+
+    xticks = np.round(np.linspace(0,RANGE_R/TIME_STEP, 7), 1)
+    xtick_labels = [str(round(i)) for i in np.linspace(0, RANGE_R, 7)]
+    plt.xticks(xticks, xtick_labels)
+
+    yticks = np.round(np.linspace(0,RANGE_R/TIME_STEP, 7), 1)
+    ytick_labels = [str(round(i)) for i in np.linspace(0, RANGE_R, 7)]
+    plt.yticks(yticks, ytick_labels)
+
+    Gindex = 0
+    Lindex = 0
+
+
+    for Global in np.arange(0,RANGE_R,TIME_STEP):
+        for Local in np.arange(0,RANGE_R,TIME_STEP):
+
+            ###################################################
+            for each_species in range(SPECIES_K):
+                abundance = 0
+                if each_species in local_population_index:
+                    abundance = (
+
+                            (math.e) ** ((-1) * (((abs((Global)-mu[0][each_species])) ** 2) / (2*(NICHE_WIDTH**2))))
+                            *
+                            (math.e) ** ((-1) * (((abs((Local)-mu[1][each_species])) ** 2) / (2*(NICHE_WIDTH**2))))
+                    )
+                else:
+                    abundance = (math.e) ** ((-1) * (((abs((Global)-mu[0][each_species])) ** 2) / (2*(NICHE_WIDTH**2))))
+                ###################################################
+
+                if abundance > alive_threshold:
+                    heatmap[Gindex][Lindex] += 1
+
+            Lindex += 1
+        Lindex = 0
+        Gindex += 1
+
+
+    plt.colorbar(plt.pcolor(heatmap))
+    plt.imshow(heatmap, cmap='hot', origin='lower')
+    plt.show()
+
+    print("Alive non Truncated")
+    plt.figure(figsize=(8,8), dpi=200)
+
+    plt.title('Biotic Effect of Each Species (a*w)')
+    plt.xlabel('Temperature')
+    plt.ylabel('Biotic Effect')
+
+    for E_index in range(ENV_VARS):
+        for _ in range(SPECIES_K):
+            tem = []
+            abundance = []
+            affects = []
+
+            for temp in np.arange(0,RANGE_R, 0.001):
+                tem.append(temp)
+                abundance.append(((math.e) ** ((-1) * (((abs((temp)-(mu[E_index][_]))) ** 2) / (2*(NICHE_WIDTH**2))))))
+                affects.append(abundance[-1] * affects_w[0][_])
+            plt.plot(tem,affects)
+
+    plt.show()
+
+
+    plt.figure(figsize=(8,8), dpi=200)
+    plt.title('Abundance for each Species')
+    plt.xlabel('Time Steps')
+    plt.ylabel('abundance values')
+
+    for _ in range(SPECIES_K):
+        if _ in local_population_index:
+            plt.plot(times_steps, results[_], 'r-')
+        else:
+            plt.plot(times_steps, results[_], 'b-')
+
+    plt.show()
+
+    plt.figure(figsize=(8,8), dpi=200)
+    plt.title('Environment Variables')
+    plt.xlabel('Time Steps')
+    plt.ylabel('Temp/PH')
+    plt.plot(times_steps, results[-2], 'k-', label = 'global')
+    plt.plot(times_steps, results[-1], 'b-', label = 'local')
+    plt.legend()
+    plt.show()
+
+
+
 def get_shelve(file):
     print("Processing  : ",print(len(rAxR_prime)), " >>> ", file)
     s = shelve.open(data_dr + "/" + str(file) + "/dyke.refactor_core.data")
