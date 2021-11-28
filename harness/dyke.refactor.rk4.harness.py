@@ -9,10 +9,10 @@ import sys
 
 # Generating ALL Parameters
 SAMPLE_SIZE = 1
-SAMPLE_STEP = 50
+SAMPLE_STEP = 1
 RUN_ID = int(time.time())
 
-SPECIES_K   = 50                    # ----------- Number of Biotic Components
+SPECIES_K   = 100                    # ----------- Number of Biotic Components
 RANGE_R     = 100                   # ----------- Essential Range
 TIME_START  = 0                     # ----------- Start of Simulation
 TIME_END    = 200                   # ----------- Length of Simulation
@@ -85,7 +85,6 @@ def run_it(simulation_run_shelve):
     os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(simulation_run_shelve))
 
 
-
 if __name__ == '__main__':
 
     shelve_files = []
@@ -109,7 +108,6 @@ if __name__ == '__main__':
                 simulation_shelve['Eg'] = Eg_temp
                 simulation_shelve['El'] = El_temp
                 simulation_shelve['ENV_START'] = ENV_START
-
 
             finally:
                 simulation_shelve.close()

@@ -42,18 +42,19 @@ finally:
 
 system_state = np.zeros(SPECIES_K+ENV_VARS)
 
+print(ENV_START)
 
 ################## INITIAL STATE
 # Abundance Init
-for E_index in range(ENV_VARS):
-    for _ in range(SPECIES_K):
-        system_state[_] = ((math.e) ** ((-1) * (((abs((ENV_START[E_index])-(mu[E_index][_]))) ** 2) / (2*(NICHE**2)))))
+for e_i in range(ENV_VARS):
+    for s_i in range(SPECIES_K):
+        system_state[s_i] = ((math.e) ** ((-1) * (((abs((ENV_START[e_i])-(mu[e_i][s_i]))) ** 2) / (2*(NICHE**2)))))
 # Environment Init
 for _ in range(ENV_VARS):
     system_state[SPECIES_K+_] = ENV_START[_]
-################## INITIAL STATE
 
-print("System State : ", system_state)
+
+#print("System State : ", system_state)
 
 
 def rates_of_change_system_state(system_state):
@@ -91,12 +92,12 @@ def rates_of_change_system_state(system_state):
     biotic_force_FG = 0
     biotic_force_FL = 0
 
-    for _ in range(SPECIES_K):
+    for s_i in range(SPECIES_K):
         # Global
-        biotic_force_FG += (system_state[_] * omega[0][_]) # >>> contains current rate of change for alpha
+        biotic_force_FG += (system_state[s_i] * omega[0][s_i])
         # Local
-        if _ in local_population_index:
-            biotic_force_FL += (system_state[_] * omega[0][_]) # >>> contains current rate of change for alpha
+        if s_i in local_population_index:
+            biotic_force_FL += (system_state[s_i] * omega[1][s_i])
 
     rate_of_change[SPECIES_K+0] = (biotic_force_FG)
     rate_of_change[SPECIES_K+1] = (biotic_force_FL)
@@ -132,6 +133,8 @@ if __name__ == '__main__':
 
     try:
         s['system_state'] = system_state
+        s['results'] = results
+        s['times_steps'] = times_steps
 
     finally:
         s.close()
