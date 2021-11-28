@@ -21,8 +21,7 @@ ENV_VARS    = 2                     # ----------- Number of Environment Variable
 NICHE = 5                     # ----------- Niche Size
 LOCAL_SIZE  = 50                    # ----------- Local Population Size (%)
 ALIVE_THRESHOLD = 0.5
-
-En = [(random.uniform(10, RANGE_R)) for env_start_temp in range(ENV_VARS)]
+ENV_START=[]
 omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 
@@ -49,8 +48,8 @@ def init_shelve():
 
 
     try:
-        s['SAMPLE_SIZE'] = SAMPLE_SIZE
-        s['SAMPLE_STEP'] = SAMPLE_STEP
+        #s['SAMPLE_SIZE'] = SAMPLE_SIZE
+        #s['SAMPLE_STEP'] = SAMPLE_STEP
         s['RUN_ID'] = RUN_ID
 
         s['SPECIES_K'] = SPECIES_K
@@ -61,9 +60,8 @@ def init_shelve():
         s['ENV_VARS'] = ENV_VARS
         s['NICHE'] = NICHE
         s['LOCAL_SIZE'] = LOCAL_SIZE
-
         s['ALIVE_THRESHOLD'] = ALIVE_THRESHOLD
-
+        #s['ENV_START'] = ENV_START
 
         s['exp_name'] = exp_name
         s['data_directory'] = data_directory
@@ -101,16 +99,21 @@ if __name__ == '__main__':
             print("InLoopCreates: ",simulation_run_shelve)
             simulation_shelve = shelve.open(simulation_run_shelve)
 
+            ENV_START.append(Eg_temp)
+            ENV_START.append(El_temp)
+
             try:
                 simulation_shelve['omega'] = omega
                 simulation_shelve['mu'] = mu
                 simulation_shelve['local_population_index'] = local_population_index
                 simulation_shelve['Eg'] = Eg_temp
                 simulation_shelve['El'] = El_temp
+                simulation_shelve['ENV_START'] = ENV_START
+
+
             finally:
                 simulation_shelve.close()
 
-            #time.sleep(1)
 
     print("===")
     for item in shelve_files:
