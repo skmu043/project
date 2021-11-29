@@ -98,6 +98,7 @@ if __name__ == '__main__':
             print("InLoopCreates: ",simulation_run_shelve)
             simulation_shelve = shelve.open(simulation_run_shelve)
 
+            ENV_START=[]
             ENV_START.append(Eg_temp)
             ENV_START.append(El_temp)
 
@@ -111,14 +112,14 @@ if __name__ == '__main__':
 
             finally:
                 simulation_shelve.close()
-
+            ENV_START.clear()
 
     print("===")
-    for item in shelve_files:
-        print(item)
+    #$for item in shelve_files:
+     #   print(item)
 
 
-    pool = Pool(processes=16)
+    pool = Pool(processes=7)
 
     pool.map(run_it, [_ for _ in shelve_files])
 

@@ -39,6 +39,8 @@ try:
 finally:
     s.close()
 
+Eg = ENV_START[0]
+El = ENV_START[1]
 
 system_state = np.zeros(SPECIES_K+ENV_VARS)
 
@@ -46,15 +48,44 @@ print(ENV_START)
 
 ################## INITIAL STATE
 # Abundance Init
-for e_i in range(ENV_VARS):
-    for s_i in range(SPECIES_K):
-        system_state[s_i] = ((math.e) ** ((-1) * (((abs((ENV_START[e_i])-(mu[e_i][s_i]))) ** 2) / (2*(NICHE**2)))))
+
+number_alive_global_start = 0
+number_alive_local_start = 0
+number_alive_start = 0
+
+
+
+for s_i in range(SPECIES_K):
+    if s_i in local_population_index:
+        a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 )) \
+                 * \
+                 np.exp(- abs(El-mu[1][s_i]) ** 2 / ( 2 * NICHE ** 2))
+
+        if a_star < ALIVE_THRESHOLD:
+            a_star = 0
+
+        system_state[s_i] = a_star
+
+        if a_star >= ALIVE_THRESHOLD:
+            number_alive_local_start += 1
+
+    else :
+        a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
+
+        if a_star < ALIVE_THRESHOLD:
+            a_star = 0
+
+        system_state[s_i] = a_star
+
+        if a_star >= ALIVE_THRESHOLD:
+            number_alive_global_start +=1
+
+
+number_alive_start = number_alive_local_start + number_alive_global_start
+
 # Environment Init
 for _ in range(ENV_VARS):
     system_state[SPECIES_K+_] = ENV_START[_]
-
-
-#print("System State : ", system_state)
 
 
 def rates_of_change_system_state(system_state):
@@ -128,14 +159,41 @@ if __name__ == '__main__':
         system_state += ((k1 + (2*k2) + (2*k3) + k4)/6)
 
 
-
     s = shelve.open(shelve_file)
 
+
+    number_alive_global_end = 0
+    number_alive_local_end = 0
+    number_alive_end = 0
+
+    for s_i in range(SPECIES_K):
+        if s_i in local_population_index:
+            a_star = system_state[s_i]
+            if a_star >= ALIVE_THRESHOLD:
+                number_alive_local_end += 1
+
+        else :
+            a_star = system_state[s_i]
+            if a_star >= ALIVE_THRESHOLD:
+                number_alive_global_end +=1
+
+    number_alive_end = number_alive_local_end + number_alive_global_end
+
     try:
-        s['system_state'] = system_state
-        s['results'] = results
-        s['times_steps'] = times_steps
+        #s['system_state'] = system_state
+        #s['results'] = results
+        #s['times_steps'] = times_steps
+
+        s['number_alive_global_start'] = number_alive_global_start
+        s['number_alive_local_start'] = number_alive_local_start
+        s['number_alive_global_end'] = number_alive_global_end
+        s['number_alive_local_end'] = number_alive_local_end
+
+        s['number_alive_start'] = number_alive_start
+        s['number_alive_end'] = number_alive_end
+
+
 
     finally:
-        s.close()
+            s.close()
 
