@@ -9,7 +9,7 @@ import sys
 
 # Generating ALL Parameters
 SAMPLE_SIZE = 1
-SAMPLE_STEP = 1
+SAMPLE_STEP = 50
 RUN_ID = int(time.time())
 
 SPECIES_K   = 100                    # ----------- Number of Biotic Components
