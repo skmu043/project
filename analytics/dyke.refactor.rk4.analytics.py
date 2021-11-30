@@ -11,9 +11,11 @@ data_dr = os.getcwd() + '/data'
 data_archives = os.listdir(data_dr)
 shel = shelve.open(data_dr + "/" + str(data_archives[0]) + "/dyke.refactor.rk4.data")
 RANGE_R = 0
+times_step = 0
 
 try:
     RANGE_R = shel['RANGE_R']
+    times_steps = shel['times_steps']
 finally:
     shel.close()
 
@@ -32,6 +34,9 @@ number_alive_start_ = []
 number_alive_end_ = []
 ENV_START_ = []
 
+results_g = []
+results_l = []
+time_steps = []
 
 for file in data_archives:
     s = shelve.open(data_dr + "/" + str(file) + "/dyke.refactor.rk4.data")
@@ -50,6 +55,8 @@ for file in data_archives:
         ENV_START = s['ENV_START']
         RANGE_R = s['RANGE_R']
 
+        results = s['results']
+
         number_alive_global_start_.append(number_alive_global_start)
         number_alive_local_start_.append(number_alive_local_start)
         number_alive_global_end_.append(number_alive_global_end)
@@ -57,6 +64,9 @@ for file in data_archives:
         number_alive_start_.append(number_alive_start)
         number_alive_end_.append(number_alive_end)
         ENV_START_.append(ENV_START)
+
+        results_g.append(results[-2]) # Global
+        results_l.append(results[-1]) # Local
 
         number_alive_global_start_np[ENV_START[0]][ENV_START[1]] += number_alive_global_start
         number_alive_local_start_np[ENV_START[0]][ENV_START[1]] += number_alive_local_start
@@ -258,5 +268,20 @@ if __name__ == '__main__':
     #plt.show()
 
     #individual_plots()
+
+    #===================================================================================================================
+    plt.figure(figsize=(8,8), dpi=200)
+    plt.title('Environment Variable Trajectories')
+    plt.xlabel('Time Steps')
+    plt.ylabel('Env Start Condition')
+    for globals in results_g:
+        plt.plot(globals, 'k')
+    for locals in results_l:
+        plt.plot(locals, 'g')
+    plt.show()
+    #===================================================================================================================
+
+
+
 
     print("Completed")
