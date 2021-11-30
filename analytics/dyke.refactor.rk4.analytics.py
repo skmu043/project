@@ -271,16 +271,23 @@ if __name__ == '__main__':
 
     #===================================================================================================================
     plt.figure(figsize=(8,8), dpi=200)
-    plt.title('Environment Variable Trajectories')
+    plt.title('Global Environment Variable Trajectories')
     plt.xlabel('Time Steps')
-    plt.ylabel('Env Start Condition')
+    plt.ylabel('Global Start Condition')
     for globals in results_g:
         plt.plot(globals, 'k')
-    for locals in results_l:
-        plt.plot(locals, 'g')
     plt.show()
     #===================================================================================================================
 
+    #===================================================================================================================
+    plt.figure(figsize=(8,8), dpi=200)
+    plt.title('Local Environment Variable Trajectories')
+    plt.xlabel('Time Steps')
+    plt.ylabel('Local Start Condition')
+    for locals in results_l:
+        plt.plot(locals, 'b')
+    plt.show()
+    #===================================================================================================================
 
 
 
