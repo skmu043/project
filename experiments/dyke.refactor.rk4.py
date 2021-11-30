@@ -181,8 +181,8 @@ if __name__ == '__main__':
 
     try:
         #s['system_state'] = system_state
-        #s['results'] = results
-        #s['times_steps'] = times_steps
+        s['results'] = results
+        s['times_steps'] = times_steps
 
         s['number_alive_global_start'] = number_alive_global_start
         s['number_alive_local_start'] = number_alive_local_start

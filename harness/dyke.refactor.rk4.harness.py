@@ -9,7 +9,7 @@ import sys
 
 # Generating ALL Parameters
 SAMPLE_SIZE = 1
-SAMPLE_STEP = 10
+SAMPLE_STEP = 1
 RUN_ID = int(time.time())
 
 SPECIES_K   = 100                    # ----------- Number of Biotic Components
@@ -119,7 +119,7 @@ if __name__ == '__main__':
      #   print(item)
 
 
-    pool = Pool(processes=7)
+    pool = Pool(processes=15)
 
     pool.map(run_it, [_ for _ in shelve_files])
 
