@@ -192,21 +192,26 @@ def individual_plots():
 
 if __name__ == '__main__':
 
-
-
     fig = plt.figure(figsize=(10,10), dpi=300)
     ax = fig.add_subplot(111, projection='3d', adjustable='box')
     ax.set_title(label = "EL/EG over Time Steps")
     ax.set_xlabel('X - EL', fontsize=10)
     ax.set_ylabel('Y - EG', fontsize=10)
     ax.set_zlabel('Z - Time Steps', fontsize=10)
-    ax.set_xlim([-10,100])
-    ax.set_ylim([-10,100])
+    #ax.set_xlim([-10,RANGE_R])
+    #ax.set_ylim([-10,RANGE_R])
 
     for gl in results_gl:
-        #ax.scatter(gl(1), gl(0), times_steps, marker='*', s=20, color=(float(c_r/100), float(c_g/100), float(0.5)))
-        ax.scatter(gl[1], gl[0], times_steps, marker='*', s=20)
-    #plt.savefig("3d_abundance_" + str(RUN_ID)  + "-" +  str(random.randint(100, 999)) + ".png")
+        c_l = gl[1][-1]
+        c_g = gl[0][-1]
+        if(c_l < 0 or c_g < 0 or c_l > 100 or c_g > 100 ):
+            ax.scatter(gl[1][0], gl[0][0], times_steps[0], marker='.', s=20, color=(float(0), float(0), float(1)))
+            ax.plot(gl[1], gl[0], times_steps,color=(float(0), float(0), float(1)))
+        else:
+            ax.scatter(gl[1][0], gl[0][0], times_steps[0], marker='.', s=20, color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
+            ax.plot(gl[1], gl[0], times_steps,color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
+            ax.scatter(gl[1][-1], gl[0][-1], times_steps[-1], marker='*', s=20, color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
+    plt.savefig("3d_el_eg_" + str(random.randint(100, 999)) + ".png")
     plt.show()
 
     #===================================================================================================================
@@ -248,22 +253,23 @@ if __name__ == '__main__':
     axes[1][2].set_ylabel('Eg')
 
     im1 = axes[0][0].imshow(number_alive_global_start_np, vmin=minmin, vmax=maxmax,
-                         extent=(0,100,0,100), aspect='equal', cmap='viridis')
+                         extent=(0,RANGE_R,0,RANGE_R), aspect='equal', cmap='viridis')
     im2 = axes[0][1].imshow(number_alive_local_start_np, vmin=minmin, vmax=maxmax,
-                         extent=(0,100,0,100), aspect='equal', cmap='viridis')
+                         extent=(0,RANGE_R,0,RANGE_R), aspect='equal', cmap='viridis')
     im3 = axes[0][2].imshow(number_alive_start_np, vmin=minmin, vmax=maxmax,
-                         extent=(0,100,0,100), aspect='equal', cmap='viridis')
+                         extent=(0,RANGE_R,0,RANGE_R), aspect='equal', cmap='viridis')
     im4 = axes[1][0].imshow(number_alive_global_end_np, vmin=minmin, vmax=maxmax,
-                         extent=(0,100,0,100), aspect='equal', cmap='viridis')
+                         extent=(0,RANGE_R,0,RANGE_R), aspect='equal', cmap='viridis')
     im5 = axes[1][1].imshow(number_alive_local_end_np, vmin=minmin, vmax=maxmax,
-                         extent=(0,100,0,100), aspect='equal', cmap='viridis')
+                         extent=(0,RANGE_R,0,RANGE_R), aspect='equal', cmap='viridis')
     im6 = axes[1][2].imshow(number_alive_end_np, vmin=minmin, vmax=maxmax,
-                         extent=(0,100,0,100), aspect='equal', cmap='viridis')
+                         extent=(0,RANGE_R,0,RANGE_R), aspect='equal', cmap='viridis')
 
     # add space for colour bar
     fig.subplots_adjust(right=0.85)
     cbar_ax = fig.add_axes([0.88, 0.15, 0.04, 0.7])
     fig.colorbar(im6, cax=cbar_ax)
+    plt.savefig("3d_el_eg_alives_" + str(random.randint(100, 999)) + ".png")
     plt.show()
 
 
