@@ -7,16 +7,19 @@ import numpy as np
 import time
 import sys
 
+#from numba import jit
+
 # Generating ALL Parameters
 SAMPLE_SIZE = 1
-SAMPLE_STEP = 20
+SAMPLE_STEP = 1
 RUN_ID = int(time.time())
 
 SPECIES_K   = 100                    # ----------- Number of Biotic Components
 RANGE_R     = 100                   # ----------- Essential Range
 TIME_START  = 0                     # ----------- Start of Simulation
 TIME_END    = 200                   # ----------- Length of Simulation
-TIME_STEP   = 0.1                   # ----------- Time Step
+TIME_STEP   = 0.1                   # ----------- Time Step3
+0
 ENV_VARS    = 2                     # ----------- Number of Environment Variables
 NICHE = 5                     # ----------- Niche Size
 LOCAL_SIZE  = 50                    # ----------- Local Population Size (%)
@@ -78,7 +81,7 @@ def print_time():
     print(current_time)
 print_time()
 
-
+#@jit
 def run_it(simulation_run_shelve):
 
     # Main Experiment
@@ -119,7 +122,7 @@ if __name__ == '__main__':
      #   print(item)
 
 
-    pool = Pool(processes=15)
+    pool = Pool(processes=7)
 
     pool.map(run_it, [_ for _ in shelve_files])
 

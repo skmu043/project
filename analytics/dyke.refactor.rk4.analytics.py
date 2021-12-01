@@ -34,8 +34,7 @@ number_alive_start_ = []
 number_alive_end_ = []
 ENV_START_ = []
 
-results_g = []
-results_l = []
+results_gl = []
 time_steps = []
 
 for file in data_archives:
@@ -65,8 +64,7 @@ for file in data_archives:
         number_alive_end_.append(number_alive_end)
         ENV_START_.append(ENV_START)
 
-        results_g.append(results[-2]) # Global
-        results_l.append(results[-1]) # Local
+        results_gl.append((results[-2],results[-1]))
 
         number_alive_global_start_np[ENV_START[0]][ENV_START[1]] += number_alive_global_start
         number_alive_local_start_np[ENV_START[0]][ENV_START[1]] += number_alive_local_start
@@ -195,6 +193,25 @@ def individual_plots():
 if __name__ == '__main__':
 
 
+
+    fig = plt.figure(figsize=(10,10), dpi=300)
+    ax = fig.add_subplot(111, projection='3d', adjustable='box')
+    ax.set_title(label = "EL/EG over Time Steps")
+    ax.set_xlabel('X - EL', fontsize=10)
+    ax.set_ylabel('Y - EG', fontsize=10)
+    ax.set_zlabel('Z - Time Steps', fontsize=10)
+    ax.set_xlim([-10,100])
+    ax.set_ylim([-10,100])
+
+    for gl in results_gl:
+        #ax.scatter(gl(1), gl(0), times_steps, marker='*', s=20, color=(float(c_r/100), float(c_g/100), float(0.5)))
+        ax.scatter(gl[1], gl[0], times_steps, marker='*', s=20)
+    #plt.savefig("3d_abundance_" + str(RUN_ID)  + "-" +  str(random.randint(100, 999)) + ".png")
+    plt.show()
+
+    #===================================================================================================================
+
+
     fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(20,10), dpi=300)
     plt.title('Global + Local Species Counts')
 
@@ -269,25 +286,8 @@ if __name__ == '__main__':
 
     #individual_plots()
 
-    #===================================================================================================================
-    plt.figure(figsize=(8,8), dpi=200)
-    plt.title('Global Environment Variable Trajectories')
-    plt.xlabel('Time Steps')
-    plt.ylabel('Global Start Condition')
-    for globals in results_g:
-        plt.plot(globals, 'k')
-    plt.show()
-    #===================================================================================================================
 
-    #===================================================================================================================
-    plt.figure(figsize=(8,8), dpi=200)
-    plt.title('Local Environment Variable Trajectories')
-    plt.xlabel('Time Steps')
-    plt.ylabel('Local Start Condition')
-    for locals in results_l:
-        plt.plot(locals, 'b')
-    plt.show()
-    #===================================================================================================================
+
 
 
 
