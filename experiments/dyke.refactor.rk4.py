@@ -46,6 +46,9 @@ system_state = np.zeros(SPECIES_K+ENV_VARS)
 
 print(ENV_START)
 
+print(mu)
+print(omega)
+
 ################## INITIAL STATE
 # Abundance Init
 

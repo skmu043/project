@@ -19,7 +19,6 @@ RANGE_R     = 10                   # ----------- Essential Range
 TIME_START  = 0                     # ----------- Start of Simulation
 TIME_END    = 200                   # ----------- Length of Simulation
 TIME_STEP   = 0.1                   # ----------- Time Step3
-0
 ENV_VARS    = 2                     # ----------- Number of Environment Variables
 NICHE = 5                     # ----------- Niche Size
 LOCAL_SIZE  = 50                    # ----------- Local Population Size (%)
@@ -37,6 +36,7 @@ for _ in range(int(LOCAL_SIZE/100 * SPECIES_K)):
     local_population_index.append(local_species)
 local_population_index.sort()
 
+print(omega)
 print(mu)
 print(local_population_index)
 

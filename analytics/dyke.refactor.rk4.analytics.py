@@ -25,6 +25,7 @@ number_alive_global_end_np = np.zeros((RANGE_R, RANGE_R))
 number_alive_local_end_np = np.zeros((RANGE_R, RANGE_R))
 number_alive_start_np = np.zeros((RANGE_R, RANGE_R))
 number_alive_end_np = np.zeros((RANGE_R, RANGE_R))
+number_alive_diff_end_np = np.zeros((RANGE_R, RANGE_R))
 
 number_alive_global_start_ = []
 number_alive_local_start_ = []
@@ -73,8 +74,6 @@ for file in data_archives:
         number_alive_start_np[ENV_START[0]][ENV_START[1]] += number_alive_start
         number_alive_end_np[ENV_START[0]][ENV_START[1]] += number_alive_end
 
-
-
         # SUPER DATA STRUCTURE NEEDED
 
         #(Eg, El, number_alive_global_start, number_alive_local_start, number_alive_start, number_alive_global_end, number_alive_local_end, number_alive_end)
@@ -96,6 +95,12 @@ for file in data_archives:
 
     finally:
         s.close()
+
+number_alive_diff_end_np = number_alive_end_np - number_alive_start_np
+
+print(number_alive_start_np)
+print(number_alive_end_np)
+print(number_alive_diff_end_np)
 
 def individual_plots():
 
@@ -192,27 +197,74 @@ def individual_plots():
 
 if __name__ == '__main__':
 
+
+    fig, axes = plt.subplots(nrows=1, ncols=1,figsize=(10,10), dpi=300)
+    plt.title('Global + Local Species (Start End) Difference')
+
+    axes.title.set_text('Difference')
+    axes.set_xlabel('El')
+    axes.set_ylabel('Eg')
+
+    minmin = abs(np.min([np.min(number_alive_diff_end_np)]))
+    maxmax = abs(np.max([np.max(number_alive_diff_end_np)]))
+    scale = maxmax
+    if(minmin>=maxmax):
+        scale = minmin
+    print(minmin,maxmax, scale)
+
+    im1 = axes.imshow(number_alive_diff_end_np, extent=(0,RANGE_R,0,RANGE_R), aspect='equal', vmin=-scale, vmax=scale, cmap='Spectral')
+
+    fig.subplots_adjust(right=0.85)
+    cbar_ax = fig.add_axes([0.88, 0.15, 0.04, 0.7])
+    fig.colorbar(im1, cax=cbar_ax)
+    plt.savefig("3d_el_eg_alives_diff_" + str(random.randint(100, 999)) + ".png")
+    plt.show()
+
+
+    #===================================================================================================================
+
+
     fig = plt.figure(figsize=(10,10), dpi=300)
-    ax = fig.add_subplot(111, projection='3d', adjustable='box')
-    ax.set_title(label = "EL/EG over Time Steps")
-    ax.set_xlabel('X - EL', fontsize=10)
-    ax.set_ylabel('Y - EG', fontsize=10)
-    ax.set_zlabel('Z - Time Steps', fontsize=10)
-    #ax.set_xlim([-10,RANGE_R])
-    #ax.set_ylim([-10,RANGE_R])
+    plt.title(label = "EL/EG")
+    plt.xlabel('X - EL', fontsize=10)
+    plt.ylabel('Y - EG', fontsize=10)
 
     for gl in results_gl:
         c_l = gl[1][-1]
         c_g = gl[0][-1]
         if(c_l < 0 or c_g < 0 or c_l > 100 or c_g > 100 ):
-            ax.scatter(gl[1][0], gl[0][0], times_steps[0], marker='.', s=20, color=(float(0), float(0), float(1)))
-            ax.plot(gl[1], gl[0], times_steps,color=(float(0), float(0), float(1)))
+            plt.scatter(gl[1][0], gl[0][0],  marker='.', s=20, color=(float(0), float(0), float(1)))
+            plt.plot(gl[1], gl[0],color=(float(0), float(0), float(1)))
         else:
-            ax.scatter(gl[1][0], gl[0][0], times_steps[0], marker='.', s=20, color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
-            ax.plot(gl[1], gl[0], times_steps,color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
-            ax.scatter(gl[1][-1], gl[0][-1], times_steps[-1], marker='*', s=20, color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
-    plt.savefig("3d_el_eg_" + str(random.randint(100, 999)) + ".png")
+            plt.scatter(gl[1][0], gl[0][0], marker='.', s=20, color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
+            plt.plot(gl[1], gl[0], color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
+            plt.scatter(gl[1][-1], gl[0][-1], marker='*', s=20, color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
+    plt.savefig("2d_el_eg_" + str(random.randint(100, 999)) + ".png")
     plt.show()
+
+    #===================================================================================================================
+
+    #fig = plt.figure(figsize=(10,10), dpi=300)
+    #ax = fig.add_subplot(111, projection='3d', adjustable='box')
+    #ax.set_title(label = "EL/EG over Time Steps")
+    #ax.set_xlabel('X - EL', fontsize=10)
+    #ax.set_ylabel('Y - EG', fontsize=10)
+    #ax.set_zlabel('Z - Time Steps', fontsize=10)
+    #ax.set_xlim([-10,RANGE_R])
+    #ax.set_ylim([-10,RANGE_R])
+
+    #for gl in results_gl:
+    #    c_l = gl[1][-1]
+    #    c_g = gl[0][-1]
+    #    if(c_l < 0 or c_g < 0 or c_l > 100 or c_g > 100 ):
+    #        ax.scatter(gl[1][0], gl[0][0], times_steps[0], marker='.', s=20, color=(float(0), float(0), float(1)))
+    #        ax.plot(gl[1], gl[0], times_steps,color=(float(0), float(0), float(1)))
+    #    else:
+    #        ax.scatter(gl[1][0], gl[0][0], times_steps[0], marker='.', s=20, color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
+    #        ax.plot(gl[1], gl[0], times_steps,color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
+    #        ax.scatter(gl[1][-1], gl[0][-1], times_steps[-1], marker='*', s=20, color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
+    #plt.savefig("3d_el_eg_" + str(random.randint(100, 999)) + ".png")
+    #plt.show()
 
     #===================================================================================================================
 
@@ -273,28 +325,8 @@ if __name__ == '__main__':
     plt.show()
 
 
-    #fig, axes = plt.subplots(nrows=1, ncols=2)
-    # generate randomly populated arrays
-    #data1 = np.random.rand(10,10)*10
-    #data2 = np.random.rand(10,10)*10 -7.5
-    # find minimum of minima & maximum of maxima
-    #minmin = np.min([np.min(data1), np.min(data2)])
-    #maxmax = np.max([np.max(data1), np.max(data2)])
-    #im1 = axes[0].imshow(data1, vmin=minmin, vmax=maxmax,
-    #                     extent=(-5,5,-5,5), aspect='auto', cmap='viridis')
-    #im2 = axes[1].imshow(data2, vmin=minmin, vmax=maxmax,
-    #                     extent=(-5,5,-5,5), aspect='auto', cmap='viridis')
-    # add space for colour bar
-    #fig.subplots_adjust(right=0.85)
-    #cbar_ax = fig.add_axes([0.88, 0.15, 0.04, 0.7])
-    #fig.colorbar(im2, cax=cbar_ax)
-    #plt.show()
 
-    #individual_plots()
-
-
-
-
+    #===================================================================================================================
 
 
     print("Completed")
