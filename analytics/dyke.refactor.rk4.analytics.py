@@ -43,8 +43,6 @@ for file in data_archives:
 
     try:
 
-        #RUN_ID = s['RUN_ID']
-
         number_alive_global_start = s['number_alive_global_start']
         number_alive_local_start = s['number_alive_local_start']
         number_alive_global_end = s['number_alive_global_end']
@@ -74,33 +72,10 @@ for file in data_archives:
         number_alive_start_np[ENV_START[0]][ENV_START[1]] += number_alive_start
         number_alive_end_np[ENV_START[0]][ENV_START[1]] += number_alive_end
 
-        # SUPER DATA STRUCTURE NEEDED
-
-        #(Eg, El, number_alive_global_start, number_alive_local_start, number_alive_start, number_alive_global_end, number_alive_local_end, number_alive_end)
-
-        #Eg = [] ...
-        #El = [] ...
-        #number_alive_global_start= []
-
-        # Loops would be for item in Eg ...
-        # plot Eg = x , El = y (the correct one) , heatmap += number_alive_global_start
-
-        # Replicate for the ones below :
-
-        #number_alive_local_start
-        #number_alive_start
-        #number_alive_global_end
-        #number_alive_local_end
-        #number_alive_end
-
     finally:
         s.close()
 
 number_alive_diff_end_np = number_alive_end_np - number_alive_start_np
-
-print(number_alive_start_np)
-print(number_alive_end_np)
-print(number_alive_diff_end_np)
 
 def individual_plots():
 
@@ -210,7 +185,6 @@ if __name__ == '__main__':
     scale = maxmax
     if(minmin>=maxmax):
         scale = minmin
-    print(minmin,maxmax, scale)
 
     im1 = axes.imshow(number_alive_diff_end_np, extent=(0,RANGE_R,0,RANGE_R), aspect='equal', vmin=-scale, vmax=scale, cmap='Spectral')
 
