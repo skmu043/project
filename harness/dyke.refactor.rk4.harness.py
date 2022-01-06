@@ -11,10 +11,10 @@ import sys
 
 # Generating ALL Parameters
 SAMPLE_SIZE = 1
-SAMPLE_STEP = 1
+SAMPLE_STEP = 7
 RUN_ID = int(time.time())
 
-SPECIES_K   = 10                    # ----------- Number of Biotic Components
+SPECIES_K   = 10                   # ----------- Number of Biotic Components
 RANGE_R     = 10                   # ----------- Essential Range
 TIME_START  = 0                     # ----------- Start of Simulation
 TIME_END    = 200                   # ----------- Length of Simulation
@@ -96,7 +96,6 @@ if __name__ == '__main__':
 
     for Eg_temp in np.arange(0,RANGE_R,SAMPLE_STEP):
         for El_temp in np.arange(0,RANGE_R,SAMPLE_STEP):
-            #print(Eg_temp, El_temp)
 
             simulation_run_shelve = init_shelve()
             shelve_files.append(simulation_run_shelve)

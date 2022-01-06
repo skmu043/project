@@ -16,6 +16,7 @@ times_step = 0
 try:
     RANGE_R = shel['RANGE_R']
     times_steps = shel['times_steps']
+
 finally:
     shel.close()
 
@@ -65,12 +66,25 @@ for file in data_archives:
 
         results_gl.append((results[-2],results[-1]))
 
-        number_alive_global_start_np[ENV_START[0]][ENV_START[1]] += number_alive_global_start
-        number_alive_local_start_np[ENV_START[0]][ENV_START[1]] += number_alive_local_start
-        number_alive_global_end_np[ENV_START[0]][ENV_START[1]] += number_alive_global_end
-        number_alive_local_end_np[ENV_START[0]][ENV_START[1]] += number_alive_local_end
-        number_alive_start_np[ENV_START[0]][ENV_START[1]] += number_alive_start
-        number_alive_end_np[ENV_START[0]][ENV_START[1]] += number_alive_end
+
+        np_eg = (RANGE_R) - (ENV_START[0])
+        np_el = ENV_START[1] - 1
+        if(ENV_START[0] == 0):
+            np_eg = RANGE_R - 1
+        if(ENV_START[1] == 0):
+            np_el = ENV_START[1]
+        if(ENV_START[0] == RANGE_R):
+            np_eg = 0
+        if(ENV_START[1] == RANGE_R):
+            np_el = ENV_START[1] - 1
+
+
+        number_alive_global_start_np[np_eg][np_el] += number_alive_global_start
+        number_alive_local_start_np[np_eg][np_el] += number_alive_local_start
+        number_alive_global_end_np[np_eg][np_el] += number_alive_global_end
+        number_alive_local_end_np[np_eg][np_el] += number_alive_local_end
+        number_alive_start_np[np_eg][np_el] += number_alive_start
+        number_alive_end_np[np_eg][np_el] += number_alive_end
 
     finally:
         s.close()
@@ -183,7 +197,7 @@ if __name__ == '__main__':
     minmin = abs(np.min([np.min(number_alive_diff_end_np)]))
     maxmax = abs(np.max([np.max(number_alive_diff_end_np)]))
     scale = maxmax
-    if(minmin>=maxmax):
+    if(minmin>=maxmax):     
         scale = minmin
 
     im1 = axes.imshow(number_alive_diff_end_np, extent=(0,RANGE_R,0,RANGE_R), aspect='equal', vmin=-scale, vmax=scale, cmap='Spectral')
@@ -197,6 +211,7 @@ if __name__ == '__main__':
 
     #===================================================================================================================
 
+    #Verified Correct
 
     fig = plt.figure(figsize=(10,10), dpi=300)
     plt.title(label = "EL/EG")
