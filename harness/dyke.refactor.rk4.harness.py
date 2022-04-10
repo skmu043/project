@@ -14,13 +14,13 @@ SAMPLE_SIZE = 1
 SAMPLE_STEP = 7
 RUN_ID = int(time.time())
 
-SPECIES_K   = 10                   # ----------- Number of Biotic Components
-RANGE_R     = 10                   # ----------- Essential Range
+SPECIES_K   = 100                   # ----------- Number of Biotic Components
+RANGE_R     = 100                  # ----------- Essential Range
 TIME_START  = 0                     # ----------- Start of Simulation
 TIME_END    = 200                   # ----------- Length of Simulation
-TIME_STEP   = 0.1                   # ----------- Time Step3
+TIME_STEP   = 1                   # ----------- Time Step3
 ENV_VARS    = 2                     # ----------- Number of Environment Variables
-NICHE = 5                     # ----------- Niche Size
+NICHE = 5                           # ----------- Niche Size
 LOCAL_SIZE  = 50                    # ----------- Local Population Size (%)
 ALIVE_THRESHOLD = 0.5
 ENV_START=[]
@@ -87,7 +87,7 @@ print_time()
 def run_it(simulation_run_shelve):
 
     # Main Experiment
-    os.system("python3.9 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(simulation_run_shelve))
+    os.system("python3.10 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(simulation_run_shelve))
 
 
 if __name__ == '__main__':
