@@ -56,7 +56,7 @@ def init_shelve():
         #s['ENV_VARS'] = ENV_VARS
         s['NICHE'] = NICHE
         #s['LOCAL_SIZE'] = LOCAL_SIZE
-        #s['ALIVE_THRESHOLD'] = ALIVE_THRESHOLD
+        s['ALIVE_THRESHOLD'] = ALIVE_THRESHOLD
         #s['ENV_START'] = ENV_START
 
         s['exp_name'] = exp_name

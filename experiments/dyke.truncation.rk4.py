@@ -24,7 +24,7 @@ try:
     #ENV_VARS = s['ENV_VARS']
     NICHE = s['NICHE']
     #LOCAL_SIZE = s['LOCAL_SIZE']
-    #ALIVE_THRESHOLD = s['ALIVE_THRESHOLD']
+    ALIVE_THRESHOLD = s['ALIVE_THRESHOLD']
 
     exp_name = s['exp_name']
     data_directory = s['data_directory']
