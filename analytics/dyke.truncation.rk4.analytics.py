@@ -9,7 +9,7 @@ import matplotlib as mpl
 
 data_dr = os.getcwd() + '/data'
 data_archives = os.listdir(data_dr)
-shel = shelve.open(data_dr + "/" + str(data_archives[0]) + "/dyke.refactor.rk4.data")
+shel = shelve.open(data_dr + "/" + str(data_archives[0]) + "/dyke.truncation.rk4.data")
 RANGE_R = 0
 times_step = 0
 
@@ -21,17 +21,13 @@ finally:
     shel.close()
 
 number_alive_global_start_np = np.zeros((RANGE_R, RANGE_R))
-number_alive_local_start_np = np.zeros((RANGE_R, RANGE_R))
 number_alive_global_end_np = np.zeros((RANGE_R, RANGE_R))
-number_alive_local_end_np = np.zeros((RANGE_R, RANGE_R))
 number_alive_start_np = np.zeros((RANGE_R, RANGE_R))
 number_alive_end_np = np.zeros((RANGE_R, RANGE_R))
 number_alive_diff_end_np = np.zeros((RANGE_R, RANGE_R))
 
 number_alive_global_start_ = []
-number_alive_local_start_ = []
 number_alive_global_end_ = []
-number_alive_local_end_ = []
 number_alive_start_ = []
 number_alive_end_ = []
 ENV_START_ = []
@@ -40,14 +36,12 @@ results_gl = []
 time_steps = []
 
 for file in data_archives:
-    s = shelve.open(data_dr + "/" + str(file) + "/dyke.refactor.rk4.data")
+    s = shelve.open(data_dr + "/" + str(file) + "/dyke.truncation.rk4.data")
 
     try:
 
         number_alive_global_start = s['number_alive_global_start']
-        number_alive_local_start = s['number_alive_local_start']
         number_alive_global_end = s['number_alive_global_end']
-        number_alive_local_end = s['number_alive_local_end']
         number_alive_start = s['number_alive_start']
         number_alive_end = s['number_alive_end']
 
@@ -57,15 +51,12 @@ for file in data_archives:
         results = s['results']
 
         number_alive_global_start_.append(number_alive_global_start)
-        number_alive_local_start_.append(number_alive_local_start)
         number_alive_global_end_.append(number_alive_global_end)
-        number_alive_local_end_.append(number_alive_local_end)
         number_alive_start_.append(number_alive_start)
         number_alive_end_.append(number_alive_end)
         ENV_START_.append(ENV_START)
 
         results_gl.append((results[-2],results[-1]))
-
 
         np_eg = (RANGE_R) - (ENV_START[0])
         np_el = ENV_START[1] - 1
@@ -80,9 +71,7 @@ for file in data_archives:
 
 
         number_alive_global_start_np[np_eg][np_el] += number_alive_global_start
-        number_alive_local_start_np[np_eg][np_el] += number_alive_local_start
         number_alive_global_end_np[np_eg][np_el] += number_alive_global_end
-        number_alive_local_end_np[np_eg][np_el] += number_alive_local_end
         number_alive_start_np[np_eg][np_el] += number_alive_start
         number_alive_end_np[np_eg][np_el] += number_alive_end
 
@@ -110,36 +99,6 @@ def individual_plots():
 
     #===================================================================================================================
     plt.figure(figsize=(8,8), dpi=200)
-    plt.title('Local Alives Start')
-    plt.xlabel('EL')
-    plt.ylabel('EG')
-    heatmap = [[0 for _ in range(RANGE_R)] for _ in range(RANGE_R)]
-    idx = 0
-    for start_vars in ENV_START_:
-        idx += 1
-    plt.colorbar(plt.pcolor(heatmap))
-    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower', vmin=0, vmax=12)
-    plt.show()
-    #===================================================================================================================
-
-    #===================================================================================================================
-    plt.figure(figsize=(8,8), dpi=200)
-    plt.title('Global + Local Alives Start')
-    plt.xlabel('EL')
-    plt.ylabel('EG')
-    heatmap = [[0 for _ in range(RANGE_R)] for _ in range(RANGE_R)]
-    idx = 0
-    for start_vars in ENV_START_:
-        heatmap[int(start_vars[0])][int(start_vars[1])] += number_alive_start_[idx]
-        idx += 1
-    plt.colorbar(plt.pcolor(heatmap))
-    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower', vmin=0, vmax=12)
-    plt.show()
-    #===================================================================================================================
-
-
-    #===================================================================================================================
-    plt.figure(figsize=(8,8), dpi=200)
     plt.title('Global Alives End')
     plt.xlabel('EL')
     plt.ylabel('EG')
@@ -147,36 +106,6 @@ def individual_plots():
     idx = 0
     for start_vars in ENV_START_:
         heatmap[int(start_vars[0])][int(start_vars[1])] += number_alive_global_end_[idx]
-        idx += 1
-    plt.colorbar(plt.pcolor(heatmap))
-    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower', vmin=0, vmax=12)
-    plt.show()
-    #===================================================================================================================
-
-    #===================================================================================================================
-    plt.figure(figsize=(8,8), dpi=200)
-    plt.title('Local Alives End')
-    plt.xlabel('EL')
-    plt.ylabel('EG')
-    heatmap = [[0 for _ in range(RANGE_R)] for _ in range(RANGE_R)]
-    idx = 0
-    for start_vars in ENV_START_:
-        heatmap[int(start_vars[0])][int(start_vars[1])] += number_alive_local_end_[idx]
-        idx += 1
-    plt.colorbar(plt.pcolor(heatmap))
-    plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower', vmin=0, vmax=12)
-    plt.show()
-    #===================================================================================================================
-
-    #===================================================================================================================
-    plt.figure(figsize=(8,8), dpi=200)
-    plt.title('Global + Local Alives End')
-    plt.xlabel('EL')
-    plt.ylabel('EG')
-    heatmap = [[0 for _ in range(RANGE_R)] for _ in range(RANGE_R)]
-    idx = 0
-    for start_vars in ENV_START_:
-        heatmap[int(start_vars[0])][int(start_vars[1])] += number_alive_end_[idx]
         idx += 1
     plt.colorbar(plt.pcolor(heatmap))
     plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower', vmin=0, vmax=12)
@@ -231,47 +160,17 @@ if __name__ == '__main__':
     plt.savefig("2d_el_eg_" + str(random.randint(100, 999)) + ".png")
     plt.show()
 
-    #===================================================================================================================
-
-    #fig = plt.figure(figsize=(10,10), dpi=300)
-    #ax = fig.add_subplot(111, projection='3d', adjustable='box')
-    #ax.set_title(label = "EL/EG over Time Steps")
-    #ax.set_xlabel('X - EL', fontsize=10)
-    #ax.set_ylabel('Y - EG', fontsize=10)
-    #ax.set_zlabel('Z - Time Steps', fontsize=10)
-    #ax.set_xlim([-10,RANGE_R])
-    #ax.set_ylim([-10,RANGE_R])
-
-    #for gl in results_gl:
-    #    c_l = gl[1][-1]
-    #    c_g = gl[0][-1]
-    #    if(c_l < 0 or c_g < 0 or c_l > 100 or c_g > 100 ):
-    #        ax.scatter(gl[1][0], gl[0][0], times_steps[0], marker='.', s=20, color=(float(0), float(0), float(1)))
-    #        ax.plot(gl[1], gl[0], times_steps,color=(float(0), float(0), float(1)))
-    #    else:
-    #        ax.scatter(gl[1][0], gl[0][0], times_steps[0], marker='.', s=20, color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
-    #        ax.plot(gl[1], gl[0], times_steps,color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
-    #        ax.scatter(gl[1][-1], gl[0][-1], times_steps[-1], marker='*', s=20, color=(float(gl[1][-1]/100), float(gl[0][-1]/100), float(0.5)))
-    #plt.savefig("3d_el_eg_" + str(random.randint(100, 999)) + ".png")
-    #plt.show()
-
-    #===================================================================================================================
-
 
     fig, axes = plt.subplots(nrows=2, ncols=3,figsize=(20,10), dpi=300)
     plt.title('Global + Local Species Counts')
 
     minmin = np.min([np.min(number_alive_global_start_np),
-                     np.min(number_alive_local_start_np),
                      np.min(number_alive_start_np),
                      np.min(number_alive_global_end_np),
-                     np.min(number_alive_local_end_np),
                      np.min(number_alive_end_np)])
     maxmax = np.max([np.max(number_alive_global_start_np),
-                     np.max(number_alive_local_start_np),
                      np.max(number_alive_start_np),
                      np.max(number_alive_global_end_np),
-                     np.max(number_alive_local_end_np),
                      np.max(number_alive_end_np)])
 
     axes[0][0].title.set_text('Global Alive Start')

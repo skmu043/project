@@ -53,7 +53,6 @@ print(omega)
 # Abundance Init
 
 number_alive_global_start = 0
-number_alive_local_start = 0
 number_alive_start = 0
 
 system_state = np.zeros(SPECIES_K+ENV_VARS)
@@ -73,12 +72,11 @@ for s_i in range(SPECIES_K):
         number_alive_global_start +=1
 
 
-number_alive_start = number_alive_local_start + number_alive_global_start
+number_alive_start = number_alive_global_start
 
 # Environment Init
 for _ in range(ENV_VARS):
     system_state[SPECIES_K+_] = ENV_START[_]
-
 
 def rates_of_change_system_state(system_state):
 
@@ -113,7 +111,6 @@ def rates_of_change_system_state(system_state):
 
     return(rate_of_change)
 
-
 if __name__ == '__main__':
 
     results = [[] for _ in range(SPECIES_K+ENV_VARS)]
@@ -139,7 +136,6 @@ if __name__ == '__main__':
 
 
     number_alive_global_end = 0
-    number_alive_local_end = 0
     number_alive_end = 0
 
     for s_i in range(SPECIES_K):
@@ -148,20 +144,21 @@ if __name__ == '__main__':
         if a_star >= ALIVE_THRESHOLD:
             number_alive_global_end +=1
 
-    number_alive_end = number_alive_local_end + number_alive_global_end
+    number_alive_end = number_alive_global_end
 
     try:
-        #s['system_state'] = system_state
         s['results'] = results
         s['times_steps'] = times_steps
 
         s['number_alive_global_start'] = number_alive_global_start
-        s['number_alive_local_start'] = number_alive_local_start
         s['number_alive_global_end'] = number_alive_global_end
-        s['number_alive_local_end'] = number_alive_local_end
 
         s['number_alive_start'] = number_alive_start
         s['number_alive_end'] = number_alive_end
+        print("---")
+        print(ENV_START[0])
+        print(number_alive_start, number_alive_end)
+        print("---")
 
     finally:
 
