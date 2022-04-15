@@ -11,15 +11,15 @@ import sys
 
 # Generating ALL Parameters
 SAMPLE_SIZE = 1
-SAMPLE_STEP = 1
+SAMPLE_STEP = 7
 RUN_ID = int(time.time())
 
-SPECIES_K   = 10                   # ----------- Number of Biotic Components
-RANGE_R     = 10                  # ----------- Essential Range
+SPECIES_K   = 100                   # ----------- Number of Biotic Components
+RANGE_R     = 100                  # ----------- Essential Range
 TIME_START  = 0                     # ----------- Start of Simulation
 TIME_END    = 200                   # ----------- Length of Simulation
 TIME_STEP   = 1                   # ----------- Time Step3
-ENV_VARS    = 1                     # ----------- Number of Environment Variables
+ENV_VARS    = 2                     # ----------- Number of Environment Variables
 NICHE = 5                           # ----------- Niche Size
 LOCAL_SIZE  = 50                    # ----------- Local Population Size (%)
 ALIVE_THRESHOLD = 0.5
@@ -27,10 +27,19 @@ ENV_START=[]
 omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 
+local_population_index = []
+uniq_k = []
+for _ in range(int(LOCAL_SIZE/100 * SPECIES_K)):
+    local_species = random.randint(0,SPECIES_K-1)
+    while local_species in local_population_index:
+        local_species = random.randint(0,SPECIES_K-1)
+    local_population_index.append(local_species)
+local_population_index.sort()
+
 print(omega)
 print(mu)
+print(local_population_index)
 
-#print(local_population_index)
 # Create Shelve to store parameters being sent to experiment run
 exp_name = "dyke.truncation.rk4"
 
@@ -53,17 +62,15 @@ def init_shelve():
         s['TIME_START'] = TIME_START
         s['TIME_END'] = TIME_END
         s['TIME_STEP'] = TIME_STEP
-        #s['ENV_VARS'] = ENV_VARS
+        s['ENV_VARS'] = ENV_VARS
         s['NICHE'] = NICHE
-        #s['LOCAL_SIZE'] = LOCAL_SIZE
-        #s['ALIVE_THRESHOLD'] = ALIVE_THRESHOLD
+        s['LOCAL_SIZE'] = LOCAL_SIZE
+        s['ALIVE_THRESHOLD'] = ALIVE_THRESHOLD
         #s['ENV_START'] = ENV_START
 
         s['exp_name'] = exp_name
         s['data_directory'] = data_directory
         s['shelve_file'] = shelve_file
-        s['omega'] = omega
-        s['mu'] = mu
 
     finally:
         s.close()
@@ -87,22 +94,29 @@ if __name__ == '__main__':
 
     shelve_files = []
 
-    for Start_Temp in np.arange(0,RANGE_R,SAMPLE_STEP):
+    for Eg_temp in np.arange(0,RANGE_R,SAMPLE_STEP):
+        for El_temp in np.arange(0,RANGE_R,SAMPLE_STEP):
 
-        simulation_run_shelve = init_shelve()
-        shelve_files.append(simulation_run_shelve)
-        print("InLoopCreates: ",simulation_run_shelve)
-        simulation_shelve = shelve.open(simulation_run_shelve)
+            simulation_run_shelve = init_shelve()
+            shelve_files.append(simulation_run_shelve)
+            print("InLoopCreates: ",simulation_run_shelve)
+            simulation_shelve = shelve.open(simulation_run_shelve)
 
-        ENV_START=[]
-        ENV_START.append(Start_Temp)
+            ENV_START=[]
+            ENV_START.append(Eg_temp)
+            ENV_START.append(El_temp)
 
-        try:
-            simulation_shelve['ENV_START'] = ENV_START
+            try:
+                simulation_shelve['omega'] = omega
+                simulation_shelve['mu'] = mu
+                simulation_shelve['local_population_index'] = local_population_index
+                simulation_shelve['Eg'] = Eg_temp
+                simulation_shelve['El'] = El_temp
+                simulation_shelve['ENV_START'] = ENV_START
 
-        finally:
-            simulation_shelve.close()
-        ENV_START.clear()
+            finally:
+                simulation_shelve.close()
+            ENV_START.clear()
 
     print("===")
     #$for item in shelve_files:

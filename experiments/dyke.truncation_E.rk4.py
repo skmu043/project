@@ -21,10 +21,10 @@ try:
     TIME_START = s['TIME_START']
     TIME_END = s['TIME_END']
     TIME_STEP = s['TIME_STEP']
-    #ENV_VARS = s['ENV_VARS']
+    ENV_VARS = s['ENV_VARS']
     NICHE = s['NICHE']
-    #LOCAL_SIZE = s['LOCAL_SIZE']
-    #ALIVE_THRESHOLD = s['ALIVE_THRESHOLD']
+    LOCAL_SIZE = s['LOCAL_SIZE']
+    ALIVE_THRESHOLD = s['ALIVE_THRESHOLD']
 
     exp_name = s['exp_name']
     data_directory = s['data_directory']
@@ -32,20 +32,20 @@ try:
 
     omega = s['omega']
     mu = s['mu']
-    #local_population_index = s['local_population_index']
+    local_population_index = s['local_population_index']
 
     ENV_START = s['ENV_START']
 
 finally:
     s.close()
 
-#Eg = ENV_START[0]
-#El = ENV_START[1]
+Eg = ENV_START[0]
+El = ENV_START[1]
 
-#system_state = np.zeros(SPECIES_K+ENV_VARS)
-print("---")
+system_state = np.zeros(SPECIES_K+ENV_VARS)
+
 print(ENV_START)
-print(str(sys.argv[1]))
+
 print(mu)
 print(omega)
 
