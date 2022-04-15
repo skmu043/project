@@ -14,8 +14,8 @@ SAMPLE_SIZE = 1
 SAMPLE_STEP = 1
 RUN_ID = int(time.time())
 
-SPECIES_K   = 10                   # ----------- Number of Biotic Components
-RANGE_R     = 10                  # ----------- Essential Range
+SPECIES_K   = 100                   # ----------- Number of Biotic Components
+RANGE_R     = 100                  # ----------- Essential Range
 TIME_START  = 0                     # ----------- Start of Simulation
 TIME_END    = 200                   # ----------- Length of Simulation
 TIME_STEP   = 1                   # ----------- Time Step3
@@ -53,7 +53,7 @@ def init_shelve():
         s['TIME_START'] = TIME_START
         s['TIME_END'] = TIME_END
         s['TIME_STEP'] = TIME_STEP
-        #s['ENV_VARS'] = ENV_VARS
+        s['ENV_VARS'] = ENV_VARS
         s['NICHE'] = NICHE
         #s['LOCAL_SIZE'] = LOCAL_SIZE
         s['ALIVE_THRESHOLD'] = ALIVE_THRESHOLD

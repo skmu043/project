@@ -21,7 +21,7 @@ try:
     TIME_START = s['TIME_START']
     TIME_END = s['TIME_END']
     TIME_STEP = s['TIME_STEP']
-    #ENV_VARS = s['ENV_VARS']
+    ENV_VARS = s['ENV_VARS']
     NICHE = s['NICHE']
     #LOCAL_SIZE = s['LOCAL_SIZE']
     ALIVE_THRESHOLD = s['ALIVE_THRESHOLD']
@@ -56,32 +56,21 @@ number_alive_global_start = 0
 number_alive_local_start = 0
 number_alive_start = 0
 
+system_state = np.zeros(SPECIES_K+ENV_VARS)
 
+Eg = ENV_START[0]
 
 for s_i in range(SPECIES_K):
-    if s_i in local_population_index:
-        a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 )) \
-                 * \
-                 np.exp(- abs(El-mu[1][s_i]) ** 2 / ( 2 * NICHE ** 2))
 
-        if a_star < ALIVE_THRESHOLD:
-            a_star = 0
+    a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
 
-        system_state[s_i] = a_star
+    if a_star < ALIVE_THRESHOLD:
+        a_star = 0
 
-        if a_star >= ALIVE_THRESHOLD:
-            number_alive_local_start += 1
+    system_state[s_i] = a_star
 
-    else :
-        a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
-
-        if a_star < ALIVE_THRESHOLD:
-            a_star = 0
-
-        system_state[s_i] = a_star
-
-        if a_star >= ALIVE_THRESHOLD:
-            number_alive_global_start +=1
+    if a_star >= ALIVE_THRESHOLD:
+        number_alive_global_start +=1
 
 
 number_alive_start = number_alive_local_start + number_alive_global_start
@@ -100,41 +89,25 @@ def rates_of_change_system_state(system_state):
     rate_of_change = system_state.copy()
 
     Eg = system_state[SPECIES_K+0]
-    El = system_state[SPECIES_K+1]
 
     for s_i in range(SPECIES_K):
-        if s_i in local_population_index:                     # Hard coded 0 and 1 -> see notes [E1], [E1, E2], [E3][E4][E5] - scale with Es like w, u there will be another
-            a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 )) \
-                     * \
-                     np.exp(- abs(El-mu[1][s_i]) ** 2 / ( 2 * NICHE ** 2))
 
-            if a_star < ALIVE_THRESHOLD:
-                a_star = 0
+        a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
 
-            rate_of_change[s_i] = a_star - system_state[s_i]
+        if a_star < ALIVE_THRESHOLD:
+            a_star = 0
 
-        else :
-            a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
-
-            if a_star < ALIVE_THRESHOLD:
-                a_star = 0
-
-            rate_of_change[s_i] =  a_star - system_state[s_i]
+        rate_of_change[s_i] =  a_star - system_state[s_i]
 
 
         #da/dt = a* - a
     biotic_force_FG = 0
-    biotic_force_FL = 0
 
     for s_i in range(SPECIES_K):
         # Global
         biotic_force_FG += (system_state[s_i] * omega[0][s_i])
-        # Local
-        if s_i in local_population_index:
-            biotic_force_FL += (system_state[s_i] * omega[1][s_i])
 
     rate_of_change[SPECIES_K+0] = (biotic_force_FG)
-    rate_of_change[SPECIES_K+1] = (biotic_force_FL)
 
     #dE/dt = E* + F
 
@@ -170,15 +143,10 @@ if __name__ == '__main__':
     number_alive_end = 0
 
     for s_i in range(SPECIES_K):
-        if s_i in local_population_index:
-            a_star = system_state[s_i]
-            if a_star >= ALIVE_THRESHOLD:
-                number_alive_local_end += 1
 
-        else :
-            a_star = system_state[s_i]
-            if a_star >= ALIVE_THRESHOLD:
-                number_alive_global_end +=1
+        a_star = system_state[s_i]
+        if a_star >= ALIVE_THRESHOLD:
+            number_alive_global_end +=1
 
     number_alive_end = number_alive_local_end + number_alive_global_end
 
