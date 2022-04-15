@@ -196,5 +196,6 @@ if __name__ == '__main__':
         s['number_alive_end'] = number_alive_end
 
     finally:
+
             s.close()
 
