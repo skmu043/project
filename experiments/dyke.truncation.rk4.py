@@ -155,10 +155,10 @@ if __name__ == '__main__':
 
         s['number_alive_start'] = number_alive_start
         s['number_alive_end'] = number_alive_end
-        print("---")
-        print(ENV_START[0])
-        print(number_alive_start, number_alive_end)
-        print("---")
+        #print("---")
+        #print(ENV_START[0])
+        #print(number_alive_start, number_alive_end)
+        #print("---")
 
     finally:
 

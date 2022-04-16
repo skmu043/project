@@ -22,7 +22,7 @@ TIME_STEP   = 1                   # ----------- Time Step3
 ENV_VARS    = 1                     # ----------- Number of Environment Variables
 NICHE = 5                           # ----------- Niche Size
 LOCAL_SIZE  = 50                    # ----------- Local Population Size (%)
-ALIVE_THRESHOLD = 0.7
+ALIVE_THRESHOLD = 0
 ENV_START=[]
 omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
@@ -87,22 +87,24 @@ if __name__ == '__main__':
 
     shelve_files = []
 
-    for Start_Temp in np.arange(0,RANGE_R,SAMPLE_STEP):
+    for threshold in np.arange(0,1, 0.1):
+        for Start_Temp in np.arange(0,RANGE_R,SAMPLE_STEP):
 
-        simulation_run_shelve = init_shelve()
-        shelve_files.append(simulation_run_shelve)
-        print("InLoopCreates: ",simulation_run_shelve)
-        simulation_shelve = shelve.open(simulation_run_shelve)
+            simulation_run_shelve = init_shelve()
+            shelve_files.append(simulation_run_shelve)
+            print("InLoopCreates: ",simulation_run_shelve)
+            simulation_shelve = shelve.open(simulation_run_shelve)
 
-        ENV_START=[]
-        ENV_START.append(Start_Temp)
+            ENV_START=[]
+            ENV_START.append(Start_Temp)
 
-        try:
-            simulation_shelve['ENV_START'] = ENV_START
+            try:
+                simulation_shelve['ENV_START'] = ENV_START
+                simulation_shelve['ALIVE_THRESHOLD'] = threshold
 
-        finally:
-            simulation_shelve.close()
-        ENV_START.clear()
+            finally:
+                simulation_shelve.close()
+            ENV_START.clear()
 
     print("===")
     #$for item in shelve_files:
