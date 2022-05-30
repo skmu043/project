@@ -42,6 +42,8 @@ def init_shelve():
     s = shelve.open(shelve_file)
     print(data_directory, shelve_file)
 
+    omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
+    mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 
     try:
         #s['SAMPLE_SIZE'] = SAMPLE_SIZE
@@ -55,7 +57,6 @@ def init_shelve():
         s['TIME_STEP'] = TIME_STEP
         s['ENV_VARS'] = ENV_VARS
         s['NICHE'] = NICHE
-        #s['LOCAL_SIZE'] = LOCAL_SIZE
         s['ALIVE_THRESHOLD'] = ALIVE_THRESHOLD
         s['ENV_START'] = ENV_START
 
@@ -87,13 +88,12 @@ if __name__ == '__main__':
 
     shelve_files = []
 
-    #for threshold in np.arange(0,1, 0.1):
-    #    for Start_Temp in np.arange(0,RANGE_R,SAMPLE_STEP):
+    for threshold in np.arange(0,500, 1):
 
-    simulation_run_shelve = init_shelve()
-    shelve_files.append(simulation_run_shelve)
-    print("InLoopCreates: ",simulation_run_shelve)
-    simulation_shelve = shelve.open(simulation_run_shelve)
+        simulation_run_shelve = init_shelve()
+        shelve_files.append(simulation_run_shelve)
+        print("InLoopCreates: ",simulation_run_shelve)
+        simulation_shelve = shelve.open(simulation_run_shelve)
 
     #ENV_START=[]
     #ENV_START.append(Start_Temp)
@@ -112,7 +112,7 @@ if __name__ == '__main__':
      #   print(item)
 
 
-    pool = Pool(processes=1)
+    pool = Pool(processes=7)
 
     pool.map(run_it, [_ for _ in shelve_files])
 

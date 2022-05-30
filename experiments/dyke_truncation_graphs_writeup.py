@@ -1,5 +1,12 @@
-import sys
+import random
+import os
 import shelve
+import time
+from multiprocessing import Process, Pool
+import numpy as np
+import time
+
+import sys
 import random
 import math
 import numpy as np
@@ -9,46 +16,26 @@ from scipy import optimize
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap, BoundaryNorm
 
-if int(len(sys.argv)) != int(2):
-    print("Args: shelve file name which contains all of > (K, R, P, E, start, end, step, EN, OE, LP_Z, RUN_ID)")
-    print("e.g K=100, R=100, P=0, E=10, start=0, end=200, step=0.01, EN=2, OE=5, LP_Z = (10 - 100), RUN_ID : epoch")
-    print("exit")
-    sys.exit()
+#from numba import jit
 
-s = shelve.open(str(sys.argv[1]))
+# Generating ALL Parameters
+SAMPLE_SIZE = 1
+SAMPLE_STEP = 1
+RUN_ID = int(time.time())
 
-try:
+SPECIES_K   = 100                  # ----------- Number of Biotic Components
+RANGE_R     = 100                  # ----------- Essential Range
+TIME_START  = 0                     # ----------- Start of Simulation
+TIME_END    = 200                   # ----------- Length of Simulation
+TIME_STEP   = 1                   # ----------- Time Step3
+ENV_VARS    = 1                     # ----------- Number of Environment Variables
+NICHE = 5                           # ----------- Niche Size
+LOCAL_SIZE  = 50                    # ----------- Local Population Size (%)
+ALIVE_THRESHOLD = 0
+ENV_START=[50]
+omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
+mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 
-    SPECIES_K = s['SPECIES_K']
-    RANGE_R = s['RANGE_R']
-    TIME_START = s['TIME_START']
-    TIME_END = s['TIME_END']
-    TIME_STEP = s['TIME_STEP']
-    ENV_VARS = s['ENV_VARS']
-    NICHE = s['NICHE']
-    ALIVE_THRESHOLD = s['ALIVE_THRESHOLD']
-
-    exp_name = s['exp_name']
-    data_directory = s['data_directory']
-    shelve_file = s['shelve_file']
-
-    omega = s['omega']
-    mu = s['mu']
-
-    ENV_START = s['ENV_START']
-
-finally:
-    s.close()
-
-#system_state = np.zeros(SPECIES_K+ENV_VARS)
-print("---")
-print(ENV_START)
-print(str(sys.argv[1]))
-print(mu)
-print(omega)
-
-################## INITIAL STATE
-# Abundance Init
 
 number_alive_global_start = 0
 number_alive_start = 0
@@ -176,12 +163,6 @@ def plot_alphas_truncated():
 
 ###################### ROOTS ########################################################
 ###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
 
 
 def f1(x):
@@ -275,19 +256,8 @@ def plot_stable_points():
 
 ###################### ROOTS ########################################################
 ###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
 
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
+
 ###################### ROOTS ########################################################
 ###################### ROOTS ########################################################
 
@@ -391,14 +361,6 @@ def plot_stable_points_t():
 #print(np.unique(np.array(true_zeros)))
 
 ###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-###################### ROOTS ########################################################
-
 
 
 def plot_gaussian():
@@ -435,25 +397,63 @@ def gaus(each_temp):
 
 def plot_gaussian_trunk():
 
-    plt.figure(figsize=(20,10))
-    plt.title('The Truncated Gaussian Distribution', fontsize=40)
-    plt.xlabel('Environment Condition (temperature)', fontsize=40)
-    plt.ylabel('Alive Value', fontsize=40)
 
     ideal_temp = 50
+
     temp = []
     gaus = []
+
     for each_temp in np.arange(0,100,0.01):
         temp.append(each_temp)
         result = (math.e) ** ((-1) * (((abs(each_temp-ideal_temp)) ** 2) / (2*(NICHE**2))))
-        if (result > ALIVE_THRESHOLD):
-            gaus.append(result)
-        else:
-            gaus.append(0)
+        gaus.append(result)
 
-    plt.axhline(y=ALIVE_THRESHOLD, color='g', linestyle='--')
-    plt.plot(temp,gaus, 'b-',label = 'The gaussian distribution')
-    plt.show()
+    #plt.figure(figsize=(20,10))
+    #plt.title('The Gaussian Distribution', fontsize=40)
+    #plt.xlabel('Environment Condition (temperature)', fontsize=40)
+    #plt.ylabel('Alive Value', fontsize=40)
+    #plt.plot(temp,gaus, 'r-',label = 'The gaussian distribution')
+    #plt.show()
+
+    #plt.figure(figsize=(20,10))
+    #plt.title('The Truncated Gaussian Distribution', fontsize=40)
+    #plt.xlabel('Environment Condition (temperature)', fontsize=40)
+    #plt.ylabel('Alive Value', fontsize=40)
+
+
+    temp_t = []
+    gaus_t = []
+    for each_temp in np.arange(0,100,0.01):
+        temp_t.append(each_temp)
+        result = (math.e) ** ((-1) * (((abs(each_temp-ideal_temp)) ** 2) / (2*(NICHE**2))))
+        if (result > ALIVE_THRESHOLD):
+            gaus_t.append(result)
+        else:
+            gaus_t.append(0)
+
+    #plt.axhline(y=ALIVE_THRESHOLD, color='g', linestyle='--')
+    #plt.plot(temp_t,gaus,_t 'b-',label = 'The gaussian distribution')
+    #plt.show()
+
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
+    fig.suptitle('Abundance Values')
+    #fig.set_size_inches(3, 1.5)
+    ax1.plot(temp, gaus)
+    ax1.set_title('Original')
+    ax1.set_xlabel('Temperature')
+    ax1.set_ylabel('Abundance')
+    ax2.plot(temp_t, gaus_t)
+    ax2.set_title('Survival Threshold')
+    ax2.set_xlabel('Temperature')
+    ax2.set_ylabel('Abundance')
+    ax2.axhline(y=0.2, linestyle = '-')
+
+    fig.show()
+
+
+
+
 
 if __name__ == '__main__':
 
@@ -485,33 +485,17 @@ if __name__ == '__main__':
 
     ENV_VAR_ALIVE_ZERO_END = system_state[SPECIES_K+0]
 
-    #plt.figure(figsize=(20,10))
-    #plt.title('Simulation with alive threshold :  ' + str(ALIVE_THRESHOLD), fontsize=40)
-    #plt.xlabel('Time Steps', fontsize=20)
-    #plt.ylabel('Alive Value for each species', fontsize=20)
-    #myList = results[:-1]
-    #for item in myList:
-    #    plt.plot(times_steps,item)
-    #plt.show()
-
-    #plt.figure(figsize=(20,10))
-    #plt.title('Simulation with alive threshold :  ' + str(ALIVE_THRESHOLD), fontsize=40)
-    #plt.xlabel('Time Steps', fontsize=20)
-    #plt.ylabel('Temperature', fontsize=20)
-    #plt.ylim([0,100])
-    #plt.plot(times_steps,results[-1])
-    #plt.show()
-
+    results_nt = results
 
 
     #================
     #plot_alphas()
-    ALIVE_THRESHOLD=0.5
+    ALIVE_THRESHOLD=0.2
     #plot_alphas_truncated()
     #plot_stable_points()
     #plot_stable_points_t()
     #plot_gaussian()
-    #plot_gaussian_trunk()
+    plot_gaussian_trunk()
 
     results = [[] for _ in range(SPECIES_K+ENV_VARS)]
 
@@ -552,24 +536,34 @@ if __name__ == '__main__':
 
     ENV_VAR_ALIVE_ONE_END = system_state[SPECIES_K+0]
 
-    #plt.figure(figsize=(20,10))
-    #plt.title('Simulation with alive threshold :  ' + str(ALIVE_THRESHOLD), fontsize=40)
-    #plt.xlabel('Time Steps', fontsize=20)
-    #plt.ylabel('Alive Value for each species', fontsize=20)
-    #myList = results[:-1]
-    #for item in myList:
-    #    plt.plot(times_steps,item)
-    #plt.show()
 
-    #plt.figure(figsize=(20,10))
-    #plt.title('Simulation with alive threshold :  ' + str(ALIVE_THRESHOLD), fontsize=40)
-    #plt.xlabel('Time Steps', fontsize=20)
-    #plt.ylabel('Temperature', fontsize=20)
-    #plt.ylim([0,100])
-    #plt.plot(times_steps, results[-1])
-    #plt.show()
+    fig, axs = plt.subplots(2, 2, dpi=300, figsize=(10,20))
+    fig.suptitle('Species Aliveness')
+    myList = results_nt[:-1]
+    for item in myList:
+        axs[0,0].plot(times_steps,item)
+    axs[0,0].set_title('Simulation with alive threshold')
+    axs[0,0].set_xlabel('Time Steps')
+    axs[0,0].set_ylabel('Alive Value for each species')
 
-    s = shelve.open(shelve_file)
+    myList = results[:-1]
+    for item in myList:
+        axs[0,1].plot(times_steps,item)
+
+    axs[0,1].set_title('Simulation with alive threshold')
+    axs[0,1].set_xlabel('Time Steps')
+    axs[0,1].set_ylabel('Alive Value for each species')
+
+
+    axs[1,0].set_title('Temperature')
+    axs[1,0].set_xlabel('Time Steps')
+    axs[1,0].set_ylabel('Temperature')
+    axs[1,0].plot(times_steps,results_nt[-1])
+    axs[1,0].plot(times_steps, results[-1])
+
+    fig.show()
+
+
 
 
     number_alive_global_end = 0
@@ -582,25 +576,4 @@ if __name__ == '__main__':
             number_alive_global_end +=1
 
     number_alive_end = number_alive_global_end
-
-    try:
-        #s['results'] = results
-        #s['times_steps'] = times_steps
-
-        #s['number_alive_global_start'] = number_alive_global_start
-        #s['number_alive_global_end'] = number_alive_global_end
-
-        #s['number_alive_start'] = number_alive_start
-        #s['number_alive_end'] = number_alive_end
-
-        s['ENV_VAR_ALIVE_ZERO_START'] = ENV_VAR_ALIVE_ZERO_START
-        s['ENV_VAR_ALIVE_ONE_START'] = ENV_VAR_ALIVE_ONE_START
-        s['ENV_VAR_ALIVE_ZERO_END'] = ENV_VAR_ALIVE_ZERO_END
-        s['ENV_VAR_ALIVE_ONE_END'] = ENV_VAR_ALIVE_ONE_END
-
-    finally:
-
-            s.close()
-
-
 
