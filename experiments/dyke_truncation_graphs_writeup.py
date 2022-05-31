@@ -37,7 +37,6 @@ ENV_START=[50]
 omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 
-
 number_alive_global_start = 0
 number_alive_start = 0
 
@@ -530,139 +529,119 @@ def plot_gaussian_trunk():
 
 if __name__ == '__main__':
 
-    ENV_VAR_ALIVE_ZERO_START = ENV_START[0]
+    for sim in range(0, 10000):
+        print(sim)
+        omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
+        mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 
-    ENV_VAR_ALIVE_ONE_START = ENV_START[0]
+        system_state = np.zeros(SPECIES_K+ENV_VARS)
+        Eg = ENV_START[0]
+        for s_i in range(SPECIES_K):
+            a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
+            system_state[s_i] = a_star
 
+        for _ in range(ENV_VARS):
+            system_state[SPECIES_K+_] = ENV_START[_]
 
-    ALIVE_THRESHOLD=0
+        ENV_VAR_ALIVE_ZERO_START = ENV_START[0]
+        ENV_VAR_ALIVE_ONE_START = ENV_START[0]
 
-    results = [[] for _ in range(SPECIES_K+ENV_VARS)]
+        ALIVE_THRESHOLD=0
+        results = [[] for _ in range(SPECIES_K+ENV_VARS)]
+        times_steps=[]
 
-    times_steps=[]
+        for step in np.arange(TIME_START, TIME_END, TIME_STEP):
+            times_steps.append(step)
+            for _ in range(SPECIES_K+ENV_VARS):
+                results[_].append(system_state[_])
+            k1 = TIME_STEP * rates_of_change_system_state(system_state)
+            k2 = TIME_STEP * rates_of_change_system_state(system_state + k1 * 0.5)
+            k3 = TIME_STEP * rates_of_change_system_state(system_state + k2 * 0.5)
+            k4 = TIME_STEP * rates_of_change_system_state(system_state + k3)
+            system_state += ((k1 + (2*k2) + (2*k3) + k4)/6)
+        ENV_VAR_ALIVE_ZERO_END = system_state[SPECIES_K+0]
+        results_nt = results
 
-    for step in np.arange(TIME_START, TIME_END, TIME_STEP):
+        #================
+        #plot_gaussian_trunk()
+        #plot_temps()
+        ALIVE_THRESHOLD=0.2
+        #plot_alphas_truncated()
 
-        times_steps.append(step)
+        results = [[] for _ in range(SPECIES_K+ENV_VARS)]
+        times_steps=[]
+        system_state = np.zeros(SPECIES_K+ENV_VARS)
+        Eg = ENV_START[0]
 
-        for _ in range(SPECIES_K+ENV_VARS):
-            results[_].append(system_state[_])
+        for s_i in range(SPECIES_K):
+            a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
+            if a_star < ALIVE_THRESHOLD:
+                a_star = 0
+            system_state[s_i] = a_star
 
-        k1 = TIME_STEP * rates_of_change_system_state(system_state)
-        k2 = TIME_STEP * rates_of_change_system_state(system_state + k1 * 0.5)
-        k3 = TIME_STEP * rates_of_change_system_state(system_state + k2 * 0.5)
-        k4 = TIME_STEP * rates_of_change_system_state(system_state + k3)
+        for _ in range(ENV_VARS):
+            system_state[SPECIES_K+_] = ENV_START[_]
 
-        system_state += ((k1 + (2*k2) + (2*k3) + k4)/6)
+        for step in np.arange(TIME_START, TIME_END, TIME_STEP):
+            times_steps.append(step)
+            for _ in range(SPECIES_K+ENV_VARS):
+                results[_].append(system_state[_])
+            k1 = TIME_STEP * rates_of_change_system_state(system_state)
+            k2 = TIME_STEP * rates_of_change_system_state(system_state + k1 * 0.5)
+            k3 = TIME_STEP * rates_of_change_system_state(system_state + k2 * 0.5)
+            k4 = TIME_STEP * rates_of_change_system_state(system_state + k3)
+            system_state += ((k1 + (2*k2) + (2*k3) + k4)/6)
+        ENV_VAR_ALIVE_ONE_END = system_state[SPECIES_K+0]
 
+        print(results_nt[-1][-1])
+        print(results[-1][-1])
 
-    ENV_VAR_ALIVE_ZERO_END = system_state[SPECIES_K+0]
+        if(((results_nt[-1][-1] > 100 or results_nt[-1][-1] < 0) and (results[-1][-1] < 100 and results[-1][-1] > 0))
+            or
+            ((results_nt[-1][-1] < 100 and results_nt[-1][-1] > 0) and (results[-1][-1] > 100 or results[-1][-1] < 0))):
 
-    results_nt = results
+            print(omega)
+            print(mu)
 
+            fig = plt.figure(dpi=300, figsize=(20,10))
+            fig.suptitle('Species Aliveness ' + str(sim))
 
-    #================
-    plot_gaussian_trunk()
-    plot_temps()
-    #plot_alphas()
-    ALIVE_THRESHOLD=0.2
-    plot_alphas_truncated()
-    #plot_stable_points()
-    #plot_stable_points_t()
-    #plot_gaussian()
+            gs = fig.add_gridspec(2,2)
+            ax1 = fig.add_subplot(gs[0, 0])
+            ax2 = fig.add_subplot(gs[0, 1])
+            ax3 = fig.add_subplot(gs[1, :])
 
+            myList = results_nt[:-1]
+            for item in myList:
+                ax1.plot(times_steps,item)
+            ax1.set_title('Simulation without alive threshold')
+            ax1.set_xlabel('Time Steps')
+            ax1.set_ylabel('Abundance for each species')
 
+            myList = results[:-1]
+            for item in myList:
+                ax2.plot(times_steps,item)
+            ax2.set_title('Simulation with alive threshold: ' + str(ALIVE_THRESHOLD))
+            ax2.set_xlabel('Time Steps')
+            ax2.set_ylabel('Abundance for each species')
+            ax3.set_title('Temperature')
+            ax3.set_xlabel('Time Steps')
+            ax3.set_ylabel('Temperature')
+            ax3.plot(times_steps,results_nt[-1], "b", label = "Model")
+            ax3.plot(times_steps, results[-1],"k", label = "alive threshold")
+            ax3.set_ylim([0, 100])
+            ax3.legend()
+            fig.show()
+            fig.savefig(str(sim) + '.png')
 
+            #number_alive_global_end = 0
+            #number_alive_end = 0
 
-    results = [[] for _ in range(SPECIES_K+ENV_VARS)]
+            #for s_i in range(SPECIES_K):
 
-    times_steps=[]
+            #    a_star = system_state[s_i]
+            #    if a_star >= ALIVE_THRESHOLD:
+            #        number_alive_global_end +=1
 
-    system_state = np.zeros(SPECIES_K+ENV_VARS)
-
-    Eg = ENV_START[0]
-
-    for s_i in range(SPECIES_K):
-
-        a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
-
-        if a_star < ALIVE_THRESHOLD:
-            a_star = 0
-
-        system_state[s_i] = a_star
-
-        if a_star >= ALIVE_THRESHOLD:
-            number_alive_global_start +=1
-
-    for _ in range(ENV_VARS):
-        system_state[SPECIES_K+_] = ENV_START[_]
-
-    for step in np.arange(TIME_START, TIME_END, TIME_STEP):
-
-        times_steps.append(step)
-
-        for _ in range(SPECIES_K+ENV_VARS):
-            results[_].append(system_state[_])
-
-        k1 = TIME_STEP * rates_of_change_system_state(system_state)
-        k2 = TIME_STEP * rates_of_change_system_state(system_state + k1 * 0.5)
-        k3 = TIME_STEP * rates_of_change_system_state(system_state + k2 * 0.5)
-        k4 = TIME_STEP * rates_of_change_system_state(system_state + k3)
-
-        system_state += ((k1 + (2*k2) + (2*k3) + k4)/6)
-
-    ENV_VAR_ALIVE_ONE_END = system_state[SPECIES_K+0]
-
-
-    fig = plt.figure(dpi=300, figsize=(20,10))
-
-    fig.suptitle('Species Aliveness')
-
-    myList = results_nt[:-1]
-
-    gs = fig.add_gridspec(2,2)
-
-    ax1 = fig.add_subplot(gs[0, 0])
-    ax2 = fig.add_subplot(gs[0, 1])
-    ax3 = fig.add_subplot(gs[1, :])
-
-    for item in myList:
-        ax1.plot(times_steps,item)
-    ax1.set_title('Simulation with alive threshold')
-    ax1.set_xlabel('Time Steps')
-    ax1.set_ylabel('Alive Value for each species')
-
-    myList = results[:-1]
-
-    for item in myList:
-        ax2.plot(times_steps,item)
-
-    ax2.set_title('Simulation with alive threshold')
-    ax2.set_xlabel('Time Steps')
-    ax2.set_ylabel('Alive Value for each species')
-
-
-
-    ax3.set_title('Temperature')
-    ax3.set_xlabel('Time Steps')
-    ax3.set_ylabel('Temperature')
-    ax3.plot(times_steps,results_nt[-1])
-    ax3.plot(times_steps, results[-1])
-    ax3.set_ylim([0, 100])
-
-    fig.show()
-
-
-
-
-    number_alive_global_end = 0
-    number_alive_end = 0
-
-    for s_i in range(SPECIES_K):
-
-        a_star = system_state[s_i]
-        if a_star >= ALIVE_THRESHOLD:
-            number_alive_global_end +=1
-
-    number_alive_end = number_alive_global_end
+            #number_alive_end = number_alive_global_end
 
