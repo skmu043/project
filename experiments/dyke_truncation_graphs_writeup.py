@@ -5,6 +5,7 @@ import time
 from multiprocessing import Process, Pool
 import numpy as np
 import time
+from matplotlib.gridspec import GridSpec
 
 import sys
 import random
@@ -131,6 +132,34 @@ def plot_alphas_truncated():
 
 
     temperatures = []
+    biotic_force = [[] for _ in range(SPECIES_K)]
+    step = 0.01
+
+    for x in np.arange (-50, RANGE_R+50, step):
+        temperatures.append(x)
+
+    for y in range(SPECIES_K):
+        for x in np.arange (-50, RANGE_R+50, step):
+            biotic_force[y].append((math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2)))) * omega[0][y])
+            #biotic_force[y].append((math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2)))))
+
+    plt.figure(figsize=(30,30))
+    plt.title('Biotic Force of 100 species with alive threshold : ' + str(ALIVE_THRESHOLD), fontsize=40)
+    plt.xlabel('Environment Condition (temperature)', fontsize=40)
+    plt.ylabel('Biotic Force (a * w)', fontsize=40)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    for _ in range(SPECIES_K):
+        plt.plot(temperatures,biotic_force[_])
+
+    plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
+
+    plt.show()
+
+
+
+
+    temperatures = []
     alive_value = [[] for _ in range(SPECIES_K)]
     step = 0.01
 
@@ -158,6 +187,48 @@ def plot_alphas_truncated():
     plt.plot(temperatures,np.sum((np.array(alive_value, dtype=float)), axis=0), lw=4)
 
     plt.show()
+
+def plot_temps():
+
+    temperatures = []
+    biotic_force = [[] for _ in range(SPECIES_K)]
+    step = 0.01
+
+    for x in np.arange (-50, RANGE_R+50, step):
+        temperatures.append(x)
+
+    for y in range(SPECIES_K):
+        for x in np.arange (-50, RANGE_R+50, step):
+            biotic_force[y].append((math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2)))))
+
+    alive_value = [[] for _ in range(SPECIES_K)]
+    step = 0.01
+
+    for y in range(SPECIES_K):
+        for x in np.arange (-50, RANGE_R+50, step):
+            aliveness = (math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2))))
+            if(aliveness <= truncation and aliveness >= (-1 * truncation)):
+                alive_value[y].append(0)
+            else:
+                alive_value[y].append(aliveness)
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
+    fig.suptitle('Abundance')
+    #fig.set_size_inches(3, 1.5)
+    for _ in range(SPECIES_K):
+        ax1.plot(temperatures,biotic_force[_])
+    ax1.set_title('Original')
+    ax1.set_xlabel('Temperature')
+    ax1.set_ylabel('Abundance')
+    for _ in range(SPECIES_K):
+        ax2.plot(temperatures,alive_value[_])
+    ax2.set_title('Survival Threshold')
+    ax2.set_xlabel('Temperature')
+    ax2.set_ylabel('Abundance')
+
+    fig.show()
+
+
 
 
 
@@ -423,10 +494,11 @@ def plot_gaussian_trunk():
 
     temp_t = []
     gaus_t = []
+    alive_thresh = 0.2
     for each_temp in np.arange(0,100,0.01):
         temp_t.append(each_temp)
         result = (math.e) ** ((-1) * (((abs(each_temp-ideal_temp)) ** 2) / (2*(NICHE**2))))
-        if (result > ALIVE_THRESHOLD):
+        if (result > alive_thresh):
             gaus_t.append(result)
         else:
             gaus_t.append(0)
@@ -447,7 +519,8 @@ def plot_gaussian_trunk():
     ax2.set_title('Survival Threshold')
     ax2.set_xlabel('Temperature')
     ax2.set_ylabel('Abundance')
-    ax2.axhline(y=0.2, linestyle = '-')
+
+    ax2.hlines(y=0.2, xmin=0, xmax=100, linewidth=2, color='r')
 
     fig.show()
 
@@ -489,13 +562,17 @@ if __name__ == '__main__':
 
 
     #================
+    plot_gaussian_trunk()
+    plot_temps()
     #plot_alphas()
     ALIVE_THRESHOLD=0.2
-    #plot_alphas_truncated()
+    plot_alphas_truncated()
     #plot_stable_points()
     #plot_stable_points_t()
     #plot_gaussian()
-    plot_gaussian_trunk()
+
+
+
 
     results = [[] for _ in range(SPECIES_K+ENV_VARS)]
 
@@ -537,29 +614,41 @@ if __name__ == '__main__':
     ENV_VAR_ALIVE_ONE_END = system_state[SPECIES_K+0]
 
 
-    fig, axs = plt.subplots(2, 2, dpi=300, figsize=(10,20))
+    fig = plt.figure(dpi=300, figsize=(20,10))
+
     fig.suptitle('Species Aliveness')
+
     myList = results_nt[:-1]
+
+    gs = fig.add_gridspec(2,2)
+
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax3 = fig.add_subplot(gs[1, :])
+
     for item in myList:
-        axs[0,0].plot(times_steps,item)
-    axs[0,0].set_title('Simulation with alive threshold')
-    axs[0,0].set_xlabel('Time Steps')
-    axs[0,0].set_ylabel('Alive Value for each species')
+        ax1.plot(times_steps,item)
+    ax1.set_title('Simulation with alive threshold')
+    ax1.set_xlabel('Time Steps')
+    ax1.set_ylabel('Alive Value for each species')
 
     myList = results[:-1]
+
     for item in myList:
-        axs[0,1].plot(times_steps,item)
+        ax2.plot(times_steps,item)
 
-    axs[0,1].set_title('Simulation with alive threshold')
-    axs[0,1].set_xlabel('Time Steps')
-    axs[0,1].set_ylabel('Alive Value for each species')
+    ax2.set_title('Simulation with alive threshold')
+    ax2.set_xlabel('Time Steps')
+    ax2.set_ylabel('Alive Value for each species')
 
 
-    axs[1,0].set_title('Temperature')
-    axs[1,0].set_xlabel('Time Steps')
-    axs[1,0].set_ylabel('Temperature')
-    axs[1,0].plot(times_steps,results_nt[-1])
-    axs[1,0].plot(times_steps, results[-1])
+
+    ax3.set_title('Temperature')
+    ax3.set_xlabel('Time Steps')
+    ax3.set_ylabel('Temperature')
+    ax3.plot(times_steps,results_nt[-1])
+    ax3.plot(times_steps, results[-1])
+    ax3.set_ylim([0, 100])
 
     fig.show()
 
