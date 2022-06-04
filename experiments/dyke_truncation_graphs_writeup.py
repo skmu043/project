@@ -113,9 +113,9 @@ def plot_alphas():
             #biotic_force[y].append((math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2)))))
 
     plt.figure(figsize=(30,30))
-    plt.title('Biotic Force of 100 species with alive threshold : ' + str(ALIVE_THRESHOLD), fontsize=40)
-    plt.xlabel('Environment Condition (temperature)', fontsize=40)
-    plt.ylabel('Biotic Force (a * w)', fontsize=40)
+    plt.title('Biotic Force of 100 species with alive threshold : ' + str(ALIVE_THRESHOLD), fontsize=30)
+    plt.xlabel('Temperature', fontsize=20)
+    plt.ylabel('Biotic Force', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     for _ in range(SPECIES_K):
@@ -143,16 +143,16 @@ def plot_alphas_truncated():
             #biotic_force[y].append((math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2)))))
 
     plt.figure(figsize=(30,30))
-    plt.title('Biotic Force of 100 species with alive threshold : ' + str(ALIVE_THRESHOLD), fontsize=40)
-    plt.xlabel('Environment Condition (temperature)', fontsize=40)
-    plt.ylabel('Biotic Force (a * w)', fontsize=40)
+    plt.title('Biotic Force for 100 species in the Original Model', fontsize=30)
+    plt.xlabel('Temperature', fontsize=20)
+    plt.ylabel('Biotic Force', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     for _ in range(SPECIES_K):
         plt.plot(temperatures,biotic_force[_])
 
-    plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4)
-
+    plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4, label='Combined Biotic Force')
+    plt.legend(prop={'size': 30})
     plt.show()
 
 
@@ -175,16 +175,17 @@ def plot_alphas_truncated():
 
 
     plt.figure(figsize=(30,30))
-    plt.title('Biotic Force of 100 species with alive threshold: ' + str(ALIVE_THRESHOLD), fontsize=40)
-    plt.xlabel('Environment Condition (temperature)', fontsize=40)
-    plt.ylabel('Biotic Force (a * w)', fontsize=40)
+    plt.title('Biotic Force for 100 species with survival threshold of ' + str(ALIVE_THRESHOLD), fontsize=30)
+    plt.xlabel('Temperature', fontsize=20)
+    plt.ylabel('Biotic Force', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     for _ in range(SPECIES_K):
         plt.plot(temperatures,alive_value[_])
 
-    plt.plot(temperatures,np.sum((np.array(alive_value, dtype=float)), axis=0), lw=4)
+    plt.plot(temperatures,np.sum((np.array(alive_value, dtype=float)), axis=0), lw=4, label='Combined Biotic Force')
 
+    plt.legend(prop={'size': 30})
     plt.show()
 
 def plot_temps():
@@ -212,18 +213,18 @@ def plot_temps():
                 alive_value[y].append(aliveness)
 
     fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
-    fig.suptitle('Abundance')
+    fig.suptitle('Abundance for a simulation with 100 biotic components', fontsize=30)
     #fig.set_size_inches(3, 1.5)
     for _ in range(SPECIES_K):
         ax1.plot(temperatures,biotic_force[_])
-    ax1.set_title('Original')
-    ax1.set_xlabel('Temperature')
-    ax1.set_ylabel('Abundance')
+    ax1.set_title('Original Model', fontsize=20)
+    ax1.set_xlabel('Temperature', fontsize=20)
+    ax1.set_ylabel('Abundance', fontsize=20)
     for _ in range(SPECIES_K):
         ax2.plot(temperatures,alive_value[_])
-    ax2.set_title('Survival Threshold')
-    ax2.set_xlabel('Temperature')
-    ax2.set_ylabel('Abundance')
+    ax2.set_title('Survival Threshold of 0.2', fontsize=20)
+    ax2.set_xlabel('Temperature', fontsize=20)
+    ax2.set_ylabel('Abundance', fontsize=20)
 
     fig.show()
 
@@ -508,19 +509,19 @@ def plot_gaussian_trunk():
 
 
     fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
-    fig.suptitle('Abundance Values')
+    fig.suptitle('The survival threshold',fontsize=30)
     #fig.set_size_inches(3, 1.5)
     ax1.plot(temp, gaus)
-    ax1.set_title('Original')
-    ax1.set_xlabel('Temperature')
-    ax1.set_ylabel('Abundance')
+    ax1.set_title('The Original Model', fontsize=20)
+    ax1.set_xlabel('Temperature', fontsize=20)
+    ax1.set_ylabel('Abundance', fontsize=20)
     ax2.plot(temp_t, gaus_t)
-    ax2.set_title('Survival Threshold')
-    ax2.set_xlabel('Temperature')
-    ax2.set_ylabel('Abundance')
+    ax2.set_title('Survival Threshold of 0.2', fontsize=20)
+    ax2.set_xlabel('Temperature', fontsize=20)
+    ax2.set_ylabel('Abundance', fontsize=20)
 
-    ax2.hlines(y=0.2, xmin=0, xmax=100, linewidth=2, color='r')
-
+    ax2.hlines(y=0.2, xmin=0, xmax=100, linewidth=2, color='r', label='survival threshold')
+    ax2.legend(prop={'size': 20})
     fig.show()
 
 
@@ -529,10 +530,14 @@ def plot_gaussian_trunk():
 
 if __name__ == '__main__':
 
-    for sim in range(0, 10000):
+    for sim in range(0, 1):
         print(sim)
         omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
         mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
+
+        omega = [[-0.45570349442317326, 0.9926566784100075, 0.888549026699764, 0.14928544806368338, -0.9996264233158934, -0.4385610485834899, -0.08038541123391796, -0.6260150923250922, -0.47235424832183703, 0.08534830008829819, 0.04489977686157176, 0.20925429233908543, 0.33254542065489434, 0.0840048379259668, -0.49418449970563194, 0.436757577051496, -0.10442494952037817, -0.4757616053069522, 0.21271766647905, -0.6493074483217449, -0.8353341996437704, -0.2056676731969611, -0.219114871126884, 0.3482756179142581, -0.7028479623473687, 0.06655864395029609, -0.2594633634515553, 0.71109331879931, 0.2747045193340545, 0.6193474305138627, -0.25427585792748153, 0.42264649771697194, -0.7670619926343019, 0.5194338631557813, 0.2955475346559173, 0.8362123688943861, 0.6573922690996239, -0.33227139325065447, -0.0417269736591952, 0.7474335021368288, 0.9721065523838919, 0.34145394392500794, -0.30158871229552675, 0.6383367973778622, -0.9658834930955591, -0.07201988587528474, 0.9859256779205499, -0.6456751377980265, 0.34596559619769796, 0.008703893399207852, -0.07077698031747182, 0.3687349388787877, -0.2128586823583034, -0.428467812969906, -0.7612417665593616, -0.753888511973025, -0.5823855135630227, 0.34720762289370155, 0.5656944867519293, 0.8403768391236615, -0.7055015387194046, 0.9167024270609578, -0.8377405059080654, 0.613368151113215, -0.20085672743369987, 0.5324877735051026, -0.5404093098424378, -0.4793030314186506, 0.020783169315794492, -0.339350185930549, 0.6054281152160448, 0.28770596557012973, -0.401032234196933, 0.38382727022568774, -0.5413820483877667, 0.758547095228723, -0.6448441963556208, 0.6560350213385717, 0.3469446743002187, 0.8625593080945051, 0.4194108163826673, -0.6339503647551701, -0.5989127516874513, 0.16883352766822046, 0.7962033825685597, 0.9763587212634572, 0.5538388523357383, -0.7229295694774867, 0.24767934527856994, -0.19051494465833296, 0.9618596596970299, -0.07639280592577236, 0.022044509842797044, -0.013989791881396485, -0.3704962409196475, 0.2672261767286863, -0.1534276130207337, -0.08114108850993196, -0.6215005516241177, 0.6759542263992802]]
+        mu = [[83.28825637081572, 19.91571692627123, 61.32525135771586, 15.672902946681667, 99.60109311987452, 24.675327758157138, 45.49766334978646, 98.01411351486603, 14.926773747336696, 26.197887508113617, 8.33039624249391, 48.66276674465474, 79.20562919962092, 31.3412946690634, 60.07521156883806, 88.51314965235781, 59.22999584861787, 10.866822137513054, 7.721663134157419, 55.212466048042465, 45.4806246853774, 85.04379254402356, 33.36264522633044, 40.3056685546258, 72.26374861765332, 89.23388249659632, 33.23888478740763, 55.56364226912627, 86.46948848547017, 60.894453999422424, 39.75123975664799, 13.596967208002864, 87.05914161816646, 49.06723745022505, 85.85137654356825, 69.49385579935682, 81.51659630137934, 66.41766460075132, 82.32530462853556, 71.40294877458498, 53.41365933231239, 72.79787798021528, 72.72213208784406, 11.622320416792142, 32.79578605848111, 77.4230920723422, 64.79175868066488, 46.11347113918881, 1.6882881330386512, 58.18262186923574, 84.53715699657215, 23.175810167449985, 33.93955774606593, 50.58356189329606, 63.62625059556708, 83.48616763999951, 92.53057854280155, 28.37362873012099, 50.22611401493394, 77.27937911974684, 9.343607616123572, 17.509062939619447, 23.933792264286257, 70.66324965971809, 9.465150222878272, 9.559033167143072, 3.9341833747434496, 11.000779992185016, 63.463144118865344, 55.13443058649155, 12.19131735262431, 40.1999622829841, 91.65020017010718, 87.98928652554477, 46.736551603767076, 67.66704553087106, 93.81008320866786, 66.1536314996456, 94.51162741284558, 69.82403754406121, 91.09060303974191, 49.9136245636434, 47.25073606399731, 60.08221965203116, 48.83208415621863, 55.86184279261995, 86.70469872121117, 4.548397985062458, 20.116473823336456, 95.11452004637383, 4.671406311441073, 48.48827517728724, 12.674309717595822, 60.89359727652629, 72.51607861597465, 1.4544709343304874, 69.00210031096566, 23.63269453291944, 96.73703677466968, 89.73427847911927]]
+
 
         system_state = np.zeros(SPECIES_K+ENV_VARS)
         Eg = ENV_START[0]
@@ -563,10 +568,10 @@ if __name__ == '__main__':
         results_nt = results
 
         #================
-        #plot_gaussian_trunk()
-        #plot_temps()
+        plot_gaussian_trunk()
+        plot_temps()
         ALIVE_THRESHOLD=0.2
-        #plot_alphas_truncated()
+        plot_alphas_truncated()
 
         results = [[] for _ in range(SPECIES_K+ENV_VARS)]
         times_steps=[]
@@ -596,45 +601,47 @@ if __name__ == '__main__':
         print(results_nt[-1][-1])
         print(results[-1][-1])
 
-        if(((results_nt[-1][-1] > 100 or results_nt[-1][-1] < 0) and (results[-1][-1] < 100 and results[-1][-1] > 0))
-            or
-            ((results_nt[-1][-1] < 100 and results_nt[-1][-1] > 0) and (results[-1][-1] > 100 or results[-1][-1] < 0))):
+        #if(((results_nt[-1][-1] > 100 or results_nt[-1][-1] < 0) and (results[-1][-1] < 100 and results[-1][-1] > 0))
+        #    or
+        #    ((results_nt[-1][-1] < 100 and results_nt[-1][-1] > 0) and (results[-1][-1] > 100 or results[-1][-1] < 0))):
 
-            print(omega)
-            print(mu)
+        print(omega)
+        print(mu)
 
-            fig = plt.figure(dpi=300, figsize=(20,10))
-            fig.suptitle('Species Aliveness ' + str(sim))
+        fig = plt.figure(dpi=300, figsize=(20,10))
+        #fig.suptitle('Species Aliveness ' + str(sim))
+        fig.suptitle('A simulation run with 100 biotic components', fontsize=20)
 
-            gs = fig.add_gridspec(2,2)
-            ax1 = fig.add_subplot(gs[0, 0])
-            ax2 = fig.add_subplot(gs[0, 1])
-            ax3 = fig.add_subplot(gs[1, :])
+        gs = fig.add_gridspec(2,2)
+        ax1 = fig.add_subplot(gs[0, 0])
+        ax2 = fig.add_subplot(gs[0, 1])
+        ax3 = fig.add_subplot(gs[1, :])
 
-            myList = results_nt[:-1]
-            for item in myList:
-                ax1.plot(times_steps,item)
-            ax1.set_title('Simulation without alive threshold')
-            ax1.set_xlabel('Time Steps')
-            ax1.set_ylabel('Abundance for each species')
+        myList = results_nt[:-1]
+        for item in myList:
+            ax1.plot(times_steps,item)
+        ax1.set_title('Original Model', fontsize=15)
+        ax1.set_xlabel('Time Steps', fontsize=12)
+        ax1.set_ylabel('Abundance', fontsize=12)
 
-            myList = results[:-1]
-            for item in myList:
-                ax2.plot(times_steps,item)
-            ax2.set_title('Simulation with alive threshold: ' + str(ALIVE_THRESHOLD))
-            ax2.set_xlabel('Time Steps')
-            ax2.set_ylabel('Abundance for each species')
-            ax3.set_title('Temperature')
-            ax3.set_xlabel('Time Steps')
-            ax3.set_ylabel('Temperature')
-            ax3.plot(times_steps,results_nt[-1], "b", label = "Model")
-            ax3.plot(times_steps, results[-1],"k", label = "alive threshold")
-            ax3.set_ylim([0, 100])
-            ax3.legend()
-            fig.show()
-            fig.savefig(str(sim) + '.png')
+        myList = results[:-1]
+        for item in myList:
+            ax2.plot(times_steps,item)
+        ax2.set_title('Survival Threshold : ' + str(ALIVE_THRESHOLD), fontsize=15)
+        ax2.set_xlabel('Time Steps', fontsize=12)
+        ax2.set_ylabel('Abundance', fontsize=12)
 
-            #number_alive_global_end = 0
+        ax3.set_title('The Environment Condition',fontsize=15)
+        ax3.set_xlabel('Time Steps', fontsize=12)
+        ax3.set_ylabel('Temperature', fontsize=12)
+        ax3.plot(times_steps,results_nt[-1], "b", label = "Original Model")
+        ax3.plot(times_steps, results[-1],"k", label = "survival threshold")
+        ax3.set_ylim([0, 100])
+        ax3.legend()
+        fig.show()
+        fig.savefig(str(sim) + '.png')
+
+        #number_alive_global_end = 0
             #number_alive_end = 0
 
             #for s_i in range(SPECIES_K):
