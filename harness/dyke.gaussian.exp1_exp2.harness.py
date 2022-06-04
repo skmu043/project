@@ -11,7 +11,7 @@ SAMPLE_SIZE = 1
 SAMPLE_STEP = 1
 RUN_ID = int(time.time())
 
-SPECIES_K           = 100                   # ----------- Number of Biotic Components
+SPECIES_K           = 10                   # ----------- Number of Biotic Components
 RANGE_R             = 100                   # ----------- Essential Range
 TIME_START          = 0                     # ----------- Start of Simulation
 TIME_END            = 200                   # ----------- Length of Simulation
@@ -58,15 +58,13 @@ def init_shelve():
 def print_time():
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
-    print(current_time)
-
+    return(current_time)
 
 #@jit
 def run_it(simulation_run_shelve):
 
     # Main Experiment
-    print_time()
-    print(simulation_run_shelve)
+    #print(simulation_run_shelve)
     os.system("python3.10 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(simulation_run_shelve))
 
 
@@ -74,7 +72,7 @@ if __name__ == '__main__':
 
     shelve_files = []
 
-    for start_temperature in np.arange (0,101, 5):
+    for start_temperature in np.arange (40,100, 5):
         for survival_threshold in np.arange (0,1, 0.2):
             for niche_size in [3, 5, 10]:
 
@@ -93,9 +91,10 @@ if __name__ == '__main__':
                 finally:
                     simulation_shelve.close()
 
-    pool = Pool(processes=7)
+    print("STARTING : " + print_time())
+    pool = Pool(processes=1)
     pool.map(run_it, [_ for _ in shelve_files])
-    print("Completed Experiment Runs")
+    print("Completed : " + print_time())
 
 
 #    data_dr = os.getcwd() + '/data'
