@@ -631,6 +631,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
     x = [] #start temp
     y = [] #env_end
     z = [] #survival threshold
+    al = []
 
     #RESULT_DATA.append((
     # omega[0],
@@ -648,6 +649,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
             x.append(data_point[4])
             y.append(data_point[5])
             z.append(data_point[3])
+            al.append(data_point[7])
 
     uniq_start_temps = np.unique(np.array(x))
     uniq_start_temps.sort()
@@ -662,9 +664,9 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
     for each_survival_threshold in uniq_survivals:
 
         plt.figure(figsize=(XFIG,YFIG), dpi=200)
-        plt.title('The end Temperature : ' + str(each_survival_threshold), fontsize=TFONT)
-        plt.xlabel('Bounds', fontsize=XFONT)
-        plt.ylabel('End Temperature', fontsize=YFONT)
+        plt.title('Bounds [inside 0-R or outside 0-R] : ' + str(each_survival_threshold), fontsize=TFONT)
+        plt.xlabel('Start Temperature', fontsize=XFONT)
+        plt.ylabel('Simulations Bounds', fontsize=YFONT)
         plt.xticks(fontsize=X_TICKS)
         plt.yticks(fontsize=Y_TICKS)
 
@@ -676,7 +678,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
             inside_b = 0
             outside_b = 0
             for each_row in x:
-                if(x[index_1] == each_start_temp and z[index_1] == each_survival_threshold):
+                if(x[index_1] == each_start_temp and z[index_1] == each_survival_threshold and al[index_1] > 0): # al = Number of alive species greater than one
                     if(y[index_1] > 0 and y[index_1] < 100):
                         inside_b +=1
                     if(y[index_1] < 0 or y[index_1] > 100):
@@ -694,8 +696,8 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
 
         X_axis = np.arange(len(X))
 
-        plt.bar(X_axis - 0.2, inside_bounds, 0.4, label = 'Simulations within bounds 0 - R')
-        plt.bar(X_axis + 0.2, outside_bounds, 0.4, label = 'Simulations outside bounds 0 - R')
+        plt.bar(uniq_start_temps - 0.5, inside_bounds, 1, label = 'Simulations within bounds 0 - R')
+        plt.bar(uniq_start_temps + 0.5, outside_bounds, 1, label = 'Simulations outside bounds 0 - R')
 
 
         #plt.xticks(X_axis, X)
@@ -706,5 +708,106 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
 
 
 #=======================================================================================================================
-number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R()
+#number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R()
+#=======================================================================================================================
+
+#=======================================================================================================================
+def number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_inside_only_truncated_inside_only():
+
+    UNIQ_SAMPLES = []
+    for data_point in RESULT_DATA:
+        if ((data_point[0],data_point[1])) not in UNIQ_SAMPLES:
+            UNIQ_SAMPLES.append((data_point[0],data_point[1]))
+
+    mu = []
+    omega = []
+    x = [] #start temp
+    y = [] #env_end
+    z = [] #survival threshold
+    al = []
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+
+    for data_point in RESULT_DATA:
+        if(data_point[2]==5 and (data_point[3]==0 or data_point[3]==0.2)):
+            omega.append(data_point[0])
+            mu.append(data_point[1])
+            x.append(data_point[4])  #env_start
+            y.append(data_point[5])  #env_end
+            z.append(data_point[3])  #survival_threshold
+            al.append(data_point[7]) #num_alive_end
+
+    uniq_start_temps = np.unique(np.array(x))
+    uniq_start_temps.sort()
+    uniq_survivals = np.unique(np.array(z))
+    uniq_survivals.sort()
+
+    main_result = []
+
+    print(uniq_start_temps)
+    print(uniq_survivals)
+
+    plt.figure(figsize=(XFIG,YFIG), dpi=200)
+    plt.title('Bounds [inside 0-R or outside 0-R] :', fontsize=TFONT)
+    plt.xlabel('Start Temperature', fontsize=XFONT)
+    plt.ylabel('Simulations Bounds', fontsize=YFONT)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+
+
+    main_results = []
+
+    for each_temp in uniq_start_temps:
+        both_all = []
+        zero_all = []
+        zero2_all = []
+        for each_sample in UNIQ_SAMPLES:
+            index = 0
+            both = 0
+            zero = 0
+            zero2 = 0
+            for each_data in x:
+                if(x[index] == each_temp and ((omega[index], mu[index])) == each_sample and al[index] > 0):
+                    if(z[index]==0 and (y[index] > 0 and y[index] < 100)):
+                        zero +=1
+                    if(z[index]==0.2 and (y[index] > 0 and y[index] < 100)):
+                        zero2 +=1
+                index +=1
+            if(zero > 0 and zero2 > 0):
+                both_all.append(1)
+            if(zero > 0 and zero2 == 0):
+                zero_all.append(1)
+            if(zero == 0 and zero2 > 0):
+                zero2_all.append(1)
+
+        main_results.append((each_temp,sum(both_all), sum(zero_all), sum(zero2_all)))
+
+    bar_both = []
+    bar_zero_all = []
+    bar_zero2_all = []
+
+    for each_result in main_results:
+        bar_both.append(each_result[1])
+        bar_zero_all.append(each_result[2])
+        bar_zero2_all.append(each_result[3])
+
+
+    plt.bar(uniq_start_temps - 0.7, bar_both, 1, label = 'Both within bounds 0 - R')
+    plt.bar(uniq_start_temps + 0.5, bar_zero_all, 1, label = 'zero only inside bounds 0 - R')
+    plt.bar(uniq_start_temps + 0.7, bar_zero2_all, 1, label = '0.2 only inside bounds 0 - R')
+    plt.legend(prop={'size': 20})
+    plt.show()
+
+
+#=======================================================================================================================
+number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_inside_only_truncated_inside_only()
 #=======================================================================================================================
