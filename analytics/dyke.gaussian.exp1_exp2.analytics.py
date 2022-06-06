@@ -322,8 +322,6 @@ def number_alive_at_each_start_temperature_at_the_end_of_simulation():
 #=======================================================================================================================
 number_alive_at_each_start_temperature_at_the_end_of_simulation()
 #=======================================================================================================================
-
-
 def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation():
 
     #RESULT_DATA.append((
@@ -455,4 +453,174 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
     fig.show()
 #=======================================================================================================================
 average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
+#=======================================================================================================================
+
+def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels():
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+
+    start_temp_0 = []
+    alives_start_0 = []
+    alive_end_0 = []
+    survival_thresh_0 = []
+
+    for data_point in RESULT_DATA:
+        if(data_point[2]==5):
+            start_temp_0.append(data_point[4])
+            survival_thresh_0.append(data_point[3])
+            alives_start_0.append(data_point[6])
+            alive_end_0.append(data_point[7])
+
+    fig, (ax1, ax2, ax3, ax4) = plt.subplots(1, 4, dpi=300, figsize=(30,10))
+    fig.suptitle('Average Number of alives at the Start and End of the Simulation for Survival Thresholds',fontsize=30)
+    #fig.set_size_inches(3, 1.5)
+
+    uniq_start_temps = np.unique(np.array(start_temp_0))
+    uniq_start_temps.sort()
+    survival_thresh_0.sort()
+
+    print(uniq_start_temps)
+    print(survival_thresh_0)
+
+    # alive end stats
+
+    st2_s = []
+    st4_s = []
+    st6_s = []
+    st8_s = []
+
+    st2_e = []
+    st4_e = []
+    st6_e = []
+    st8_e = []
+
+    for each_st in survival_thresh_0:
+        stats_temp = []
+        stats_avg_alives = []
+        for each_temp in uniq_start_temps:
+            index = 0
+            sum = 0
+            count = 0
+            for each_instance in start_temp_0:
+                if(each_temp == each_instance and each_st == survival_thresh_0[index]):
+                    sum += alive_end_0[index]
+                    count += 1
+                index += 1
+            stats_temp.append(each_temp)
+            stats_avg_alives.append((sum/count))
+
+        if(each_st == 0.2):
+            st2_e = stats_avg_alives.copy()
+            ax1.plot(stats_temp, stats_avg_alives, label='alives end 0.2')
+        if(each_st == 0.4):
+            st4_e = stats_avg_alives.copy()
+            ax2.plot(stats_temp, stats_avg_alives, label='alives end 0.4')
+        if(each_st == 0.6):
+            st6_e = stats_avg_alives.copy()
+            ax3.plot(stats_temp, stats_avg_alives, label='alives end 0.6')
+        if(each_st == 0.8):
+            st8_e = stats_avg_alives.copy()
+            ax4.plot(stats_temp, stats_avg_alives, label='alives end 0.8')
+
+        stats_temp = []
+        stats_avg_alives = []
+
+        for each_temp in uniq_start_temps:
+            index = 0
+            sum = 0
+            count = 0
+            for each_instance in start_temp_0:
+                if(each_temp == each_instance and each_st == survival_thresh_0[index]):
+                    sum += alives_start_0[index]
+                    count += 1
+                index += 1
+            stats_temp.append(each_temp)
+            stats_avg_alives.append((sum/count))
+
+        if(each_st == 0.2):
+            st2_s = stats_avg_alives.copy()
+            ax1.plot(stats_temp, stats_avg_alives, label='alives start 0.2')
+            ax1.set_title('T0.2', fontsize=20)
+            ax1.set_xlabel('Temperature', fontsize=20)
+            ax1.set_ylabel('Number Alives', fontsize=20)
+        if(each_st == 0.4):
+            st4_s = stats_avg_alives.copy()
+            ax2.plot(stats_temp, stats_avg_alives, label='alives start 0.4')
+            ax2.set_title('T0.4', fontsize=20)
+            ax2.set_xlabel('Temperature', fontsize=20)
+            ax2.set_ylabel('Number Alives', fontsize=20)
+        if(each_st == 0.6):
+            st6_s = stats_avg_alives.copy()
+            ax3.plot(stats_temp, stats_avg_alives, label='alives start 0.6')
+            ax3.set_title('T0.6', fontsize=20)
+            ax3.set_xlabel('Temperature', fontsize=20)
+            ax3.set_ylabel('Number Alives', fontsize=20)
+        if(each_st == 0.8):
+            st8_s = stats_avg_alives.copy()
+            ax4.plot(stats_temp, stats_avg_alives, label='alives start 0.8')
+            ax4.set_title('T0.8', fontsize=20)
+            ax4.set_xlabel('Temperature', fontsize=20)
+            ax4.set_ylabel('Number Alives', fontsize=20)
+
+    fig.show()
+
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
+    fig.suptitle('Number Alive for each Temperature at each Survival Threshold',fontsize=30)
+    #fig.set_size_inches(3, 1.5)
+
+    index = 0
+    for temp in uniq_start_temps:
+        linex = [0.2,0.4,0.6,0.8]
+        liney = [st2_s[index],st4_s[index],st6_s[index],st8_s[index]]
+        ax2.plot(linex, liney, label=str(temp))
+        index+=1
+
+
+    ax1.set_title('Alives Start', fontsize=20)
+    ax1.set_xlabel('Survival Threshold', fontsize=20)
+    ax1.set_ylabel('Number Alives', fontsize=20)
+
+    index = 0
+    for temp in uniq_start_temps:
+        linex = [0.2,0.4,0.6,0.8]
+        liney = [st2_e[index],st4_e[index],st6_e[index],st8_e[index]]
+        ax1.plot(linex, liney, label=str(temp))
+        index+=1
+
+    ax2.set_title('Alives End', fontsize=20)
+    ax2.set_xlabel('Survival Threshold', fontsize=20)
+    ax2.set_ylabel('Number Alives', fontsize=20)
+    ax2.legend(prop={'size': 20})
+    fig.show()
+
+    plt.figure(figsize=(XFIG,YFIG), dpi=200)
+    plt.title('Different Start and End Alives at Suvival Thresholds', fontsize=TFONT)
+    plt.xlabel('Survival Threshold', fontsize=XFONT)
+    plt.ylabel('Number Alive', fontsize=YFONT)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+
+
+    index = 0
+    for temp in uniq_start_temps:
+        linex = [0.2,0.4,0.6,0.8]
+        liney = [st2_e[index]-st2_s[index],st4_e[index]-st4_s[index],st6_e[index]-st6_s[index],st8_e[index]-st8_s[index]]
+        plt.plot(linex, liney, label=str(temp))
+        index+=1
+    plt.legend()
+    plt.show()
+
+
+#=======================================================================================================================
+average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels()
 #=======================================================================================================================
