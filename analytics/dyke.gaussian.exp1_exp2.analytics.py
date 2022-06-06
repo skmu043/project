@@ -24,7 +24,7 @@ for file in data_archives:
         survival_threshold = s['SURVIVAL_THRESHOLD']
         env_start = s['ENV_START']
         env_end = s['ENV_END']
-        num_alive_start = ['NUMBER_ALIVE_START']
+        num_alive_start = s['NUMBER_ALIVE_START']
         num_alive_end = s['NUMBER_ALIVE_END']
 
         RESULT_DATA.append((omega,mu,niche,survival_threshold,env_start,env_end,num_alive_start,num_alive_end))
@@ -202,8 +202,7 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
 
             main_result.append([each_start_temp,each_survival_threshold,below_zero,above_zero])
 
-        for each in main_result:
-            print(each)
+
 
         X=[]
         for each in uniq_start_temps:
@@ -221,7 +220,104 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
 
 
 #=======================================================================================================================
-number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
+#number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
 #=======================================================================================================================
+def zero_alives_at_end_removed_number_alive_at_each_start_temperature_at_the_start_of_simulation():
+
+
+    # Write UP notes - if simulation ended with zero species alive - its still included in these results
+    # Where it won't be included is in the temperature section where species alive at the end matters
+    # no species alive at the end of a simulation and a temperature between 0 and R does not mean the
+    # simulation is good - there cannot be regulation without species (temperature stays at a value with no change
+    # when the species no longer exist)
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+
+    start_temp_0 = []
+    alive_start_0 = []
+    start_temp_2 = []
+    alive_start_2 = []
+
+    for data_point in RESULT_DATA:
+        if(data_point[2]==5 and (data_point[3]==0 or data_point[3]==0.2)):
+            if(data_point[3]==0):
+                start_temp_0.append(data_point[4])
+                alive_start_0.append(data_point[6])
+            if(data_point[3]==0.2):
+                start_temp_2.append(data_point[4])
+                alive_start_2.append(data_point[6])
+
+
+    print(start_temp_0)
+    print(alive_start_0)
+    fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
+    fig.suptitle('The Number of Alive at the Start of the Simulation',fontsize=30)
+    #fig.set_size_inches(3, 1.5)
+    ax1.scatter(start_temp_0, alive_start_0)
+    ax1.set_title('The Dyke Weaver Model', fontsize=20)
+    ax1.set_xlabel('Temperature', fontsize=20)
+    ax1.set_ylabel('Number Alives', fontsize=20)
+    ax2.scatter(start_temp_2, alive_start_2)
+    ax2.set_title('Survival Threshold of 0.2', fontsize=20)
+    ax2.set_xlabel('Temperature', fontsize=20)
+    ax2.set_ylabel('Number Alives', fontsize=20)
+    ax2.legend(prop={'size': 20})
+    fig.show()
+
+zero_alives_at_end_removed_number_alive_at_each_start_temperature_at_the_start_of_simulation()
+
 def zero_alives_at_end_removed_number_alive_at_each_start_temperature_at_the_end_of_simulation():
-    print()
+
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+
+    start_temp_0 = []
+    alive_end_0 = []
+    start_temp_2 = []
+    alive_end_2 = []
+
+    for data_point in RESULT_DATA:
+        if(data_point[2]==5 and (data_point[3]==0 or data_point[3]==0.2)):
+            if(data_point[3]==0):
+                start_temp_0.append(data_point[4])
+                alive_end_0.append(data_point[7])
+            if(data_point[3]==0.2):
+                start_temp_2.append(data_point[4])
+                alive_end_2.append(data_point[7])
+
+
+    print(start_temp_0)
+    print(alive_end_0)
+    fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
+    fig.suptitle('The Number of Alive at the End of the Simulation',fontsize=30)
+    #fig.set_size_inches(3, 1.5)
+    ax1.scatter(start_temp_0, alive_end_0)
+    ax1.set_title('The Dyke Weaver Model', fontsize=20)
+    ax1.set_xlabel('Temperature', fontsize=20)
+    ax1.set_ylabel('Number Alives', fontsize=20)
+    ax2.scatter(start_temp_2, alive_end_2)
+    ax2.set_title('Survival Threshold of 0.2', fontsize=20)
+    ax2.set_xlabel('Temperature', fontsize=20)
+    ax2.set_ylabel('Number Alives', fontsize=20)
+    ax2.legend(prop={'size': 20})
+    fig.show()
+
+zero_alives_at_end_removed_number_alive_at_each_start_temperature_at_the_end_of_simulation()
