@@ -121,36 +121,6 @@ XFIG = 30
 YFIG = 30
 TFONT = 40
 
-
-def end_temp():
-    plt.figure(figsize=(XFIG,YFIG), dpi=200)
-    plt.title('START/END Temp : 0.2 start temp 50', fontsize=TFONT)
-    plt.xlabel('With Truncation', fontsize=XFONT)
-    plt.ylabel('Zero Truncation', fontsize=YFONT)
-    plt.xticks(fontsize=X_TICKS)
-    plt.yticks(fontsize=Y_TICKS)
-    plt.ylim(-50, 150)
-    plt.xlim(-50, 150)
-
-    for data_point in RESULT_DATA:
-        x = 0
-        y = 0
-
-        if(data_point[3] == 0 and data_point[4] == 50 and data_point[2] == 5):
-            x = data_point[5]
-            for data_point_2 in RESULT_DATA:
-                if(data_point[0] == data_point_2[0]
-                        and data_point[1] == data_point_2[1]
-                        and data_point_2[3] == 0.2
-                        and data_point_2[4] == 50
-                        and data_point_2[2] == 5):
-                    y = data_point_2[5]
-
-        plt.scatter(x,y)
-
-    plt.show()
-
-
 #=======================================================================================================================
 def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end():
 
@@ -809,5 +779,49 @@ def number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_insi
 
 
 #=======================================================================================================================
-number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_inside_only_truncated_inside_only()
+#number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_inside_only_truncated_inside_only()
 #=======================================================================================================================
+
+def end_temperature_both_zero_zero2_with_alives_overlay():
+
+    plt.figure(figsize=(XFIG,YFIG), dpi=200)
+    plt.title('START/END Temp : 0.2 start temp 50', fontsize=TFONT)
+    plt.xlabel('With Truncation', fontsize=XFONT)
+    plt.ylabel('Zero Truncation', fontsize=YFONT)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+    plt.ylim(-50, 150)
+    plt.xlim(-50, 150)
+
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+    zero_t = []
+    two_t = []
+    alives = []
+
+    for data_point in RESULT_DATA:
+
+        if((data_point[3] == 0 or data_point[3] == 0.2) and data_point[4] == 50 and data_point[2] == 5):
+            if(data_point[3] == 0):
+                zero_t.append(data_point[5])
+            if(data_point[3] == 0.2):
+                two_t.append(data_point[5])
+                alives.append(data_point[7])
+
+    plt.scatter(zero_t, two_t, c=alives, cmap = 'viridis')
+    plt.colorbar(label="Number Alive", orientation="vertical")
+    plt.show()
+#=======================================================================================================================
+end_temperature_both_zero_zero2_with_alives_overlay()
+#=======================================================================================================================
+
+
