@@ -222,7 +222,7 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
 #=======================================================================================================================
 #number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
 #=======================================================================================================================
-def zero_alives_at_end_removed_number_alive_at_each_start_temperature_at_the_start_of_simulation():
+def number_alive_at_each_start_temperature_at_the_start_of_simulation():
 
 
     # Write UP notes - if simulation ended with zero species alive - its still included in these results
@@ -272,10 +272,10 @@ def zero_alives_at_end_removed_number_alive_at_each_start_temperature_at_the_sta
     ax2.set_ylabel('Number Alives', fontsize=20)
     ax2.legend(prop={'size': 20})
     fig.show()
-
-zero_alives_at_end_removed_number_alive_at_each_start_temperature_at_the_start_of_simulation()
-
-def zero_alives_at_end_removed_number_alive_at_each_start_temperature_at_the_end_of_simulation():
+#=======================================================================================================================
+number_alive_at_each_start_temperature_at_the_start_of_simulation()
+#=======================================================================================================================
+def number_alive_at_each_start_temperature_at_the_end_of_simulation():
 
 
     #RESULT_DATA.append((
@@ -319,5 +319,140 @@ def zero_alives_at_end_removed_number_alive_at_each_start_temperature_at_the_end
     ax2.set_ylabel('Number Alives', fontsize=20)
     ax2.legend(prop={'size': 20})
     fig.show()
+#=======================================================================================================================
+number_alive_at_each_start_temperature_at_the_end_of_simulation()
+#=======================================================================================================================
 
-zero_alives_at_end_removed_number_alive_at_each_start_temperature_at_the_end_of_simulation()
+
+def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation():
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+
+    start_temp_0 = []
+    alives_start_0 = []
+    alive_end_0 = []
+    start_temp_2 = []
+    alives_start_2 = []
+    alive_end_2 = []
+
+    for data_point in RESULT_DATA:
+        if(data_point[2]==5 and (data_point[3]==0 or data_point[3]==0.2)):
+            if(data_point[3]==0):
+                start_temp_0.append(data_point[4])
+                alives_start_0.append(data_point[6])
+                alive_end_0.append(data_point[7])
+            if(data_point[3]==0.2):
+                start_temp_2.append(data_point[4])
+                alives_start_2.append(data_point[6])
+                alive_end_2.append(data_point[7])
+
+
+    print(start_temp_0)
+    print(alive_end_0)
+    fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
+    fig.suptitle('Average Number of alives at the Start and End of the Simulation',fontsize=30)
+    #fig.set_size_inches(3, 1.5)
+
+    uniq_start_temps = np.unique(np.array(start_temp_0))
+    uniq_start_temps.sort()
+
+    print(uniq_start_temps)
+
+
+    # alive end stats
+    stats_temp = []
+    stats_avg_alives = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        sum = 0
+        count = 0
+        for each_instance in start_temp_0:
+            if(each_temp == each_instance):
+                sum += alive_end_0[index]
+                count += 1
+
+            index += 1
+        stats_temp.append(each_temp)
+        stats_avg_alives.append((sum/count))
+
+    ax1.plot(stats_temp, stats_avg_alives, label='alives end')
+
+    stats_temp = []
+    stats_avg_alives = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        sum = 0
+        count = 0
+        for each_instance in start_temp_0:
+            if(each_temp == each_instance):
+                sum += alives_start_0[index]
+                count += 1
+
+            index += 1
+        stats_temp.append(each_temp)
+        stats_avg_alives.append((sum/count))
+
+    ax1.plot(stats_temp, stats_avg_alives, label='alives start')
+
+
+
+    ax1.set_title('The Dyke Weaver Model', fontsize=20)
+    ax1.set_xlabel('Temperature', fontsize=20)
+    ax1.set_ylabel('Number Alives', fontsize=20)
+
+    stats_temp_2 = []
+    stats_avg_alives_2 = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        sum = 0
+        count = 0
+        for each_instance in start_temp_2:
+            if(each_temp == each_instance):
+                sum += alive_end_2[index]
+                count += 1
+
+            index += 1
+        stats_temp_2.append(each_temp)
+        stats_avg_alives_2.append((sum/count))
+
+
+    ax2.plot(stats_temp_2, stats_avg_alives_2,label='alives end')
+
+    stats_temp_2 = []
+    stats_avg_alives_2 = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        sum = 0
+        count = 0
+        for each_instance in start_temp_2:
+            if(each_temp == each_instance):
+                sum += alives_start_2[index]
+                count += 1
+
+            index += 1
+        stats_temp_2.append(each_temp)
+        stats_avg_alives_2.append((sum/count))
+
+
+    ax2.plot(stats_temp_2, stats_avg_alives_2, label='alives start')
+    ax2.set_title('Survival Threshold of 0.2', fontsize=20)
+    ax2.set_xlabel('Temperature', fontsize=20)
+    ax2.set_ylabel('Number Alives', fontsize=20)
+    ax2.legend(prop={'size': 20})
+    fig.show()
+#=======================================================================================================================
+average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
+#=======================================================================================================================
