@@ -7,11 +7,11 @@ import numpy as np
 import time
 import sys
 
-SAMPLE_SIZE = 1
+SAMPLE_SIZE = 10
 SAMPLE_STEP = 1
 RUN_ID = int(time.time())
 
-SPECIES_K           = 10                   # ----------- Number of Biotic Components
+SPECIES_K           = 100                   # ----------- Number of Biotic Components
 RANGE_R             = 100                   # ----------- Essential Range
 TIME_START          = 0                     # ----------- Start of Simulation
 TIME_END            = 200                   # ----------- Length of Simulation
@@ -21,8 +21,6 @@ NICHE               = 5                     # ----------- Niche Size
 LOCAL_SIZE          = 50                    # ----------- Local Population Size (%)
 SURVIVAL_THRESHOLD  = 0
 ENV_START           = [50]
-omega               = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
-mu                  = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 exp_name            = "dyke.gaussian.exp1_exp2"
 
 def init_shelve():
@@ -43,8 +41,8 @@ def init_shelve():
         s['exp_name']       = exp_name
         s['data_directory'] = data_directory
         s['shelve_file']    = shelve_file
-        s['omega']          = omega
-        s['mu']             = mu
+        #s['omega']          = omega
+        #s['mu']             = mu
         s['ENV_VARS']       = ENV_VARS
         #s['NICHE'] = NICHE
         #s['SURVIVAL_THRESHOLD'] = SURVIVAL_THRESHOLD
@@ -64,7 +62,7 @@ def print_time():
 def run_it(simulation_run_shelve):
 
     # Main Experiment
-    #print(simulation_run_shelve)
+    print(simulation_run_shelve)
     os.system("python3.10 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(simulation_run_shelve))
 
 
@@ -72,24 +70,31 @@ if __name__ == '__main__':
 
     shelve_files = []
 
-    for start_temperature in np.arange (40,100, 5):
-        for survival_threshold in np.arange (0,1, 0.2):
-            for niche_size in [3, 5, 10]:
 
-                print(start_temperature, float(str("{:.2f}".format(survival_threshold))), niche_size)
+    for _ in np.arange(0, SAMPLE_SIZE, SAMPLE_STEP):
+        omega               = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
+        mu                  = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 
-                simulation_run_shelve = init_shelve()
-                shelve_files.append(simulation_run_shelve)
-                #print("Creating: ",simulation_run_shelve)
-                simulation_shelve = shelve.open(simulation_run_shelve)
+        for start_temperature in np.arange (5,100, 5):
+            for survival_threshold in np.arange (0,1, 0.2):
+                for niche_size in [3, 5, 10]:
 
-                try:
-                    simulation_shelve['ENV_START']          = start_temperature
-                    simulation_shelve['SURVIVAL_THRESHOLD'] = float(str("{:.2f}".format(survival_threshold)))
-                    simulation_shelve['NICHE']              = niche_size
+                    #print(start_temperature, float(str("{:.2f}".format(survival_threshold))), niche_size)
 
-                finally:
-                    simulation_shelve.close()
+                    simulation_run_shelve = init_shelve()
+                    shelve_files.append(simulation_run_shelve)
+                    #print("Creating: ",simulation_run_shelve)
+                    simulation_shelve = shelve.open(simulation_run_shelve)
+
+                    try:
+                        simulation_shelve['omega']              = omega
+                        simulation_shelve['mu']                 = mu
+                        simulation_shelve['ENV_START']          = start_temperature
+                        simulation_shelve['SURVIVAL_THRESHOLD'] = float(str("{:.2f}".format(survival_threshold)))
+                        simulation_shelve['NICHE']              = niche_size
+
+                    finally:
+                        simulation_shelve.close()
 
     print("STARTING : " + print_time())
     pool = Pool(processes=1)
