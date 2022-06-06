@@ -273,7 +273,7 @@ def number_alive_at_each_start_temperature_at_the_start_of_simulation():
     ax2.legend(prop={'size': 20})
     fig.show()
 #=======================================================================================================================
-number_alive_at_each_start_temperature_at_the_start_of_simulation()
+#number_alive_at_each_start_temperature_at_the_start_of_simulation()
 #=======================================================================================================================
 def number_alive_at_each_start_temperature_at_the_end_of_simulation():
 
@@ -320,7 +320,7 @@ def number_alive_at_each_start_temperature_at_the_end_of_simulation():
     ax2.legend(prop={'size': 20})
     fig.show()
 #=======================================================================================================================
-number_alive_at_each_start_temperature_at_the_end_of_simulation()
+#number_alive_at_each_start_temperature_at_the_end_of_simulation()
 #=======================================================================================================================
 def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation():
 
@@ -452,7 +452,7 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
     ax2.legend(prop={'size': 20})
     fig.show()
 #=======================================================================================================================
-average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
+#average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
 #=======================================================================================================================
 
 def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels():
@@ -622,5 +622,89 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
 
 
 #=======================================================================================================================
-average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels()
+#average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels()
+#=======================================================================================================================
+
+#=======================================================================================================================
+def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
+
+    x = [] #start temp
+    y = [] #env_end
+    z = [] #survival threshold
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+
+    for data_point in RESULT_DATA:
+        if(data_point[2]==5 and (data_point[3]==0 or data_point[3]==0.2)):
+            x.append(data_point[4])
+            y.append(data_point[5])
+            z.append(data_point[3])
+
+    uniq_start_temps = np.unique(np.array(x))
+    uniq_start_temps.sort()
+    uniq_survivals = np.unique(np.array(z))
+    uniq_survivals.sort()
+
+    main_result = []
+
+    print(uniq_start_temps)
+    print(uniq_survivals)
+
+    for each_survival_threshold in uniq_survivals:
+
+        plt.figure(figsize=(XFIG,YFIG), dpi=200)
+        plt.title('The end Temperature : ' + str(each_survival_threshold), fontsize=TFONT)
+        plt.xlabel('Bounds', fontsize=XFONT)
+        plt.ylabel('End Temperature', fontsize=YFONT)
+        plt.xticks(fontsize=X_TICKS)
+        plt.yticks(fontsize=Y_TICKS)
+
+        inside_bounds = []
+        outside_bounds = []
+
+        for each_start_temp in uniq_start_temps:
+            index_1 = 0
+            inside_b = 0
+            outside_b = 0
+            for each_row in x:
+                if(x[index_1] == each_start_temp and z[index_1] == each_survival_threshold):
+                    if(y[index_1] > 0 and y[index_1] < 100):
+                        inside_b +=1
+                    if(y[index_1] < 0 or y[index_1] > 100):
+                        outside_b +=1
+                index_1 +=1
+
+            inside_bounds.append(inside_b)
+            outside_bounds.append(outside_b)
+
+            main_result.append([each_start_temp,each_survival_threshold,inside_b,outside_b])
+
+        X=[]
+        for each in uniq_start_temps:
+            X.append(str(each))
+
+        X_axis = np.arange(len(X))
+
+        plt.bar(X_axis - 0.2, inside_bounds, 0.4, label = 'Simulations within bounds 0 - R')
+        plt.bar(X_axis + 0.2, outside_bounds, 0.4, label = 'Simulations outside bounds 0 - R')
+
+
+        #plt.xticks(X_axis, X)
+
+        plt.legend(prop={'size': 20})
+        plt.show()
+        #[uniq_start_temp (19), survival_threshold (2),number of simulations with zero alives at end, number of alives above 0]
+
+
+#=======================================================================================================================
+number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R()
 #=======================================================================================================================
