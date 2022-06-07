@@ -5,6 +5,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from tqdm import tqdm
 
 RESULT_DATA = []
 UNIQ_SAMPLES = []
@@ -14,7 +15,7 @@ data_archives = os.listdir(data_dr)
 
 count = 0
 
-for file in data_archives:
+for file in tqdm(data_archives):
     s = shelve.open(data_dr + "/" + str(file) + "/dyke.gaussian.exp1_exp2.data")
     #print(count)
     try:
@@ -33,85 +34,88 @@ for file in data_archives:
     finally:
         s.close()
 
-for data_point in RESULT_DATA:
-    if ((data_point[0],data_point[1])) not in UNIQ_SAMPLES:
-        UNIQ_SAMPLES.append((data_point[0],data_point[1]))
-
-for sample in UNIQ_SAMPLES:
-    print(sample)
-#data verification
-
-DATA_VERIFICATION = []
-
-for uniq_ in UNIQ_SAMPLES:
-    start_temp_stats = []
-    niche_stats = []
-    survival_threshold_stats = []
+#=======================================================================================================================
+def data_verification():
 
     for data_point in RESULT_DATA:
-        if uniq_ == ((data_point[0], data_point[1])):
-            if([data_point[2],0] not in niche_stats):
-                niche_stats.append([data_point[2], 0])
-            if([data_point[3],0] not in survival_threshold_stats):
-                survival_threshold_stats.append([data_point[3], 0])
-            if([data_point[4],0] not in start_temp_stats):
-                start_temp_stats.append([data_point[4], 0])
+        if ((data_point[0],data_point[1])) not in UNIQ_SAMPLES:
+            UNIQ_SAMPLES.append((data_point[0],data_point[1]))
 
-    start_temp_stats.sort()
-    niche_stats.sort()
-    survival_threshold_stats.sort()
+    #for sample in UNIQ_SAMPLES:
+    #    print(sample)
+    #data verification
 
-    index_ = 0
-    for start_t in (start_temp_stats):
+    DATA_VERIFICATION = []
+
+    for uniq_ in UNIQ_SAMPLES:
+        start_temp_stats = []
+        niche_stats = []
+        survival_threshold_stats = []
+
         for data_point in RESULT_DATA:
-            if (uniq_ == ((data_point[0], data_point[1])) and data_point[4] == start_t[0]):
-                start_temp_stats[index_][1] += 1
+            if uniq_ == ((data_point[0], data_point[1])):
+                if([data_point[2],0] not in niche_stats):
+                    niche_stats.append([data_point[2], 0])
+                if([data_point[3],0] not in survival_threshold_stats):
+                    survival_threshold_stats.append([data_point[3], 0])
+                if([data_point[4],0] not in start_temp_stats):
+                    start_temp_stats.append([data_point[4], 0])
 
-        index_ +=1
+        start_temp_stats.sort()
+        niche_stats.sort()
+        survival_threshold_stats.sort()
 
-    index_ = 0
-    for niche_s in (niche_stats):
-        for data_point in RESULT_DATA:
-            if (uniq_ == ((data_point[0], data_point[1])) and data_point[2] == niche_s[0]):
-                niche_stats[index_][1] += 1
+        index_ = 0
+        for start_t in (start_temp_stats):
+            for data_point in RESULT_DATA:
+                if (uniq_ == ((data_point[0], data_point[1])) and data_point[4] == start_t[0]):
+                    start_temp_stats[index_][1] += 1
 
-        index_ +=1
+            index_ +=1
 
-    index_ = 0
-    for st_v in (survival_threshold_stats):
-        for data_point in RESULT_DATA:
-            if (uniq_ == ((data_point[0], data_point[1])) and data_point[3] == st_v[0]):
-                survival_threshold_stats[index_][1] += 1
+        index_ = 0
+        for niche_s in (niche_stats):
+            for data_point in RESULT_DATA:
+                if (uniq_ == ((data_point[0], data_point[1])) and data_point[2] == niche_s[0]):
+                    niche_stats[index_][1] += 1
 
-        index_ +=1
+            index_ +=1
 
-    #print(uniq_)
-    #print(start_temp_stats)
-    #print(niche_stats)
-    #print(survival_threshold_stats)
+        index_ = 0
+        for st_v in (survival_threshold_stats):
+            for data_point in RESULT_DATA:
+                if (uniq_ == ((data_point[0], data_point[1])) and data_point[3] == st_v[0]):
+                    survival_threshold_stats[index_][1] += 1
 
-    DATA_VERIFICATION.append([start_temp_stats,niche_stats,survival_threshold_stats])
+            index_ +=1
 
-temp_check = []
-niche_check = []
-st_check = []
+        #print(uniq_)
+        #print(start_temp_stats)
+        #print(niche_stats)
+        #print(survival_threshold_stats)
 
-#for sample in DATA_VERIFICATION:
-#    for each_temp in sample[0]:
-#        temp_check.append(each_temp[1])
-#    for each_niche in sample[1]:
-#        niche_check.append(each_niche[1])
-#    for each_st in sample[2]:
-#        st_check.append(each_st[1])
+        DATA_VERIFICATION.append([start_temp_stats,niche_stats,survival_threshold_stats])
 
-#print(all(i == temp_check[0] for i in temp_check))
-#print(all(i == niche_check[0] for i in niche_check))
-#print(all(i == st_check[0] for i in st_check))
+    temp_check = []
+    niche_check = []
+    st_check = []
 
-print("DATA VALIDATION CHECK : ")
-print(all(i == DATA_VERIFICATION[0] for i in DATA_VERIFICATION))
+    #for sample in DATA_VERIFICATION:
+    #    for each_temp in sample[0]:
+    #        temp_check.append(each_temp[1])
+    #    for each_niche in sample[1]:
+    #        niche_check.append(each_niche[1])
+    #    for each_st in sample[2]:
+    #        st_check.append(each_st[1])
 
-print("=====================")
+    #print(all(i == temp_check[0] for i in temp_check))
+    #print(all(i == niche_check[0] for i in niche_check))
+    #print(all(i == st_check[0] for i in st_check))
+
+    print("DATA VALIDATION CHECK : ")
+    print(all(i == DATA_VERIFICATION[0] for i in DATA_VERIFICATION))
+
+    print("=====================")
 
 XFONT = 40
 YFONT = 40
@@ -120,7 +124,8 @@ Y_TICKS = 20
 XFIG = 30
 YFIG = 30
 TFONT = 40
-
+#=======================================================================================================================
+#data_verification()
 #=======================================================================================================================
 def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end():
 
@@ -140,15 +145,17 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
     uniq_survivals = np.unique(np.array(z))
     main_result = []
 
-    print(uniq_start_temps)
-    print(uniq_survivals)
+    #print(uniq_start_temps)
+    #print(uniq_survivals)
 
     for each_survival_threshold in uniq_survivals:
 
         plt.figure(figsize=(XFIG,YFIG), dpi=200)
-        plt.title('The number of alive species at the end of simulations: ' + str(each_survival_threshold), fontsize=TFONT)
+        plt.title('Dyke/Weaver Model : Simulations with Alive Species', fontsize=TFONT)
+        if(each_survival_threshold == 0.2):
+            plt.title('Simulations with Alive Species using a survival threshold of 0.2', fontsize=TFONT)
         plt.xlabel('Starting Temperature', fontsize=XFONT)
-        plt.ylabel('Number Alive at the End', fontsize=YFONT)
+        plt.ylabel('Simulations with/without Alive Species', fontsize=YFONT)
         plt.xticks(fontsize=X_TICKS)
         plt.yticks(fontsize=Y_TICKS)
 
@@ -160,19 +167,18 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
             below_zero = 0
             above_zero = 0
             for each_row in x:
-                if(x[index_1] == each_start_temp and z[index_1] == each_survival_threshold):
+                if(each_row == each_start_temp and z[index_1] == each_survival_threshold):
                     if(y[index_1] <= 0):
                         below_zero +=1
                     if(y[index_1] > 0):
                         above_zero +=1
+                    #print(each_survival_threshold,each_start_temp,x[index_1],y[index_1],z[index_1])
                 index_1 +=1
 
             alive_below.append(below_zero)
             alive_above.append(above_zero)
 
-            main_result.append([each_start_temp,each_survival_threshold,below_zero,above_zero])
-
-
+            #main_result.append([each_start_temp,each_survival_threshold,below_zero,above_zero])
 
         X=[]
         for each in uniq_start_temps:
@@ -180,11 +186,14 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
 
         X_axis = np.arange(len(X))
 
-        plt.bar(X_axis - 0.2, alive_below, 0.4, label = 'Simulations with no alives at the end')
-        plt.bar(X_axis + 0.2, alive_above, 0.4, label = 'Simulation with alives at the end')
+        #print(main_result)
+
+        plt.bar(X_axis - 0.2, alive_below, 0.4, label = 'Simulations with no alive species')
+        plt.bar(X_axis + 0.2, alive_above, 0.4, label = 'Simulation with alive species')
         plt.xticks(X_axis, X)
 
-        plt.legend()
+        plt.legend(prop={'size': 30})
+        plt.savefig('number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end.jpg')
         plt.show()
         #[uniq_start_temp (19), survival_threshold (2),number of simulations with zero alives at end, number of alives above 0]
 
@@ -227,21 +236,22 @@ def number_alive_at_each_start_temperature_at_the_start_of_simulation():
                 alive_start_2.append(data_point[6])
 
 
-    print(start_temp_0)
-    print(alive_start_0)
-    fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
-    fig.suptitle('The Number of Alive at the Start of the Simulation',fontsize=30)
-    #fig.set_size_inches(3, 1.5)
-    ax1.scatter(start_temp_0, alive_start_0)
-    ax1.set_title('The Dyke Weaver Model', fontsize=20)
-    ax1.set_xlabel('Temperature', fontsize=20)
-    ax1.set_ylabel('Number Alives', fontsize=20)
-    ax2.scatter(start_temp_2, alive_start_2)
-    ax2.set_title('Survival Threshold of 0.2', fontsize=20)
-    ax2.set_xlabel('Temperature', fontsize=20)
-    ax2.set_ylabel('Number Alives', fontsize=20)
-    ax2.legend(prop={'size': 20})
-    fig.show()
+    #print(start_temp_0)
+    #print(alive_start_0)
+
+    plt.figure(figsize=(XFIG,YFIG), dpi=200)
+    plt.title('Number of alive species at the start of the simulation', fontsize=TFONT)
+    plt.xlabel('Starting Temperature', fontsize=XFONT)
+    plt.ylabel('Alive Species', fontsize=YFONT)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+    plt.scatter(start_temp_0, alive_start_0, label='Dyke/Weaver Model')
+    plt.scatter(start_temp_2, alive_start_2, label="Survival Threshold 0.2")
+    plt.xticks(np.arange(0,100,5))
+    plt.legend(prop={'size': 30})
+    plt.tight_layout()
+    plt.savefig('number_alive_at_each_start_temperature_at_the_start_of_simulation.jpg')
+    plt.show()
 #=======================================================================================================================
 #number_alive_at_each_start_temperature_at_the_start_of_simulation()
 #=======================================================================================================================
@@ -274,21 +284,24 @@ def number_alive_at_each_start_temperature_at_the_end_of_simulation():
                 alive_end_2.append(data_point[7])
 
 
-    print(start_temp_0)
-    print(alive_end_0)
-    fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
-    fig.suptitle('The Number of Alive at the End of the Simulation',fontsize=30)
-    #fig.set_size_inches(3, 1.5)
-    ax1.scatter(start_temp_0, alive_end_0)
-    ax1.set_title('The Dyke Weaver Model', fontsize=20)
-    ax1.set_xlabel('Temperature', fontsize=20)
-    ax1.set_ylabel('Number Alives', fontsize=20)
-    ax2.scatter(start_temp_2, alive_end_2)
-    ax2.set_title('Survival Threshold of 0.2', fontsize=20)
-    ax2.set_xlabel('Temperature', fontsize=20)
-    ax2.set_ylabel('Number Alives', fontsize=20)
-    ax2.legend(prop={'size': 20})
-    fig.show()
+    #print(start_temp_0)
+    #print(alive_end_0)
+
+    plt.figure(figsize=(XFIG,YFIG), dpi=200)
+    plt.title('Number of alive species at the end of the simulation', fontsize=TFONT)
+    plt.xlabel('Starting Temperature', fontsize=XFONT)
+    plt.ylabel('Alive Species', fontsize=YFONT)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+    plt.scatter(start_temp_0, alive_end_0, label='Dyke/Weaver Model')
+    plt.scatter(start_temp_2, alive_end_2, label="Survival Threshold 0.2")
+    plt.xticks(np.arange(0,100,5))
+    plt.legend(prop={'size': 30})
+    plt.tight_layout()
+    plt.savefig('number_alive_at_each_start_temperature_at_the_end_of_simulation.jpg')
+    plt.show()
+
+
 #=======================================================================================================================
 #number_alive_at_each_start_temperature_at_the_end_of_simulation()
 #=======================================================================================================================
@@ -324,21 +337,31 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
                 alive_end_2.append(data_point[7])
 
 
-    print(start_temp_0)
-    print(alive_end_0)
-    fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
-    fig.suptitle('Average Number of alives at the Start and End of the Simulation',fontsize=30)
+    #print(start_temp_0)
+    #print(alive_end_0)
+
     #fig.set_size_inches(3, 1.5)
 
     uniq_start_temps = np.unique(np.array(start_temp_0))
     uniq_start_temps.sort()
 
-    print(uniq_start_temps)
+    #print(uniq_start_temps)
 
 
     # alive end stats
     stats_temp = []
     stats_avg_alives = []
+
+    dw_temp_s = []
+    dw_alive_s = []
+    dw_temp_e = []
+    dw_alive_e = []
+
+    st_temp_s = []
+    st_alive_s = []
+    st_temp_e = []
+    st_alive_e = []
+
 
     for each_temp in uniq_start_temps:
         index = 0
@@ -353,7 +376,8 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
         stats_temp.append(each_temp)
         stats_avg_alives.append((sum/count))
 
-    ax1.plot(stats_temp, stats_avg_alives, label='alives end')
+    dw_temp_e = stats_temp.copy()
+    dw_alive_e = stats_avg_alives.copy()
 
     stats_temp = []
     stats_avg_alives = []
@@ -371,13 +395,8 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
         stats_temp.append(each_temp)
         stats_avg_alives.append((sum/count))
 
-    ax1.plot(stats_temp, stats_avg_alives, label='alives start')
-
-
-
-    ax1.set_title('The Dyke Weaver Model', fontsize=20)
-    ax1.set_xlabel('Temperature', fontsize=20)
-    ax1.set_ylabel('Number Alives', fontsize=20)
+    dw_temp_s = stats_temp.copy()
+    dw_alive_s = stats_avg_alives.copy()
 
     stats_temp_2 = []
     stats_avg_alives_2 = []
@@ -395,8 +414,8 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
         stats_temp_2.append(each_temp)
         stats_avg_alives_2.append((sum/count))
 
-
-    ax2.plot(stats_temp_2, stats_avg_alives_2,label='alives end')
+    st_temp_e = stats_temp_2.copy()
+    st_alive_e = stats_avg_alives_2.copy()
 
     stats_temp_2 = []
     stats_avg_alives_2 = []
@@ -414,13 +433,28 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
         stats_temp_2.append(each_temp)
         stats_avg_alives_2.append((sum/count))
 
+    st_temp_s = stats_temp_2.copy()
+    st_alive_s = stats_avg_alives_2.copy()
 
-    ax2.plot(stats_temp_2, stats_avg_alives_2, label='alives start')
-    ax2.set_title('Survival Threshold of 0.2', fontsize=20)
-    ax2.set_xlabel('Temperature', fontsize=20)
-    ax2.set_ylabel('Number Alives', fontsize=20)
-    ax2.legend(prop={'size': 20})
-    fig.show()
+
+
+    plt.figure(figsize=(XFIG,YFIG), dpi=200)
+    plt.title('Average Number of alives at the Start and End of the Simulation', fontsize=TFONT)
+    plt.xlabel('Starting Temperature', fontsize=XFONT)
+    plt.ylabel('Average Number of Alive Species', fontsize=YFONT)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+    plt.plot(dw_temp_s, dw_alive_s, label='Dyke/Weaver Alive Species at Start')
+    plt.plot(dw_temp_e, dw_alive_e, label='Dyke/Weaver Alive Species at End')
+    plt.plot(st_temp_s, st_alive_s, label='Survival Threshold 0.2 Alive Species at Start')
+    plt.plot(st_temp_e, st_alive_e, label='Survival Threshold 0.2 Alive Species at End')
+    plt.xticks(np.arange(0,100,5))
+    plt.legend(prop={'size': 30})
+    plt.tight_layout()
+    plt.savefig('average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation.jpg')
+    plt.show()
+
+
 #=======================================================================================================================
 #average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
 #=======================================================================================================================
@@ -450,16 +484,20 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
             alives_start_0.append(data_point[6])
             alive_end_0.append(data_point[7])
 
-    fig, (ax1, ax2, ax3, ax4) = plt.subplots(1, 4, dpi=300, figsize=(30,10))
-    fig.suptitle('Average Number of alives at the Start and End of the Simulation for Survival Thresholds',fontsize=30)
-    #fig.set_size_inches(3, 1.5)
+    fig = plt.figure(figsize=(XFIG,YFIG),dpi=200)
+    spec = fig.add_gridspec(ncols=2, nrows=2)
+    ax1 = fig.add_subplot(spec[0, 0])
+    ax2 = fig.add_subplot(spec[0, 1])
+    ax3 = fig.add_subplot(spec[1, 0])
+    ax4 = fig.add_subplot(spec[1, 1])
+    fig.suptitle('Average Number of alive species at the Start and End of simulations for different Survival Thresholds',fontsize=30)
 
     uniq_start_temps = np.unique(np.array(start_temp_0))
     uniq_start_temps.sort()
     survival_thresh_0.sort()
 
-    print(uniq_start_temps)
-    print(survival_thresh_0)
+    #print(uniq_start_temps)
+    #print(survival_thresh_0)
 
     # alive end stats
 
@@ -473,7 +511,8 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
     st6_e = []
     st8_e = []
 
-    for each_st in survival_thresh_0:
+    #print("start")
+    for each_st in tqdm(survival_thresh_0):
         stats_temp = []
         stats_avg_alives = []
         for each_temp in uniq_start_temps:
@@ -490,16 +529,16 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
 
         if(each_st == 0.2):
             st2_e = stats_avg_alives.copy()
-            ax1.plot(stats_temp, stats_avg_alives, label='alives end 0.2')
+            ax1.plot(stats_temp, stats_avg_alives, label='Alive Species at End')
         if(each_st == 0.4):
             st4_e = stats_avg_alives.copy()
-            ax2.plot(stats_temp, stats_avg_alives, label='alives end 0.4')
+            ax2.plot(stats_temp, stats_avg_alives, label='Alive Species at End')
         if(each_st == 0.6):
             st6_e = stats_avg_alives.copy()
-            ax3.plot(stats_temp, stats_avg_alives, label='alives end 0.6')
+            ax3.plot(stats_temp, stats_avg_alives, label='Alive Species at End')
         if(each_st == 0.8):
             st8_e = stats_avg_alives.copy()
-            ax4.plot(stats_temp, stats_avg_alives, label='alives end 0.8')
+            ax4.plot(stats_temp, stats_avg_alives, label='Alive Species at End')
 
         stats_temp = []
         stats_avg_alives = []
@@ -518,31 +557,31 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
 
         if(each_st == 0.2):
             st2_s = stats_avg_alives.copy()
-            ax1.plot(stats_temp, stats_avg_alives, label='alives start 0.2')
-            ax1.set_title('T0.2', fontsize=20)
-            ax1.set_xlabel('Temperature', fontsize=20)
-            ax1.set_ylabel('Number Alives', fontsize=20)
+            ax1.plot(stats_temp, stats_avg_alives, label='Alive Species at Start')
+            ax1.set_title('Survival Threshold 0.2',fontsize=25)
+            ax1.set_xlabel('Temperature',fontsize=15)
+            ax1.set_ylabel('Average number of alive species',fontsize=15)
         if(each_st == 0.4):
             st4_s = stats_avg_alives.copy()
-            ax2.plot(stats_temp, stats_avg_alives, label='alives start 0.4')
-            ax2.set_title('T0.4', fontsize=20)
-            ax2.set_xlabel('Temperature', fontsize=20)
-            ax2.set_ylabel('Number Alives', fontsize=20)
+            ax2.plot(stats_temp, stats_avg_alives, label='Alive Species at Start')
+            ax2.set_title('Survival Threshold 0.4',fontsize=25)
+            ax2.set_xlabel('Temperature',fontsize=15)
+            ax2.set_ylabel('Average number of alive species',fontsize=15)
         if(each_st == 0.6):
             st6_s = stats_avg_alives.copy()
-            ax3.plot(stats_temp, stats_avg_alives, label='alives start 0.6')
-            ax3.set_title('T0.6', fontsize=20)
-            ax3.set_xlabel('Temperature', fontsize=20)
-            ax3.set_ylabel('Number Alives', fontsize=20)
+            ax3.plot(stats_temp, stats_avg_alives, label='Alive Species at Start')
+            ax3.set_title('Survival Threshold 0.6',fontsize=25)
+            ax3.set_xlabel('Temperature',fontsize=15)
+            ax3.set_ylabel('Average number of alive species',fontsize=15)
         if(each_st == 0.8):
             st8_s = stats_avg_alives.copy()
-            ax4.plot(stats_temp, stats_avg_alives, label='alives start 0.8')
-            ax4.set_title('T0.8', fontsize=20)
-            ax4.set_xlabel('Temperature', fontsize=20)
-            ax4.set_ylabel('Number Alives', fontsize=20)
+            ax4.plot(stats_temp, stats_avg_alives, label='Alive Species at Start')
+            ax4.set_title('Survival Threshold 0.8',fontsize=25)
+            ax4.set_xlabel('Temperature',fontsize=15)
+            ax4.set_ylabel('Average number of alive species',fontsize=15)
 
+    ax4.legend(loc = 'lower right')
     fig.show()
-
 
     fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
     fig.suptitle('Number Alive for each Temperature at each Survival Threshold',fontsize=30)
@@ -556,9 +595,9 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
         index+=1
 
 
-    ax1.set_title('Alives Start', fontsize=20)
+    ax1.set_title('Species at the start of simulations', fontsize=20)
     ax1.set_xlabel('Survival Threshold', fontsize=20)
-    ax1.set_ylabel('Number Alives', fontsize=20)
+    ax1.set_ylabel('Alive Species', fontsize=20)
 
     index = 0
     for temp in uniq_start_temps:
@@ -567,16 +606,16 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
         ax1.plot(linex, liney, label=str(temp))
         index+=1
 
-    ax2.set_title('Alives End', fontsize=20)
+    ax2.set_title('Species at the end of simulations', fontsize=20)
     ax2.set_xlabel('Survival Threshold', fontsize=20)
-    ax2.set_ylabel('Number Alives', fontsize=20)
-    ax2.legend(prop={'size': 20})
+    ax2.set_ylabel('Alive Species', fontsize=20)
+    ax2.legend()
     fig.show()
 
     plt.figure(figsize=(XFIG,YFIG), dpi=200)
-    plt.title('Different Start and End Alives at Suvival Thresholds', fontsize=TFONT)
+    plt.title('Difference between the start and end number of alive species', fontsize=TFONT)
     plt.xlabel('Survival Threshold', fontsize=XFONT)
-    plt.ylabel('Number Alive', fontsize=YFONT)
+    plt.ylabel('Alive Species', fontsize=YFONT)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
 
@@ -588,7 +627,9 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
         plt.plot(linex, liney, label=str(temp))
         index+=1
     plt.legend()
+    plt.savefig('average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels.jpg')
     plt.show()
+
 
 
 #=======================================================================================================================
@@ -631,7 +672,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
     print(uniq_start_temps)
     print(uniq_survivals)
 
-    for each_survival_threshold in uniq_survivals:
+    for each_survival_threshold in tqdm(uniq_survivals):
 
         plt.figure(figsize=(XFIG,YFIG), dpi=200)
         plt.title('Bounds [inside 0-R or outside 0-R] : ' + str(each_survival_threshold), fontsize=TFONT)
@@ -673,6 +714,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
         #plt.xticks(X_axis, X)
 
         plt.legend(prop={'size': 20})
+        plt.savefig('number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R.jpg')
         plt.show()
         #[uniq_start_temp (19), survival_threshold (2),number of simulations with zero alives at end, number of alives above 0]
 
@@ -736,7 +778,7 @@ def number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_insi
 
     main_results = []
 
-    for each_temp in uniq_start_temps:
+    for each_temp in tqdm(uniq_start_temps):
         both_all = []
         zero_all = []
         zero2_all = []
@@ -770,11 +812,13 @@ def number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_insi
         bar_zero_all.append(each_result[2])
         bar_zero2_all.append(each_result[3])
 
+    width = 1
 
-    plt.bar(uniq_start_temps - 0.7, bar_both, 1, label = 'Both within bounds 0 - R')
-    plt.bar(uniq_start_temps + 0.5, bar_zero_all, 1, label = 'zero only inside bounds 0 - R')
-    plt.bar(uniq_start_temps + 0.7, bar_zero2_all, 1, label = '0.2 only inside bounds 0 - R')
-    plt.legend(prop={'size': 20})
+    plt.bar(uniq_start_temps - width/3, bar_both, width, label = 'Both within bounds 0 - R')
+    plt.bar(uniq_start_temps + 0.8, bar_zero_all, width, label = 'Dyke/Weaver only inside bounds 0 - R')
+    plt.bar(uniq_start_temps + 2, bar_zero2_all, width, label = 'Survival Threshold only inside bounds 0 - R')
+    plt.legend(prop={'size': 25})
+    plt.savefig('number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_inside_only_truncated_inside_only.jpg')
     plt.show()
 
 
@@ -785,9 +829,9 @@ def number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_insi
 def end_temperature_both_zero_zero2_with_alives_overlay():
 
     plt.figure(figsize=(XFIG,YFIG), dpi=200)
-    plt.title('START/END Temp : 0.2 start temp 50', fontsize=TFONT)
-    plt.xlabel('With Truncation', fontsize=XFONT)
-    plt.ylabel('Zero Truncation', fontsize=YFONT)
+    plt.title('End temperature of Dyke/Weaver vs Survival Threshold at 0.2 starting at 50', fontsize=TFONT)
+    plt.xlabel('End Temperature using Survival Threshold', fontsize=XFONT)
+    plt.ylabel('End Temperature Dyke/Weaver Model', fontsize=YFONT)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
     plt.ylim(-50, 150)
@@ -808,8 +852,7 @@ def end_temperature_both_zero_zero2_with_alives_overlay():
     two_t = []
     alives = []
 
-    for data_point in RESULT_DATA:
-
+    for data_point in tqdm(RESULT_DATA):
         if((data_point[3] == 0 or data_point[3] == 0.2) and data_point[4] == 50 and data_point[2] == 5):
             if(data_point[3] == 0):
                 zero_t.append(data_point[5])
@@ -817,11 +860,39 @@ def end_temperature_both_zero_zero2_with_alives_overlay():
                 two_t.append(data_point[5])
                 alives.append(data_point[7])
 
-    plt.scatter(zero_t, two_t, c=alives, cmap = 'viridis')
-    plt.colorbar(label="Number Alive", orientation="vertical")
+    plt.scatter(zero_t, two_t, c=alives, cmap = 'viridis', s=200)
+    cb = plt.colorbar(orientation="vertical")
+    cb.ax.tick_params(labelsize=20)
+    cb.set_label(label="Number of alive species",size=YFONT)
+    plt.savefig('end_temperature_both_zero_zero2_with_alives_overlay.jpg')
     plt.show()
+#=======================================================================================================================
+#end_temperature_both_zero_zero2_with_alives_overlay()
+#=======================================================================================================================
+#=======================================================================================================================
+#data_verification()
+#=======================================================================================================================
+#=======================================================================================================================
+number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
+#=======================================================================================================================
+#=======================================================================================================================
+number_alive_at_each_start_temperature_at_the_start_of_simulation()
+#=======================================================================================================================
+#=======================================================================================================================
+number_alive_at_each_start_temperature_at_the_end_of_simulation()
+#=======================================================================================================================
+#=======================================================================================================================
+average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
+#=======================================================================================================================
+#=======================================================================================================================
+number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R()
+#=======================================================================================================================
+#=======================================================================================================================
+number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_inside_only_truncated_inside_only()
+#=======================================================================================================================
 #=======================================================================================================================
 end_temperature_both_zero_zero2_with_alives_overlay()
 #=======================================================================================================================
-
-
+#=======================================================================================================================
+average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels()
+#=======================================================================================================================

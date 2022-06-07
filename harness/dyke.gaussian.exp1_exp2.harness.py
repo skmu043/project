@@ -6,8 +6,9 @@ from multiprocessing import Process, Pool
 import numpy as np
 import time
 import sys
+import tqdm
 
-SAMPLE_SIZE = 10
+SAMPLE_SIZE = 5
 SAMPLE_STEP = 1
 RUN_ID = int(time.time())
 
@@ -62,7 +63,7 @@ def print_time():
 def run_it(simulation_run_shelve):
 
     # Main Experiment
-    print(simulation_run_shelve)
+    #print(simulation_run_shelve)
     os.system("python3.10 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(simulation_run_shelve))
 
 
@@ -97,8 +98,18 @@ if __name__ == '__main__':
                         simulation_shelve.close()
 
     print("STARTING : " + print_time())
-    pool = Pool(processes=1)
-    pool.map(run_it, [_ for _ in shelve_files])
+    pool = Pool(processes=6)
+
+    #pool.map(run_it, [_ for _ in shelve_files])
+
+
+    results = []
+
+    for result in tqdm.tqdm(pool.imap_unordered(run_it, [_ for _ in shelve_files]), total=len(shelve_files)):
+        results.append(result)
+
+    print(results)
+
     print("Completed : " + print_time())
 
 
