@@ -866,6 +866,7 @@ def end_temperature_both_zero_zero2_with_alives_overlay():
     cb.set_label(label="Number of alive species",size=YFONT)
     plt.savefig('end_temperature_both_zero_zero2_with_alives_overlay.jpg')
     plt.show()
+
 #=======================================================================================================================
 #end_temperature_both_zero_zero2_with_alives_overlay()
 #=======================================================================================================================
