@@ -6,9 +6,9 @@ from multiprocessing import Process, Pool
 import numpy as np
 import time
 import sys
-import tqdm
+from tqdm import tqdm
 
-SAMPLE_SIZE = 5
+SAMPLE_SIZE = 10
 SAMPLE_STEP = 1
 RUN_ID = int(time.time())
 
@@ -71,8 +71,10 @@ if __name__ == '__main__':
 
     shelve_files = []
 
-
-    for _ in np.arange(0, SAMPLE_SIZE, SAMPLE_STEP):
+    samples_sequence = np.arange(0, SAMPLE_SIZE, SAMPLE_STEP)
+    print("STARTING FILES: " + print_time())
+    for _ in tqdm(samples_sequence):
+        tqdm.write(str(_))
         omega               = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
         mu                  = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 
@@ -97,20 +99,22 @@ if __name__ == '__main__':
                     finally:
                         simulation_shelve.close()
 
-    print("STARTING : " + print_time())
-    pool = Pool(processes=6)
+    print("COMPLETED FILES: " + print_time())
+
+    print("STARTING SIMULATIONS: " + print_time())
+    pool = Pool(processes=16)
 
     #pool.map(run_it, [_ for _ in shelve_files])
 
 
     results = []
 
-    for result in tqdm.tqdm(pool.imap_unordered(run_it, [_ for _ in shelve_files]), total=len(shelve_files)):
+    for result in tqdm(pool.imap_unordered(run_it, [_ for _ in shelve_files]), total=len(shelve_files)):
         results.append(result)
 
     print(results)
 
-    print("Completed : " + print_time())
+    print("SIMULATIONS COMPLETED: " + print_time())
 
 
 #    data_dr = os.getcwd() + '/data'

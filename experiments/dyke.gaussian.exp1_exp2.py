@@ -41,36 +41,21 @@ finally:
 system_state                = np.zeros(SPECIES_K+ENV_VARS)
 Eg                          = ENV_START
 
-
-def funct():
-    fig = plt.figure(dpi=300, figsize=(20,10))
-    fig.suptitle('A simulation run with 100 biotic components', fontsize=20)
-
-    gs = fig.add_gridspec(1,2)
-    ax1 = fig.add_subplot(gs[0, 0])
-    ax2 = fig.add_subplot(gs[0, 1])
-
-    myList = results[:-1]
-    for item in myList:
-        ax1.plot(times_steps,item)
-    ax1.set_title('Original Model', fontsize=15)
-    ax1.set_xlabel('Time Steps', fontsize=12)
-    ax1.set_ylabel('Abundance', fontsize=12)
-
-    ax2.set_title('The Environment Condition',fontsize=15)
-    ax2.set_xlabel('Time Steps', fontsize=12)
-    ax2.set_ylabel('Temperature', fontsize=12)
-    ax2.plot(times_steps, results[-1],"k", label = "survival threshold")
-    ax2.set_ylim([0, 100])
-    ax2.legend()
-    fig.show()
-
-
 for s_i in range(SPECIES_K):
     a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
     if a_star < SURVIVAL_THRESHOLD:
         a_star = 0
     system_state[s_i] = a_star
+
+# Before env var gets added - the last spot is zero
+abundance_start = sum(system_state)
+
+number_alive_start = 0
+
+for abundance_init in system_state:
+    if abundance_init > 0:
+        number_alive_start +=1
+
 
 # Environment Init
 for _ in range(ENV_VARS):
@@ -122,23 +107,29 @@ if __name__ == '__main__':
         system_state += ((k1 + (2*k2) + (2*k3) + k4)/6)
 
     number_alive_end = 0
-    number_alive_start = 0
+
+    aliveness = 0
+
+    abundance_end = 0
+
+    if(SURVIVAL_THRESHOLD > 0):
+        aliveness = 0.000001
 
     for abundance_stream in results[:-1]:
-        if abundance_stream[-1] > 0:
+        if abundance_stream[-1] > aliveness:
             number_alive_end +=1
-        if abundance_stream[0] > 0:
-            number_alive_start +=1
+            abundance_end += abundance_stream[-1]
 
 
     s = shelve.open(str(sys.argv[1]))
 
 
     try:
-        s['NUMBER_ALIVE_START'] = number_alive_start
-        s['NUMBER_ALIVE_END']   = number_alive_end
-        s['ENV_END']            = results[SPECIES_K][-1]
-
+        s['NUMBER_ALIVE_START']     = number_alive_start
+        s['NUMBER_ALIVE_END']       = number_alive_end
+        s['ENV_END']                = results[SPECIES_K][-1]
+        s['TOTAL_ABUNDANCE_START']  = abundance_start
+        s['TOTAL_ABUNDANCE_END']    = abundance_end
     finally:
         s.close()
 

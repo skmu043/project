@@ -27,8 +27,10 @@ for file in tqdm(data_archives):
         env_end = s['ENV_END']
         num_alive_start = s['NUMBER_ALIVE_START']
         num_alive_end = s['NUMBER_ALIVE_END']
+        total_abundance_start = s['TOTAL_ABUNDANCE_START']
+        total_abundance_end = s['TOTAL_ABUNDANCE_END']
 
-        RESULT_DATA.append((omega,mu,niche,survival_threshold,env_start,env_end,num_alive_start,num_alive_end))
+        RESULT_DATA.append((omega,mu,niche,survival_threshold,env_start,env_end,num_alive_start,num_alive_end,total_abundance_start,total_abundance_end))
         count += 1
 
     finally:
@@ -193,7 +195,8 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
         plt.xticks(X_axis, X)
 
         plt.legend(prop={'size': 30})
-        plt.savefig('number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end.jpg')
+        plt.tight_layout()
+        plt.savefig('number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end_'+str(each_survival_threshold)+'.jpg')
         plt.show()
         #[uniq_start_temp (19), survival_threshold (2),number of simulations with zero alives at end, number of alives above 0]
 
@@ -580,18 +583,21 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
             ax4.set_xlabel('Temperature',fontsize=15)
             ax4.set_ylabel('Average number of alive species',fontsize=15)
 
-    ax4.legend(loc = 'lower right')
+    fig.savefig('average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels_quad.jpg')
     fig.show()
 
     fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
     fig.suptitle('Number Alive for each Temperature at each Survival Threshold',fontsize=30)
     #fig.set_size_inches(3, 1.5)
 
+    #plt.bar(X_axis - 0.2, alive_below, 0.4, label = 'Simulations with no alive species')
+
+
     index = 0
     for temp in uniq_start_temps:
         linex = [0.2,0.4,0.6,0.8]
         liney = [st2_s[index],st4_s[index],st6_s[index],st8_s[index]]
-        ax2.plot(linex, liney, label=str(temp))
+        ax2.scatter(linex, liney, label=str(temp))
         index+=1
 
 
@@ -603,13 +609,15 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
     for temp in uniq_start_temps:
         linex = [0.2,0.4,0.6,0.8]
         liney = [st2_e[index],st4_e[index],st6_e[index],st8_e[index]]
-        ax1.plot(linex, liney, label=str(temp))
+        ax1.scatter(linex, liney, label=str(temp))
         index+=1
 
     ax2.set_title('Species at the end of simulations', fontsize=20)
     ax2.set_xlabel('Survival Threshold', fontsize=20)
     ax2.set_ylabel('Alive Species', fontsize=20)
     ax2.legend()
+    fig.tight_layout()
+    fig.savefig('average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels_threshold.jpg')
     fig.show()
 
     plt.figure(figsize=(XFIG,YFIG), dpi=200)
@@ -624,9 +632,10 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
     for temp in uniq_start_temps:
         linex = [0.2,0.4,0.6,0.8]
         liney = [st2_e[index]-st2_s[index],st4_e[index]-st4_s[index],st6_e[index]-st6_s[index],st8_e[index]-st8_s[index]]
-        plt.plot(linex, liney, label=str(temp))
+        plt.scatter(linex, liney, label=str(temp))
         index+=1
     plt.legend()
+    plt.tight_layout()
     plt.savefig('average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels.jpg')
     plt.show()
 
@@ -714,7 +723,8 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
         #plt.xticks(X_axis, X)
 
         plt.legend(prop={'size': 20})
-        plt.savefig('number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R.jpg')
+        plt.tight_layout()
+        plt.savefig('number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_' + str(each_survival_threshold) + '.jpg' )
         plt.show()
         #[uniq_start_temp (19), survival_threshold (2),number of simulations with zero alives at end, number of alives above 0]
 
@@ -818,6 +828,7 @@ def number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_insi
     plt.bar(uniq_start_temps + 0.8, bar_zero_all, width, label = 'Dyke/Weaver only inside bounds 0 - R')
     plt.bar(uniq_start_temps + 2, bar_zero2_all, width, label = 'Survival Threshold only inside bounds 0 - R')
     plt.legend(prop={'size': 25})
+    plt.tight_layout()
     plt.savefig('number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_inside_only_truncated_inside_only.jpg')
     plt.show()
 
@@ -864,36 +875,158 @@ def end_temperature_both_zero_zero2_with_alives_overlay():
     cb = plt.colorbar(orientation="vertical")
     cb.ax.tick_params(labelsize=20)
     cb.set_label(label="Number of alive species",size=YFONT)
+    plt.tight_layout()
     plt.savefig('end_temperature_both_zero_zero2_with_alives_overlay.jpg')
     plt.show()
 
 #=======================================================================================================================
 #end_temperature_both_zero_zero2_with_alives_overlay()
 #=======================================================================================================================
+def abundance_alive_at_each_start_temperature_at_the_start_of_simulation():
+
+
+    # Write UP notes - if simulation ended with zero species alive - its still included in these results
+    # Where it won't be included is in the temperature section where species alive at the end matters
+    # no species alive at the end of a simulation and a temperature between 0 and R does not mean the
+    # simulation is good - there cannot be regulation without species (temperature stays at a value with no change
+    # when the species no longer exist)
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # total_abundance_start[8]
+    # total_abundance_end[9])
+    # ))
+
+    start_temp_0 = []
+    abundance_start_0 = []
+    start_temp_2 = []
+    abundance_start_2 = []
+
+    for data_point in RESULT_DATA:
+        if(data_point[2]==5 and (data_point[3]==0 or data_point[3]==0.2)):
+            if(data_point[3]==0):
+                start_temp_0.append(data_point[4])
+                abundance_start_0.append(data_point[8])
+            if(data_point[3]==0.2):
+                start_temp_2.append(data_point[4])
+                abundance_start_2.append(data_point[8])
+
+
+    #print(start_temp_0)
+    #print(alive_start_0)
+
+    plt.figure(figsize=(XFIG,YFIG), dpi=200)
+    plt.title('Total Abundance of species at the start of the simulation', fontsize=TFONT)
+    plt.xlabel('Starting Temperature', fontsize=XFONT)
+    plt.ylabel('Total Abundance', fontsize=YFONT)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+    plt.scatter(start_temp_0, abundance_start_0, label='Dyke/Weaver Model')
+    plt.scatter(start_temp_2, abundance_start_2, label="Survival Threshold 0.2")
+    plt.xticks(np.arange(0,100,5))
+    plt.legend(prop={'size': 30})
+    plt.tight_layout()
+    plt.savefig('abundance_alive_at_each_start_temperature_at_the_start_of_simulation.jpg')
+    plt.show()
 #=======================================================================================================================
-#data_verification()
+#abundance_alive_at_each_start_temperature_at_the_start_of_simulation()
+#=======================================================================================================================
+def abundance_alive_at_each_start_temperature_at_the_end_of_simulation():
+
+
+    # Write UP notes - if simulation ended with zero species alive - its still included in these results
+    # Where it won't be included is in the temperature section where species alive at the end matters
+    # no species alive at the end of a simulation and a temperature between 0 and R does not mean the
+    # simulation is good - there cannot be regulation without species (temperature stays at a value with no change
+    # when the species no longer exist)
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # total_abundance_start[8]
+    # total_abundance_end[9])
+    # ))
+
+    start_temp_0 = []
+    abundance_end_0 = []
+    start_temp_2 = []
+    abundance_end_2 = []
+
+    for data_point in RESULT_DATA:
+        if(data_point[2]==5 and (data_point[3]==0 or data_point[3]==0.2)):
+            if(data_point[3]==0):
+                start_temp_0.append(data_point[4])
+                abundance_end_0.append(data_point[9])
+            if(data_point[3]==0.2):
+                start_temp_2.append(data_point[4])
+                abundance_end_2.append(data_point[9])
+
+
+    #print(start_temp_0)
+    #print(alive_start_0)
+
+    plt.figure(figsize=(XFIG,YFIG), dpi=200)
+    plt.title('Total Abundance of species at the start of the simulation', fontsize=TFONT)
+    plt.xlabel('Starting Temperature', fontsize=XFONT)
+    plt.ylabel('Total Abundance', fontsize=YFONT)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+    plt.scatter(start_temp_0, abundance_end_0, label='Dyke/Weaver Model')
+    plt.scatter(start_temp_2, abundance_end_2, label="Survival Threshold 0.2")
+    plt.xticks(np.arange(0,100,5))
+    plt.legend(prop={'size': 30})
+    plt.tight_layout()
+    plt.savefig('abundance_alive_at_each_start_temperature_at_the_end_of_simulation.jpg')
+    plt.show()
+
+#=======================================================================================================================
+#abundance_alive_at_each_start_temperature_at_the_end_of_simulation()
+#=======================================================================================================================
+
+
+#=======================================================================================================================
+data_verification()
 #=======================================================================================================================
 #=======================================================================================================================
-number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
+#number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
 #=======================================================================================================================
 #=======================================================================================================================
-number_alive_at_each_start_temperature_at_the_start_of_simulation()
+#number_alive_at_each_start_temperature_at_the_start_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-number_alive_at_each_start_temperature_at_the_end_of_simulation()
+#number_alive_at_each_start_temperature_at_the_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
+#average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R()
+#number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R()
 #=======================================================================================================================
 #=======================================================================================================================
-number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_inside_only_truncated_inside_only()
+#number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_inside_only_truncated_inside_only()
 #=======================================================================================================================
 #=======================================================================================================================
-end_temperature_both_zero_zero2_with_alives_overlay()
+#end_temperature_both_zero_zero2_with_alives_overlay()
 #=======================================================================================================================
 #=======================================================================================================================
-average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels()
+#average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels()
+#=======================================================================================================================
+#=======================================================================================================================
+#abundance_alive_at_each_start_temperature_at_the_start_of_simulation()
+#=======================================================================================================================
+#=======================================================================================================================
+#abundance_alive_at_each_start_temperature_at_the_end_of_simulation()
 #=======================================================================================================================
