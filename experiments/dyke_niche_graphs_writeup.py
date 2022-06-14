@@ -171,7 +171,10 @@ def fYaI(Xe, Ni, u, T):
     return(abundance)
 
 def fXe(Ya, Ni, u):
-    return ((math.sqrt(((math.log(Ya,math.e) / -1) * (2*(Ni**2))))) + u)
+    return (u + (math.sqrt(((math.log(Ya,math.e) / -1) * (2*(Ni**2))))))
+
+def fXe_negative(Ya, Ni, u):
+    return (u - (math.sqrt(((math.log(Ya,math.e) / -1) * (2*(Ni**2))))))
 
 def fYaIx(Xe, Ni, u, NRange):
 
@@ -233,6 +236,14 @@ def plot_inverse_case():
 
 
     print("Truncation : " , str(fYaI(fXe(0.2, 5, u), 20, u, 0)))
+
+    print(fXe(0.5, 20, u))
+    print(fXe_negative(0.5, 20, u))
+
+    print("Verification : ")
+
+    print(fYaI(fXe(0.5, 20, u), 20, u, 0))
+    print(fYaI(fXe_negative(0.5, 20, u), 20, u, 0))
 
 
 plot_inverse_case()
