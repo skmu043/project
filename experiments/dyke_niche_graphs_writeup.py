@@ -125,6 +125,50 @@ def plot_alphas():
 
     plt.show()
 
+def fYa(Xe):
+
+    Ni = 5 # niche
+    u = 50 # ideal growing temperature
+    return (((math.e) ** ((-1) * (((abs(Xe-u)) ** 2) / (2*(Ni**2))))))
+
+def fXe(Ya):
+
+    Ni = 5 # niche
+    u = 50 # ideal growing temperature
+
+    return (math.sqrt(((math.log(Ya,math.e) / -1) * (2*(Ni**2))))) + u
+
+def plot_inverse():
+
+    Xe = 60 # spot on x axis - temperature
+    Ya = 0  # abundance
+    Ni = 5 # niche
+    u = 50 # ideal growing temperature
+
+    #Ya = ((math.e) ** ((-1) * (((abs(Xe-u)) ** 2) / (2*(Ni**2)))))
+    #Xe = (math.sqrt(((math.log(Ya,math.e) / -1) * (2*(Ni**2))))) + u
+    #Xe = np.linspace(-50,150,1000)
+
+
+    f2 = np.vectorize(fYa)
+    x = np.arange(-5, 105, 0.001)
+    plt.plot(x, f2(x))
+    plt.show()
+
+    f2 = np.vectorize(fXe)
+    x = np.arange(0.00001, 1, 0.0001)
+    plt.plot(f2(x), x)
+    plt.show()
+
+
+    print(fYa(58.97061288997051))
+
+    print(fXe(1))
+
+    print(fXe(0.2))
+
+plot_inverse()
+
 truncation = 0.2
 
 def plot_alphas_truncated():
@@ -528,6 +572,7 @@ def plot_gaussian_trunk():
 if __name__ == '__main__':
 
     for sim in range(0, 1000):
+        break
         print(sim)
         omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
         mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
