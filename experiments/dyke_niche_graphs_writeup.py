@@ -125,17 +125,10 @@ def plot_alphas():
 
     plt.show()
 
-def fYa(Xe):
-
-    Ni = 5 # niche
-    u = 50 # ideal growing temperature
+def fYa(Xe, Ni, u):
     return (((math.e) ** ((-1) * (((abs(Xe-u)) ** 2) / (2*(Ni**2))))))
 
-def fXe(Ya):
-
-    Ni = 5 # niche
-    u = 50 # ideal growing temperature
-
+def fXe(Ya, Ni, u):
     return (math.sqrt(((math.log(Ya,math.e) / -1) * (2*(Ni**2))))) + u
 
 def plot_inverse():
@@ -152,22 +145,103 @@ def plot_inverse():
 
     f2 = np.vectorize(fYa)
     x = np.arange(-5, 105, 0.001)
-    plt.plot(x, f2(x))
+    plt.plot(x, f2(x, Ni, u))
     plt.show()
 
     f2 = np.vectorize(fXe)
     x = np.arange(0.00001, 1, 0.0001)
-    plt.plot(f2(x), x)
+    plt.plot(f2(x, Ni, u), x)
     plt.show()
 
 
-    print(fYa(58.97061288997051))
+    print(fYa(58.97061288997051, Ni, u))
+    print(fXe(1, Ni, u))
+    print(fXe(0.2, Ni, u))
 
-    print(fXe(1))
+#plot_inverse()
 
-    print(fXe(0.2))
 
-plot_inverse()
+def fYaI(Xe, Ni, u, T):
+
+    abundance = ((math.e) ** ((-1) * (((abs(Xe-u)) ** 2) / (2*(Ni**2)))))
+
+    if(abundance <= T):
+        abundance = 0
+
+    return(abundance)
+
+def fXe(Ya, Ni, u):
+    return ((math.sqrt(((math.log(Ya,math.e) / -1) * (2*(Ni**2))))) + u)
+
+def fYaIx(Xe, Ni, u, NRange):
+
+    abundance = ((math.e) ** ((-1) * (((abs(Xe-u)) ** 2) / (2*(Ni**2)))))
+
+    if((Xe >= u + NRange) or (Xe <= u - NRange)):
+        abundance = 0
+
+    return(abundance)
+
+def plot_inverse_case():
+
+    Ni = 5 # niche
+    u = 50 # ideal growing temperature
+    ST = 0.2
+
+    #print(fYaI(45, Ni, u, ST))
+
+    #f2 = np.vectorize(fYaI)
+    #x = np.arange(-5, 105, 0.001)
+    #plt.plot(x, f2(x, Ni, u, ST))
+    #plt.show()
+
+    alpha = []
+    temps = []
+
+    for x in np.arange(-5, 105, 0.001):
+        temps.append(x)
+        alpha.append(fYaI(x, Ni, u, ST))
+
+    plt.plot(temps,alpha)
+    plt.show()
+
+    Ni = 20
+
+    alpha = []
+    temps = []
+
+    for x in np.arange(-5, 105, 0.001):
+        temps.append(x)
+        alpha.append(fYaI(x, Ni, u, ST))
+
+    plt.plot(temps,alpha)
+    plt.show()
+
+    print(fXe(0.2, 5, u))
+
+    NRange = (fXe(0.2, 5, u) - u)
+
+    alpha = []
+    temps = []
+
+    for x in np.arange(-5, 105, 0.001):
+        temps.append(x)
+        alpha.append(fYaIx(x, Ni, u, NRange))
+    plt.title('truncation : '+str(fYaI(fXe(0.2, 5, u), 20, u, 0)))
+    plt.plot(temps,alpha)
+    plt.show()
+
+
+    print("Truncation : " , str(fYaI(fXe(0.2, 5, u), 20, u, 0)))
+
+
+plot_inverse_case()
+
+
+
+
+
+
 
 truncation = 0.2
 
