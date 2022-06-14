@@ -112,7 +112,7 @@ if __name__ == '__main__':
     for result in tqdm(pool.imap_unordered(run_it, [_ for _ in shelve_files]), total=len(shelve_files)):
         results.append(result)
 
-    print(results)
+    #print(results)
 
     print("SIMULATIONS COMPLETED: " + print_time())
 
