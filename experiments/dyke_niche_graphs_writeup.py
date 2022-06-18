@@ -224,6 +224,9 @@ def plot_inverse_case():
 
     NRange = (fXe(0.2, 5, u) - u)
 
+    print("NRANGE")
+    print(NRange)
+
     alpha = []
     temps = []
 

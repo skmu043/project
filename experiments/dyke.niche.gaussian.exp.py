@@ -41,12 +41,107 @@ finally:
 system_state                = np.zeros(SPECIES_K+ENV_VARS)
 Eg                          = ENV_START
 
-for s_i in range(SPECIES_K):
-    a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
-    if a_star < SURVIVAL_THRESHOLD:
-        a_star = 0
-    system_state[s_i] = a_star
+########################################################################################################################
+# NICHE - Match Range on Niche Change
 
+def fYaI(Xe, Ni, u, T):
+
+    abundance = ((math.e) ** ((-1) * (((abs(Xe-u)) ** 2) / (2*(Ni**2)))))
+
+    if(abundance <= T):
+        abundance = 0
+
+    return(abundance)
+
+def fXe(Ya, Ni, u):
+    return (u + (math.sqrt(((math.log(Ya,math.e) / -1) * (2*(Ni**2))))))
+
+def fXe_negative(Ya, Ni, u):
+    return (u - (math.sqrt(((math.log(Ya,math.e) / -1) * (2*(Ni**2))))))
+
+def fYaIx(Xe, Ni, u, NRange):
+
+    abundance = ((math.e) ** ((-1) * (((abs(Xe-u)) ** 2) / (2*(Ni**2)))))
+
+    if((Xe >= u + NRange) or (Xe <= u - NRange)):
+        abundance = 0
+
+    return(abundance)
+
+def plot_inverse_case():
+
+    Ni = 5 # niche
+    u = 50 # ideal growing temperature
+    ST = 0.2
+
+    alpha = []
+    temps = []
+
+    for x in np.arange(-5, 105, 0.001):
+        temps.append(x)
+        alpha.append(fYaI(x, Ni, u, ST))
+
+    plt.plot(temps,alpha)
+    plt.show()
+
+    Ni = 20
+
+    alpha = []
+    temps = []
+
+    for x in np.arange(-5, 105, 0.001):
+        temps.append(x)
+        alpha.append(fYaI(x, Ni, u, ST))
+
+    plt.plot(temps,alpha)
+    plt.show()
+
+    print(fXe(0.2, 5, u))
+
+    NRange = (fXe(0.2, 5, u) - u)
+
+    alpha = []
+    temps = []
+
+    for x in np.arange(-5, 105, 0.001):
+        temps.append(x)
+        alpha.append(fYaIx(x, Ni, u, NRange))
+    plt.title('truncation : '+str(fYaI(fXe(0.2, 5, u), 20, u, 0)))
+    plt.plot(temps,alpha)
+    plt.show()
+
+
+    print("Truncation : " , str(fYaI(fXe(0.2, 5, u), 20, u, 0)))
+
+    print(fXe(0.5, 20, u))
+    print(fXe_negative(0.5, 20, u))
+
+    print("Verification : ")
+
+    print(fYaI(fXe(0.5, 20, u), 20, u, 0))
+    print(fYaI(fXe_negative(0.5, 20, u), 20, u, 0))
+
+
+########################################################################################################################
+
+if(NICHE == 5):
+    for s_i in range(SPECIES_K):
+        a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
+        if a_star < SURVIVAL_THRESHOLD:
+            a_star = 0
+        system_state[s_i] = a_star
+
+###########=========================
+if(NICHE == 10):
+    for s_i in range(SPECIES_K):
+        NRange = (fXe(SURVIVAL_THRESHOLD, 5, mu[0][s_i]) - mu[0][s_i])
+        a_star = fYaIx(Eg, NICHE, mu[0][s_i], NRange)
+        system_state[s_i] = a_star
+
+#truncation_level = fYaI(fXe(0.2, 5, u), 20, u, 0))
+###########=========================
+
+########################################################################################################################
 # Before env var gets added - the last spot is zero
 abundance_start = sum(system_state)
 
@@ -71,12 +166,21 @@ def rates_of_change_system_state(system_state):
 
     Eg = system_state[SPECIES_K+0]
 
-    for s_i in range(SPECIES_K):
-        a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
-        if a_star < SURVIVAL_THRESHOLD:
-            a_star = 0
-        rate_of_change[s_i] =  a_star - system_state[s_i]
-        #da/dt = a* - a
+
+    if(NICHE == 5):
+        for s_i in range(SPECIES_K):
+            a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
+            if a_star < SURVIVAL_THRESHOLD:
+                a_star = 0
+            rate_of_change[s_i] =  a_star - system_state[s_i]
+            #da/dt = a* - a
+    if(NICHE == 10):
+        for s_i in range(SPECIES_K):
+            NRange = (fXe(SURVIVAL_THRESHOLD, 5, mu[0][s_i]) - mu[0][s_i])
+            a_star = fYaIx(Eg, NICHE, mu[0][s_i], NRange)
+            rate_of_change[s_i] =  a_star - system_state[s_i]
+            #da/dt = a* - a
+
     biotic_force_FG = 0
 
     for s_i in range(SPECIES_K):

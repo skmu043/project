@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
         for start_temperature in np.arange (5,100, 5):
             for survival_threshold in np.arange (0,1, 0.2):
-                for niche_size in [5]:
+                for niche_size in [5, 10]:
 
                     #print(start_temperature, float(str("{:.2f}".format(survival_threshold))), niche_size)
 
