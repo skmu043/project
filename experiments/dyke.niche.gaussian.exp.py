@@ -68,60 +68,6 @@ def fYaIx(Xe, Ni, u, NRange):
 
     return(abundance)
 
-def plot_inverse_case():
-
-    Ni = 5 # niche
-    u = 50 # ideal growing temperature
-    ST = 0.2
-
-    alpha = []
-    temps = []
-
-    for x in np.arange(-5, 105, 0.001):
-        temps.append(x)
-        alpha.append(fYaI(x, Ni, u, ST))
-
-    plt.plot(temps,alpha)
-    plt.show()
-
-    Ni = 20
-
-    alpha = []
-    temps = []
-
-    for x in np.arange(-5, 105, 0.001):
-        temps.append(x)
-        alpha.append(fYaI(x, Ni, u, ST))
-
-    plt.plot(temps,alpha)
-    plt.show()
-
-    print(fXe(0.2, 5, u))
-
-    NRange = (fXe(0.2, 5, u) - u)
-
-    alpha = []
-    temps = []
-
-    for x in np.arange(-5, 105, 0.001):
-        temps.append(x)
-        alpha.append(fYaIx(x, Ni, u, NRange))
-    plt.title('truncation : '+str(fYaI(fXe(0.2, 5, u), 20, u, 0)))
-    plt.plot(temps,alpha)
-    plt.show()
-
-
-    print("Truncation : " , str(fYaI(fXe(0.2, 5, u), 20, u, 0)))
-
-    print(fXe(0.5, 20, u))
-    print(fXe_negative(0.5, 20, u))
-
-    print("Verification : ")
-
-    print(fYaI(fXe(0.5, 20, u), 20, u, 0))
-    print(fYaI(fXe_negative(0.5, 20, u), 20, u, 0))
-
-
 ########################################################################################################################
 
 if(NICHE == 5):
@@ -156,6 +102,7 @@ for abundance_init in system_state:
 for _ in range(ENV_VARS):
     system_state[SPECIES_K+_] = ENV_START
 
+
 def rates_of_change_system_state(system_state):
 
     # Environment Vars Change >>> Abundance >>> Biotic Force Changes >>> Environment Vars Change\
@@ -165,7 +112,6 @@ def rates_of_change_system_state(system_state):
     rate_of_change = system_state.copy()
 
     Eg = system_state[SPECIES_K+0]
-
 
     if(NICHE == 5):
         for s_i in range(SPECIES_K):
