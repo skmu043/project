@@ -15,6 +15,9 @@ data_archives = os.listdir(data_dr)
 
 count = 0
 
+plt.rcParams["font.family"] = "Times New Roman"
+
+
 for file in tqdm(data_archives):
     s = shelve.open(data_dr + "/" + str(file) + "/dyke.gaussian.exp1_exp2.data")
     #print(count)
@@ -131,6 +134,18 @@ TFONT = 40
 #=======================================================================================================================
 def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end():
 
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+
     x = [] #start temp
     y = [] #number alive at the end
     z = [] #survival threshold
@@ -143,6 +158,7 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
             y.append(data_point[7])
             z.append(data_point[3])
 
+
     uniq_start_temps = np.unique(np.array(x))
     uniq_survivals = np.unique(np.array(z))
     main_result = []
@@ -152,28 +168,35 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
 
     for each_survival_threshold in uniq_survivals:
 
-        plt.figure(figsize=(XFIG,YFIG), dpi=200)
-        plt.title('Dyke/Weaver Model : Simulations with Alive Species', fontsize=TFONT)
+        fig, ax = plt.subplots(figsize=(20,20), dpi=200)
+
+        plt.title('JI Model', fontsize=TFONT)
         if(each_survival_threshold == 0.2):
-            plt.title('Simulations with Alive Species using a survival threshold of 0.2', fontsize=TFONT)
-        plt.xlabel('Starting Temperature', fontsize=XFONT)
-        plt.ylabel('Simulations with/without Alive Species', fontsize=YFONT)
+            plt.title('ST Model', fontsize=TFONT)
+        ax.set_xlabel('Starting Temperature', fontsize=XFONT)
+        ax.set_ylabel('Number of Simulations', fontsize=YFONT)
         plt.xticks(fontsize=X_TICKS)
         plt.yticks(fontsize=Y_TICKS)
+
+
 
         alive_below = []
         alive_above = []
 
+
+        data_size = 0
         for each_start_temp in uniq_start_temps:
             index_1 = 0
             below_zero = 0
             above_zero = 0
+            data_size=0
             for each_row in x:
                 if(each_row == each_start_temp and z[index_1] == each_survival_threshold):
                     if(y[index_1] <= 0):
                         below_zero +=1
                     if(y[index_1] > 0):
                         above_zero +=1
+                    data_size +=1
                     #print(each_survival_threshold,each_start_temp,x[index_1],y[index_1],z[index_1])
                 index_1 +=1
 
@@ -185,20 +208,26 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
         X=[]
         for each in uniq_start_temps:
             X.append(str(each))
+        plt.ylim([0, data_size + 5])
 
         X_axis = np.arange(len(X))
 
-        #print(main_result)
+        p1 = ax.bar(X_axis, alive_above,  label='Simulations with alive species')
+        p2 = ax.bar(X_axis, alive_below, bottom=alive_above , label='Simulations with no alive species')
 
-        plt.bar(X_axis - 0.2, alive_below, 0.4, label = 'Simulations with no alive species')
-        plt.bar(X_axis + 0.2, alive_above, 0.4, label = 'Simulation with alive species')
-        plt.xticks(X_axis, X)
+        ax.set_xticks(X_axis, labels = X)
+        ax.legend()
 
-        plt.legend(prop={'size': 30})
+        # Label with label_type 'center' instead of the default 'edge'
+        ax.bar_label(p1, label_type='center', fontsize=25)
+        if(each_survival_threshold == 0.2):
+            ax.bar_label(p2, label_type='center', fontsize=25)
+        #ax.bar_label(p2)
+        ax.legend(loc='best', fontsize=25)
         plt.tight_layout()
         plt.savefig('number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end_'+str(each_survival_threshold)+'.jpg')
         plt.show()
-        #[uniq_start_temp (19), survival_threshold (2),number of simulations with zero alives at end, number of alives above 0]
+
 
 
 #=======================================================================================================================
@@ -239,17 +268,24 @@ def number_alive_at_each_start_temperature_at_the_start_of_simulation():
                 alive_start_2.append(data_point[6])
 
 
-    #print(start_temp_0)
-    #print(alive_start_0)
+    #print(len(start_temp_0))
+    #print(len(alive_start_0))
+
+    #count = 0
+    #for item in start_temp_2:
+    #    if(item == 10):
+    #         count +=1
+    #print(count)
+
 
     plt.figure(figsize=(XFIG,YFIG), dpi=200)
-    plt.title('Number of alive species at the start of the simulation', fontsize=TFONT)
-    plt.xlabel('Starting Temperature', fontsize=XFONT)
-    plt.ylabel('Alive Species', fontsize=YFONT)
-    plt.xticks(fontsize=X_TICKS)
-    plt.yticks(fontsize=Y_TICKS)
-    plt.scatter(start_temp_0, alive_start_0, label='Dyke/Weaver Model')
-    plt.scatter(start_temp_2, alive_start_2, label="Survival Threshold 0.2")
+    plt.title('Number of alive species at the start of the simulation', fontsize=40)
+    plt.xlabel('Starting Temperature', fontsize=35)
+    plt.ylabel('Alive Species', fontsize=35)
+    plt.xticks(fontsize=28)
+    plt.yticks(fontsize=28)
+    #plt.scatter(start_temp_0, alive_start_0, label='Dyke/Weaver Model')
+    plt.scatter(start_temp_2, alive_start_2, label="ST Model")
     plt.xticks(np.arange(0,100,5))
     plt.legend(prop={'size': 30})
     plt.tight_layout()
@@ -272,32 +308,34 @@ def number_alive_at_each_start_temperature_at_the_end_of_simulation():
     # num_alive_end[7]
     # ))
 
-    start_temp_0 = []
-    alive_end_0 = []
     start_temp_2 = []
     alive_end_2 = []
 
     for data_point in RESULT_DATA:
         if(data_point[2]==5 and (data_point[3]==0 or data_point[3]==0.2)):
-            if(data_point[3]==0):
-                start_temp_0.append(data_point[4])
-                alive_end_0.append(data_point[7])
             if(data_point[3]==0.2):
                 start_temp_2.append(data_point[4])
                 alive_end_2.append(data_point[7])
 
 
-    #print(start_temp_0)
-    #print(alive_end_0)
+    #print(len(start_temp_0))
+    #print(len(alive_start_0))
+
+    #count = 0
+    #for item in start_temp_2:
+    #    if(item == 10):
+    #         count +=1
+    #print(count)
+
 
     plt.figure(figsize=(XFIG,YFIG), dpi=200)
-    plt.title('Number of alive species at the end of the simulation', fontsize=TFONT)
-    plt.xlabel('Starting Temperature', fontsize=XFONT)
-    plt.ylabel('Alive Species', fontsize=YFONT)
-    plt.xticks(fontsize=X_TICKS)
-    plt.yticks(fontsize=Y_TICKS)
-    plt.scatter(start_temp_0, alive_end_0, label='Dyke/Weaver Model')
-    plt.scatter(start_temp_2, alive_end_2, label="Survival Threshold 0.2")
+    plt.title('Number of alive species at the end of the simulation', fontsize=40)
+    plt.xlabel('Starting Temperature', fontsize=35)
+    plt.ylabel('Alive Species', fontsize=35)
+    plt.xticks(fontsize=28)
+    plt.yticks(fontsize=28)
+    #plt.scatter(start_temp_0, alive_start_0, label='Dyke/Weaver Model')
+    plt.scatter(start_temp_2, alive_end_2, label="ST Model")
     plt.xticks(np.arange(0,100,5))
     plt.legend(prop={'size': 30})
     plt.tight_layout()
@@ -1148,39 +1186,258 @@ def average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_s
 #=======================================================================================================================
 #average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation()
 #=======================================================================================================================
+
+def end_temperature_both_zero_zero2_with_stabilization_overlay():
+
+    plt.figure(figsize=(XFIG,YFIG), dpi=200)
+    plt.title('End temperature of Dyke/Weaver vs Survival Threshold at 0.2 starting at 50', fontsize=TFONT)
+    plt.xlabel('End Temperature using Survival Threshold', fontsize=XFONT)
+    plt.ylabel('End Temperature Dyke/Weaver Model', fontsize=YFONT)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+    plt.ylim(-50, 150)
+    plt.xlim(-50, 150)
+
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+
+    SUB_SET = []
+
+    for data_point in tqdm(RESULT_DATA):
+        if((data_point[3] == 0 or data_point[3] == 0.2) and data_point[4] == 50 and data_point[2] == 5):
+            SUB_SET.append(data_point)
+
+    UNIQ_SAMPLES = []
+    for data_point in SUB_SET:
+        if ((data_point[0],data_point[1])) not in UNIQ_SAMPLES:
+            UNIQ_SAMPLES.append((data_point[0],data_point[1]))
+
+
+    st_end_temp = []
+    dw_end_temp = []
+
+    st_in = []
+    dw_in = []
+
+
+    for uniq in UNIQ_SAMPLES:
+        st_in_bounds = 0
+        dw_in_bounds = 0
+        for each in SUB_SET:
+            if(((uniq[0],uniq[1])) == ((each[0],each[1]))):
+                if(each[3] == 0):
+                    dw_end_temp.append(each[5])
+                    if(each[5] < 100 and each[5] > 0):
+                        dw_in_bounds = 1
+                if(each[3] == 0.2):
+                    st_end_temp.append(each[5])
+                    if(each[5] < 100 and each[5] > 0):
+                        st_in_bounds = 1
+        st_in.append(st_in_bounds)
+        dw_in.append(dw_in_bounds)
+
+
+
+    st_x_1 = []
+    dw_x_1 = []
+
+    st_x_2 = []
+    dw_x_2 = []
+
+    st_x_3 = []
+    dw_x_3 = []
+
+    index = 0
+    for item in st_end_temp:
+        if(st_in[index] == 1 and dw_in[index] == 1):
+            #plt.scatter(st_end_temp[index], dw_end_temp[index], s=200, label="Both IN")
+            st_x_1.append(st_end_temp[index])
+            dw_x_1.append(dw_end_temp[index])
+        index += 1
+
+    index = 0
+    for item in st_end_temp:
+        if(st_in[index] == 1 and dw_in[index] == 0):
+            #plt.scatter(st_end_temp[index], dw_end_temp[index], s=200, label="ST ONLY IN")
+            st_x_2.append(st_end_temp[index])
+            dw_x_2.append(dw_end_temp[index])
+
+        index += 1
+
+    index = 0
+    for item in st_end_temp:
+        if(st_in[index] == 0 and dw_in[index] == 1):
+            #plt.scatter(st_end_temp[index], dw_end_temp[index], s=200, label="DW ONLY IN")
+            st_x_3.append(st_end_temp[index])
+            dw_x_3.append(dw_end_temp[index])
+
+        index += 1
+        bt = plt.scatter(st_x_1, dw_x_1, c='b', s=200, label="Both IN")
+        st = plt.scatter(st_x_2, dw_x_2, c='g', s=200, label="ST ONLY IN")
+        dw = plt.scatter(st_x_3, dw_x_3, c='orange', s=200, label="DW ONLY IN")
+
+    #plt.scatter(zero_t, two_t, c=alives, cmap = 'viridis', s=200)
+    #cb = plt.colorbar(orientation="vertical")
+    #cb.ax.tick_params(labelsize=20)
+    #cb.set_label(label="Number of alive species",size=YFONT)
+    plt.legend((bt,st,dw),["Both IN" , "ST ONLY IN", "DW ONLY IN"])
+
+
+    plt.tight_layout()
+    plt.savefig('end_temperature_both_zero_zero2_with_stabilization_overlay.jpg')
+    plt.show()
+
+#=======================================================================================================================
+#end_temperature_both_zero_zero2_with_stabilization_overlay()
+#=======================================================================================================================
+def end_temperature_both_zero_zero2_with_start_temps_overlay():
+
+    plt.figure(figsize=(XFIG,YFIG), dpi=200)
+    plt.title('End temperature of Dyke/Weaver vs Survival Threshold at 0.2 starting at 50', fontsize=TFONT)
+    plt.xlabel('End Temperature using Survival Threshold', fontsize=XFONT)
+    plt.ylabel('End Temperature Dyke/Weaver Model', fontsize=YFONT)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+    plt.ylim(-50, 150)
+    plt.xlim(-50, 150)
+
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+    zero_t = []
+    two_t = []
+    start_temps = []
+
+    for data_point in tqdm(RESULT_DATA):
+        if((data_point[3] == 0 or data_point[3] == 0.2) and data_point[2] == 5):
+            if(data_point[3] == 0):
+                zero_t.append(data_point[5])
+            if(data_point[3] == 0.2):
+                two_t.append(data_point[5])
+                start_temps.append(data_point[4])
+
+    plt.scatter(zero_t, two_t, c=start_temps, cmap = 'plasma', s=200)
+    cb = plt.colorbar(orientation="vertical")
+    cb.ax.tick_params(labelsize=20)
+    cb.set_label(label="Start Temperature of ST",size=YFONT)
+    plt.tight_layout()
+    plt.savefig('end_temperature_both_zero_zero2_with_start_temps_overlay.jpg')
+    plt.show()
+
+#=======================================================================================================================
+#end_temperature_both_zero_zero2_with_start_temps_overlay()
+#=======================================================================================================================
+
+def end_temperature_both_zero_zero2_with_start_temps_dw_overlay():
+
+    plt.figure(figsize=(XFIG,YFIG), dpi=200)
+    plt.title('End temperature of Dyke/Weaver vs Survival Threshold at 0.2 starting at 50', fontsize=TFONT)
+    plt.xlabel('End Temperature using Survival Threshold', fontsize=XFONT)
+    plt.ylabel('End Temperature Dyke/Weaver Model', fontsize=YFONT)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+    plt.ylim(-50, 150)
+    plt.xlim(-50, 150)
+
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+    zero_t = []
+    two_t = []
+    start_temps = []
+
+    for data_point in tqdm(RESULT_DATA):
+        if((data_point[3] == 0 or data_point[3] == 0.2) and data_point[2] == 5):
+            if(data_point[3] == 0):
+                zero_t.append(data_point[5])
+                start_temps.append(data_point[4])
+            if(data_point[3] == 0.2):
+                two_t.append(data_point[5])
+
+
+    plt.scatter(zero_t, two_t, c=start_temps, cmap = 'plasma', s=200)
+    cb = plt.colorbar(orientation="vertical")
+    cb.ax.tick_params(labelsize=20)
+    cb.set_label(label="Start Temperature of DW",size=YFONT)
+    plt.tight_layout()
+    plt.savefig('end_temperature_both_zero_zero2_with_start_temps_dw_overlay.jpg')
+    plt.show()
+
+#=======================================================================================================================
+#end_temperature_both_zero_zero2_with_start_temps_dw_overlay()
+#=======================================================================================================================
+
+
+
+
 #=======================================================================================================================
 #data_verification()
 #=======================================================================================================================
 #=======================================================================================================================
-number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
+#number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
 #=======================================================================================================================
 #=======================================================================================================================
-number_alive_at_each_start_temperature_at_the_start_of_simulation()
+#number_alive_at_each_start_temperature_at_the_start_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-number_alive_at_each_start_temperature_at_the_end_of_simulation()
+#number_alive_at_each_start_temperature_at_the_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
+#average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R()
+#number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R()
 #=======================================================================================================================
 #=======================================================================================================================
-number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_inside_only_truncated_inside_only()
+#number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_inside_only_truncated_inside_only()
 #=======================================================================================================================
 #=======================================================================================================================
-end_temperature_both_zero_zero2_with_alives_overlay()
+#end_temperature_both_zero_zero2_with_alives_overlay()
 #=======================================================================================================================
 #=======================================================================================================================
-average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels()
+#average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels()
 #=======================================================================================================================
 #=======================================================================================================================
-abundance_alive_at_each_start_temperature_at_the_start_of_simulation()
+#abundance_alive_at_each_start_temperature_at_the_start_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-abundance_alive_at_each_start_temperature_at_the_end_of_simulation()
+#abundance_alive_at_each_start_temperature_at_the_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation()
+#average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation()
 #=======================================================================================================================
+#=======================================================================================================================
+#end_temperature_both_zero_zero2_with_stabilization_overlay()
+#=======================================================================================================================
+#=======================================================================================================================
+#end_temperature_both_zero_zero2_with_start_temps_overlay()
+#=======================================================================================================================
+#=======================================================================================================================
+#end_temperature_both_zero_zero2_with_start_temps_dw_overlay()
+#=======================================================================================================================
+

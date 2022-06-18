@@ -8,7 +8,7 @@ import time
 import sys
 from tqdm import tqdm
 
-SAMPLE_SIZE = 10
+SAMPLE_SIZE = 50
 SAMPLE_STEP = 1
 RUN_ID = int(time.time())
 
@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
         for start_temperature in np.arange (5,100, 5):
             for survival_threshold in np.arange (0,1, 0.2):
-                for niche_size in [3, 5, 10]:
+                for niche_size in [5]:
 
                     #print(start_temperature, float(str("{:.2f}".format(survival_threshold))), niche_size)
 

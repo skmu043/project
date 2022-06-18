@@ -250,10 +250,6 @@ plot_inverse_case()
 
 
 
-
-
-
-
 truncation = 0.2
 
 def plot_alphas_truncated():
