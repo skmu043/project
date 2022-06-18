@@ -82,22 +82,21 @@ if __name__ == '__main__':
             for survival_threshold in np.arange (0,1, 0.2):
                 for niche_size in [5, 10]:
 
-                    #print(start_temperature, float(str("{:.2f}".format(survival_threshold))), niche_size)
+                    if not (niche_size == 10 and survival_threshold == 0): # Math Domain Error : ST can't be zero
+                        simulation_run_shelve = init_shelve()
+                        shelve_files.append(simulation_run_shelve)
+                        #print("Creating: ",simulation_run_shelve)
+                        simulation_shelve = shelve.open(simulation_run_shelve)
 
-                    simulation_run_shelve = init_shelve()
-                    shelve_files.append(simulation_run_shelve)
-                    #print("Creating: ",simulation_run_shelve)
-                    simulation_shelve = shelve.open(simulation_run_shelve)
+                        try:
+                            simulation_shelve['omega']              = omega
+                            simulation_shelve['mu']                 = mu
+                            simulation_shelve['ENV_START']          = start_temperature
+                            simulation_shelve['SURVIVAL_THRESHOLD'] = float(str("{:.2f}".format(survival_threshold)))
+                            simulation_shelve['NICHE']              = niche_size
 
-                    try:
-                        simulation_shelve['omega']              = omega
-                        simulation_shelve['mu']                 = mu
-                        simulation_shelve['ENV_START']          = start_temperature
-                        simulation_shelve['SURVIVAL_THRESHOLD'] = float(str("{:.2f}".format(survival_threshold)))
-                        simulation_shelve['NICHE']              = niche_size
-
-                    finally:
-                        simulation_shelve.close()
+                        finally:
+                            simulation_shelve.close()
 
     print("COMPLETED FILES: " + print_time())
 
