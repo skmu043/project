@@ -19,7 +19,7 @@ plt.rcParams["font.family"] = "Times New Roman"
 
 
 for file in tqdm(data_archives):
-    s = shelve.open(data_dr + "/" + str(file) + "/dyke.gaussian.exp1_exp2.data")
+    s = shelve.open(data_dr + "/" + str(file) + "/dyke.niche.gaussian.exp.data")
     #print(count)
     try:
         omega = s['omega']

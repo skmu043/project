@@ -22,7 +22,7 @@ NICHE               = 5                     # ----------- Niche Size
 LOCAL_SIZE          = 50                    # ----------- Local Population Size (%)
 SURVIVAL_THRESHOLD  = 0
 ENV_START           = [50]
-exp_name            = "dyke.gaussian.exp1_exp2"
+exp_name            = "dyke.niche.gaussian.exp"
 
 def init_shelve():
     data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
