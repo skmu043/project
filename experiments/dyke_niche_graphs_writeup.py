@@ -16,6 +16,7 @@ import matplotlib as mpl
 from scipy import optimize
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap, BoundaryNorm
+plt.rcParams["font.family"] = "Times New Roman"
 
 #from numba import jit
 
@@ -249,11 +250,54 @@ def plot_inverse_case():
     print(fYaI(fXe_negative(0.5, 20, u), 20, u, 0))
 
 
-plot_inverse_case()
-
-
 
 truncation = 0.2
+
+
+def plot_temps():
+
+    temperatures = []
+    step = 0.01
+
+    for x in np.arange (-25, RANGE_R+25, step):
+        temperatures.append(x)
+
+    abundance_for_st = [[] for _ in range(SPECIES_K)]
+    step = 0.01
+
+    for y in range(SPECIES_K):
+        for x in np.arange (-25, RANGE_R+25, step):
+            aliveness = (math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2))))
+            if(aliveness <= truncation and aliveness >= (-1 * truncation)):
+                abundance_for_st[y].append(0)
+            else:
+                abundance_for_st[y].append(aliveness)
+
+    abundance_for_st_x = [[] for _ in range(SPECIES_K)]
+
+    for y in range(SPECIES_K):
+        for x in np.arange (-25, RANGE_R+25, step):
+            NRange = (fXe(0.2, 5, mu[0][y]) - mu[0][y])
+            aliveness = fYaIx(x, 10, mu[0][y], NRange)
+            abundance_for_st_x[y].append(aliveness)
+
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
+    fig.suptitle('Abundance for a simulation with 20 biotic components', fontsize=30)
+    #fig.set_size_inches(3, 1.5)
+    for _ in range(SPECIES_K-80):
+        ax1.plot(temperatures,abundance_for_st[_])
+    ax1.set_title('ST Model', fontsize=20)
+    ax1.set_xlabel('Temperature', fontsize=20)
+    ax1.set_ylabel('Abundance', fontsize=20)
+    for _ in range(SPECIES_K-80):
+        ax2.plot(temperatures,abundance_for_st_x[_])
+    ax2.set_title('ST X Model', fontsize=20)
+    ax2.set_xlabel('Temperature', fontsize=20)
+    ax2.set_ylabel('Abundance', fontsize=20)
+
+    fig.show()
+
 
 def plot_alphas_truncated():
 
@@ -262,98 +306,60 @@ def plot_alphas_truncated():
     biotic_force = [[] for _ in range(SPECIES_K)]
     step = 0.01
 
-    for x in np.arange (-50, RANGE_R+50, step):
+    for x in np.arange (-25, RANGE_R+25, step):
         temperatures.append(x)
 
     for y in range(SPECIES_K):
-        for x in np.arange (-50, RANGE_R+50, step):
-            biotic_force[y].append((math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2)))) * omega[0][y])
-            #biotic_force[y].append((math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2)))))
+        for x in np.arange (-25, RANGE_R+25, step):
+            aliveness = (math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2))))
+            if(aliveness <= truncation and aliveness >= (-1 * truncation)):
+                biotic_force[y].append(0)
+            else:
+                biotic_force[y].append(aliveness * omega[0][y])
 
-    plt.figure(figsize=(30,30))
-    plt.title('Biotic Force for 100 species in the Original Model', fontsize=30)
-    plt.xlabel('Temperature', fontsize=20)
-    plt.ylabel('Biotic Force', fontsize=20)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
+
+    plt.figure(figsize=(20,20), dpi=300)
+    #plt.title('Biotic Force for 100 species in the JI Model', fontsize=30)
+    plt.xlabel('Temperature', fontsize=30)
+    plt.ylabel('Biotic Force', fontsize=30)
+    plt.xticks(fontsize=25)
+    plt.yticks(fontsize=25)
     for _ in range(SPECIES_K):
         plt.plot(temperatures,biotic_force[_])
 
     plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4, label='Combined Biotic Force')
     plt.legend(prop={'size': 30})
+    plt.tight_layout()
     plt.show()
 
     temperatures = []
-    alive_value = [[] for _ in range(SPECIES_K)]
     step = 0.01
 
-    for x in np.arange (-50, RANGE_R+50, step):
+    for x in np.arange (-25, RANGE_R+25, step):
         temperatures.append(x)
 
+
+    abundance_for_st_x = [[] for _ in range(SPECIES_K)]
+
     for y in range(SPECIES_K):
-        for x in np.arange (-50, RANGE_R+50, step):
-            aliveness = (math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2))))
-            if(aliveness <= truncation and aliveness >= (-1 * truncation)):
-                alive_value[y].append(0)
-            else:
-                alive_value[y].append(aliveness * omega[0][y])
+        for x in np.arange (-25, RANGE_R+25, step):
+            NRange = (fXe(0.2, 5, mu[0][y]) - mu[0][y])
+            aliveness = fYaIx(x, 10, mu[0][y], NRange)
+            abundance_for_st_x[y].append(aliveness * omega[0][y])
 
-
-    plt.figure(figsize=(30,30))
-    plt.title('Biotic Force for 100 species with survival threshold of ' + str(ALIVE_THRESHOLD), fontsize=30)
-    plt.xlabel('Temperature', fontsize=20)
-    plt.ylabel('Biotic Force', fontsize=20)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
+    plt.figure(figsize=(20,20), dpi=300)
+    #plt.title('Biotic Force for 100 species in the ST Model', fontsize=30)
+    plt.xlabel('Temperature', fontsize=30)
+    plt.ylabel('Biotic Force', fontsize=30)
+    plt.xticks(fontsize=25)
+    plt.yticks(fontsize=25)
     for _ in range(SPECIES_K):
-        plt.plot(temperatures,alive_value[_])
+        plt.plot(temperatures,abundance_for_st_x[_])
 
-    plt.plot(temperatures,np.sum((np.array(alive_value, dtype=float)), axis=0), lw=4, label='Combined Biotic Force')
-
+    plt.plot(temperatures,np.sum((np.array(abundance_for_st_x, dtype=float)), axis=0), lw=4, label='Combined Biotic Force')
     plt.legend(prop={'size': 30})
+    plt.tight_layout()
     plt.show()
-
-def plot_temps():
-
-    temperatures = []
-    biotic_force = [[] for _ in range(SPECIES_K)]
-    step = 0.01
-
-    for x in np.arange (-50, RANGE_R+50, step):
-        temperatures.append(x)
-
-    for y in range(SPECIES_K):
-        for x in np.arange (-50, RANGE_R+50, step):
-            biotic_force[y].append((math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2)))))
-
-    alive_value = [[] for _ in range(SPECIES_K)]
-    step = 0.01
-
-    for y in range(SPECIES_K):
-        for x in np.arange (-50, RANGE_R+50, step):
-            aliveness = (math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2))))
-            if(aliveness <= truncation and aliveness >= (-1 * truncation)):
-                alive_value[y].append(0)
-            else:
-                alive_value[y].append(aliveness)
-
-    fig, (ax1, ax2) = plt.subplots(1, 2, dpi=300, figsize=(30,10))
-    fig.suptitle('Abundance for a simulation with 20 biotic components', fontsize=30)
-    #fig.set_size_inches(3, 1.5)
-    for _ in range(SPECIES_K-80):
-        ax1.plot(temperatures,biotic_force[_])
-    ax1.set_title('Original Model', fontsize=20)
-    ax1.set_xlabel('Temperature', fontsize=20)
-    ax1.set_ylabel('Abundance', fontsize=20)
-    for _ in range(SPECIES_K-80):
-        ax2.plot(temperatures,alive_value[_])
-    ax2.set_title('Survival Threshold of 0.2', fontsize=20)
-    ax2.set_xlabel('Temperature', fontsize=20)
-    ax2.set_ylabel('Abundance', fontsize=20)
-
-    fig.show()
-
-
 
 
 
@@ -655,8 +661,8 @@ def plot_gaussian_trunk():
 
 if __name__ == '__main__':
 
-    for sim in range(0, 1000):
-        break
+    for sim in range(0, 1):
+
         print(sim)
         omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
         mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
@@ -699,10 +705,11 @@ if __name__ == '__main__':
         results_nt = results
 
         #================
-        #plot_gaussian_trunk()
-        #plot_temps()
+        #plot_gaussian_trunk() - not needed
+        plot_inverse_case()
+        plot_temps()
         ALIVE_THRESHOLD=0.2
-        #plot_alphas_truncated()
+        plot_alphas_truncated()
 
         results = [[] for _ in range(SPECIES_K+ENV_VARS)]
         times_steps=[]
