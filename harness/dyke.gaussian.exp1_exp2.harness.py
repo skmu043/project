@@ -67,6 +67,7 @@ def run_it(simulation_run_shelve):
     os.system("python3.10 " + os.getcwd() + "/experiments/" + exp_name + ".py " + str(simulation_run_shelve))
 
 
+
 if __name__ == '__main__':
 
     shelve_files = []
