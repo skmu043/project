@@ -130,7 +130,6 @@ def rates_of_change_system_state(system_state):
     biotic_force_FG = 0
 
 
-
     for s_i in range(SPECIES_K):
         # Global
         biotic_force_FG += (system_state[s_i] * omega[0][s_i])
