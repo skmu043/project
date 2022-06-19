@@ -141,6 +141,7 @@ def rates_of_change_system_state(system_state):
 if __name__ == '__main__':
 
 
+
     results = [[] for _ in range(SPECIES_K+ENV_VARS)]
     times_steps=[]
 
