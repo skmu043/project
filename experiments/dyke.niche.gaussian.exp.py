@@ -138,8 +138,6 @@ def rates_of_change_system_state(system_state):
     #dE/dt = E* + F
     return(rate_of_change)
 
-
-
 if __name__ == '__main__':
 
 
