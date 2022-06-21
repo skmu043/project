@@ -188,3 +188,4 @@ def plot_stable_biotic_log():
     plt.show()
 
 plot_stable_biotic_log()
+
