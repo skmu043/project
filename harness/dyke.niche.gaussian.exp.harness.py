@@ -74,12 +74,12 @@ if __name__ == '__main__':
     samples_sequence = np.arange(0, SAMPLE_SIZE, SAMPLE_STEP)
     print("STARTING FILES: " + print_time())
     for _ in tqdm(samples_sequence):
-        tqdm.write(str(_))
+        #tqdm.write(str(_))
         omega               = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
         mu                  = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 
-        for start_temperature in np.arange (5,100, 5):
-            for survival_threshold in np.arange (0,1, 0.2):
+        for start_temperature in np.arange (0,101, 5):
+            for survival_threshold in np.arange (0,0.3, 0.2):
                 for niche_size in [5, 10]:
 
                     if not (niche_size == 10 and survival_threshold == 0): # Math Domain Error : ST can't be zero

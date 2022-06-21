@@ -172,10 +172,10 @@ def fYaI(Xe, Ni, u, T):
     return(abundance)
 
 def fXe(Ya, Ni, u):
-    return (u + (math.sqrt(((math.log(Ya,math.e) / -1) * (2*(Ni**2))))))
+    return (u + (math.sqrt(((-1 * math.log(Ya,math.e)) * (2*(Ni**2))))))
 
 def fXe_negative(Ya, Ni, u):
-    return (u - (math.sqrt(((math.log(Ya,math.e) / -1) * (2*(Ni**2))))))
+    return (u - (math.sqrt(((-1 * math.log(Ya,math.e)) * (2*(Ni**2))))))
 
 def fYaIx(Xe, Ni, u, NRange):
 
@@ -801,22 +801,22 @@ if __name__ == '__main__':
             myList = results_nt[:-1]
             for item in myList:
                 ax1.plot(times_steps,item)
-            ax1.set_title('Original Model', fontsize=15)
+            ax1.set_title('ST Model', fontsize=15)
             ax1.set_xlabel('Time Steps', fontsize=12)
             ax1.set_ylabel('Abundance', fontsize=12)
             #ax1.set_ylim([0, 1])
             myList = results[:-1]
             for item in myList:
                 ax2.plot(times_steps,item)
-            ax2.set_title('Survival Threshold : ' + str(ALIVE_THRESHOLD), fontsize=15)
+            ax2.set_title('ST X u=10', fontsize=15)
             ax2.set_xlabel('Time Steps', fontsize=12)
             ax2.set_ylabel('Abundance', fontsize=12)
             #ax2.set_ylim([0, 1])
             ax3.set_title('The Environment Condition',fontsize=15)
             ax3.set_xlabel('Time Steps', fontsize=12)
             ax3.set_ylabel('Temperature', fontsize=12)
-            ax3.plot(times_steps,results_nt[-1], "b", label = "Original Model")
-            ax3.plot(times_steps, results[-1],"k", label = "survival threshold")
+            ax3.plot(times_steps,results_nt[-1], "b", label = "ST Model")
+            ax3.plot(times_steps, results[-1],"k", label = "ST X Model")
             #ax3.set_ylim([0, 100])
             ax3.legend()
             fig.show()
