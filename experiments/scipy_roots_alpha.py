@@ -13,7 +13,7 @@ from multiprocessing import Process, Pool
 
 
 exp_name = "scipy_roots_alpha"
-data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + exp_name
+data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." +exp_name
 
 # Arguments Check
 if(len(sys.argv)!=4):
