@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from tqdm import tqdm
+import statistics
 
 RESULT_DATA = []
 UNIQ_SAMPLES = []
@@ -212,7 +213,8 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
         p1 = ax.bar(X_axis, alive_above,  label='Simulations with alive species')
         p2 = ax.bar(X_axis, alive_below, bottom=alive_above , label='Simulations with no alive species')
 
-        ax.set_xticks(X_axis, label = X)
+        ax.set_xticks(X_axis)
+        ax.set_xticklabels(X)
         ax.legend()
 
         # Label with label_type 'center' instead of the default 'edge'
@@ -229,6 +231,103 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
 
 #=======================================================================================================================
 #number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
+#=======================================================================================================================
+def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end2():
+
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+
+    x = [] #start temp
+    y = [] #number alive at the end
+    z = [] #survival threshold
+
+    #RESULT_DATA.append((omega,mu,niche,survival_threshold,env_start,env_end,num_alive_start,num_alive_end))
+
+    for data_point in RESULT_DATA:
+        if(data_point[2]==10):
+            x.append(data_point[4])
+            y.append(data_point[7])
+            z.append(data_point[3])
+
+
+    uniq_start_temps = np.unique(np.array(x))
+    uniq_survivals = np.unique(np.array(z))
+    main_result = []
+
+    #print(uniq_start_temps)
+    #print(uniq_survivals)
+
+
+
+    fig, ax = plt.subplots(figsize=(20,20), dpi=200)
+
+    plt.title('NW Model', fontsize=TFONT)
+
+    ax.set_xlabel('Starting Temperature', fontsize=XFONT)
+    ax.set_ylabel('Number of Simulations', fontsize=YFONT)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+
+    alive_below = []
+    alive_above = []
+
+    data_size = 0
+    for each_start_temp in uniq_start_temps:
+        index_1 = 0
+        below_zero = 0
+        above_zero = 0
+        data_size=0
+        for each_row in x:
+            if(each_row == each_start_temp):
+                if(y[index_1] <= 0):
+                    below_zero +=1
+                if(y[index_1] > 0):
+                    above_zero +=1
+                data_size +=1
+                #print(each_survival_threshold,each_start_temp,x[index_1],y[index_1],z[index_1])
+            index_1 +=1
+
+        alive_below.append(below_zero)
+        alive_above.append(above_zero)
+
+        #main_result.append([each_start_temp,each_survival_threshold,below_zero,above_zero])
+
+    X=[]
+    for each in uniq_start_temps:
+        X.append(str(each))
+    plt.ylim([0, data_size + 5])
+
+    X_axis = np.arange(len(X))
+
+    p1 = ax.bar(X_axis, alive_above,  label='Simulations with alive species')
+    p2 = ax.bar(X_axis, alive_below, bottom=alive_above , label='Simulations with no alive species')
+
+    ax.set_xticks(X_axis)
+    ax.set_xticklabels(X)
+    ax.legend()
+
+    # Label with label_type 'center' instead of the default 'edge'
+    ax.bar_label(p1, label_type='center', fontsize=25)
+    ax.bar_label(p2, label_type='center', fontsize=25)
+    #ax.bar_label(p2)
+    ax.legend(loc='best', fontsize=25)
+    plt.tight_layout()
+    plt.savefig('number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end_10.jpg')
+    plt.show()
+
+
+
+#=======================================================================================================================
+#number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end2()
 #=======================================================================================================================
 #=======================================================================================================================
 def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
@@ -558,15 +657,29 @@ def number_alive_at_each_start_temperature_at_the_start_of_simulation():
                 start_temp_2.append(data_point[4])
                 alive_start_2.append(data_point[6])
 
+    uniq_start_temps = np.unique(np.array(start_temp_2))
+    uniq_start_temps.sort()
 
-    #print(len(start_temp_0))
-    #print(len(alive_start_0))
 
-    #count = 0
-    #for item in start_temp_2:
-    #    if(item == 10):
-    #         count +=1
-    #print(count)
+    err_x = []
+    err_y = []
+    err_e = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        data_s = []
+        for each_entry in start_temp_2:
+            if(each_temp == each_entry):
+                data_s.append(alive_start_2[index])
+
+            index+=1
+        err_x.append(each_temp)
+        err_y.append(statistics.mean(data_s))
+        err_e.append(statistics.stdev(data_s))
+
+
+
+
 
 
     plt.figure(figsize=(20,20), dpi=200)
@@ -576,14 +689,103 @@ def number_alive_at_each_start_temperature_at_the_start_of_simulation():
     plt.xticks(fontsize=28)
     plt.yticks(fontsize=28)
     #plt.scatter(start_temp_0, alive_start_0, label='Dyke/Weaver Model')
+    plt.errorbar(err_x, err_y,  yerr=err_e,fmt='o', markersize=10, capsize=10)
     plt.scatter(start_temp_2, alive_start_2, label="ST Model")
-    plt.xticks(np.arange(0,100,5))
+    plt.xticks(np.arange(0,101,5))
     plt.legend(prop={'size': 30})
     plt.tight_layout()
     plt.savefig('number_alive_at_each_start_temperature_at_the_start_of_simulation.jpg')
     plt.show()
 #=======================================================================================================================
 #number_alive_at_each_start_temperature_at_the_start_of_simulation()
+#=======================================================================================================================
+def number_alive_at_each_start_temperature_at_the_start_of_simulation2():
+
+
+    # Write UP notes - if simulation ended with zero species alive - its still included in these results
+    # Where it won't be included is in the temperature section where species alive at the end matters
+    # no species alive at the end of a simulation and a temperature between 0 and R does not mean the
+    # simulation is good - there cannot be regulation without species (temperature stays at a value with no change
+    # when the species no longer exist)
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+
+    st_start_temp = []
+    st_alive_start = []
+    nw_start_temp = []
+    nw_alive_start = []
+
+    for data_point in RESULT_DATA:
+        if((data_point[2]==5 and data_point[3]==0.2) or data_point[2]==10):
+            if(data_point[2]==5):
+                st_start_temp.append(data_point[4])
+                st_alive_start.append(data_point[6])
+            if(data_point[2]==10):
+                nw_start_temp.append(data_point[4])
+                nw_alive_start.append(data_point[6])
+
+
+    uniq_start_temps = np.unique(np.array(st_start_temp))
+    uniq_start_temps.sort()
+
+    st_err_x = []
+    st_err_y = []
+    st_err_e = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        data_s = []
+        for each_entry in st_start_temp:
+            if(each_temp == each_entry):
+                data_s.append(st_alive_start[index])
+            index+=1
+        st_err_x.append(each_temp+1.5)
+        st_err_y.append(statistics.mean(data_s))
+        st_err_e.append(statistics.stdev(data_s))
+
+    nw_err_x = []
+    nw_err_y = []
+    nw_err_e = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        data_s = []
+        for each_entry in nw_start_temp:
+            if(each_temp == each_entry):
+                data_s.append(nw_alive_start[index])
+            index+=1
+        nw_err_x.append(each_temp+3)
+        nw_err_y.append(statistics.mean(data_s))
+        nw_err_e.append(statistics.stdev(data_s))
+
+
+    plt.figure(figsize=(20,20), dpi=200)
+    plt.title('Number of alive species at the start of the simulation', fontsize=40)
+    plt.xlabel('Starting Temperature', fontsize=40)
+    plt.ylabel('Alive Species', fontsize=40)
+    plt.xticks(fontsize=28)
+    plt.yticks(fontsize=28)
+    plt.errorbar(st_err_x, st_err_y,  yerr=st_err_e,fmt='o', markersize=10, capsize=10)
+    plt.errorbar(nw_err_x, nw_err_y,  yerr=nw_err_e,fmt='o', markersize=10, capsize=10)
+
+    plt.scatter(st_start_temp, st_alive_start, label="ST Model")
+    plt.scatter(nw_start_temp, nw_alive_start, label="NW Model")
+    plt.xticks(np.arange(0,101,5))
+    plt.legend(prop={'size': 30})
+    plt.tight_layout()
+    plt.savefig('number_alive_at_each_start_temperature_at_the_start_of_simulation_ST_NW.jpg')
+    plt.show()
+#=======================================================================================================================
+#number_alive_at_each_start_temperature_at_the_start_of_simulation2()
 #=======================================================================================================================
 def number_alive_at_each_start_temperature_at_the_end_of_simulation():
 
@@ -609,14 +811,25 @@ def number_alive_at_each_start_temperature_at_the_end_of_simulation():
                 alive_end_2.append(data_point[7])
 
 
-    #print(len(start_temp_0))
-    #print(len(alive_start_0))
+    uniq_start_temps = np.unique(np.array(start_temp_2))
+    uniq_start_temps.sort()
 
-    #count = 0
-    #for item in start_temp_2:
-    #    if(item == 10):
-    #         count +=1
-    #print(count)
+
+    err_x = []
+    err_y = []
+    err_e = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        data_s = []
+        for each_entry in start_temp_2:
+            if(each_temp == each_entry):
+                data_s.append(alive_end_2[index])
+
+            index+=1
+        err_x.append(each_temp)
+        err_y.append(statistics.mean(data_s))
+        err_e.append(statistics.stdev(data_s))
 
 
     plt.figure(figsize=(20,20), dpi=200)
@@ -625,9 +838,9 @@ def number_alive_at_each_start_temperature_at_the_end_of_simulation():
     plt.ylabel('Alive Species', fontsize=40)
     plt.xticks(fontsize=28)
     plt.yticks(fontsize=28)
-    #plt.scatter(start_temp_0, alive_start_0, label='Dyke/Weaver Model')
+    plt.errorbar(err_x, err_y,  yerr=err_e,fmt='o', markersize=10, capsize=10)
     plt.scatter(start_temp_2, alive_end_2, label="ST Model")
-    plt.xticks(np.arange(0,100,5))
+    plt.xticks(np.arange(0,101,5))
     plt.legend(prop={'size': 30})
     plt.tight_layout()
     plt.savefig('number_alive_at_each_start_temperature_at_the_end_of_simulation.jpg')
@@ -636,6 +849,87 @@ def number_alive_at_each_start_temperature_at_the_end_of_simulation():
 
 #=======================================================================================================================
 #number_alive_at_each_start_temperature_at_the_end_of_simulation()
+#=======================================================================================================================
+def number_alive_at_each_start_temperature_at_the_end_of_simulation2():
+
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+
+    st_start_temp = []
+    st_alive_end = []
+    nw_start_temp = []
+    nw_alive_end = []
+
+    for data_point in RESULT_DATA:
+        if((data_point[2]==5 and data_point[3]==0.2) or data_point[2]==10):
+            if(data_point[2]==5):
+                st_start_temp.append(data_point[4])
+                st_alive_end.append(data_point[7])
+            if(data_point[2]==10):
+                nw_start_temp.append(data_point[4])
+                nw_alive_end.append(data_point[7])
+
+    uniq_start_temps = np.unique(np.array(st_start_temp))
+    uniq_start_temps.sort()
+
+    st_err_x = []
+    st_err_y = []
+    st_err_e = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        data_s = []
+        for each_entry in st_start_temp:
+            if(each_temp == each_entry):
+                data_s.append(st_alive_end[index])
+            index+=1
+        st_err_x.append(each_temp+1.5)
+        st_err_y.append(statistics.mean(data_s))
+        st_err_e.append(statistics.stdev(data_s))
+
+    nw_err_x = []
+    nw_err_y = []
+    nw_err_e = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        data_s = []
+        for each_entry in nw_start_temp:
+            if(each_temp == each_entry):
+                data_s.append(nw_alive_end[index])
+            index+=1
+        nw_err_x.append(each_temp+3)
+        nw_err_y.append(statistics.mean(data_s))
+        nw_err_e.append(statistics.stdev(data_s))
+
+    plt.figure(figsize=(20,20), dpi=200)
+    plt.title('Number of alive species at the end of the simulation', fontsize=40)
+    plt.xlabel('Starting Temperature', fontsize=40)
+    plt.ylabel('Alive Species', fontsize=40)
+    plt.xticks(fontsize=28)
+    plt.yticks(fontsize=28)
+    plt.errorbar(st_err_x, st_err_y,  yerr=st_err_e,fmt='o', markersize=10, capsize=10)
+    plt.errorbar(nw_err_x, nw_err_y,  yerr=nw_err_e,fmt='o', markersize=10, capsize=10)
+    plt.scatter(st_start_temp, st_alive_end, label="ST Model")
+    plt.scatter(nw_start_temp, nw_alive_end, label="NW Model")
+    plt.xticks(np.arange(0,101,5))
+    plt.legend(prop={'size': 30})
+    plt.tight_layout()
+    plt.savefig('number_alive_at_each_start_temperature_at_the_end_of_simulation_NW_2.jpg')
+    plt.show()
+
+
+#=======================================================================================================================
+#number_alive_at_each_start_temperature_at_the_end_of_simulation2()
 #=======================================================================================================================
 def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation():
 
@@ -740,7 +1034,7 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
     plt.plot(st_temp_s, st_alive_s, label='ST Model Alive species at Start')
     plt.plot(st_temp_e, st_alive_e, label='ST Model Alive species at End')
     plt.plot(temps_diff, avg_diff, label='ST Model Average Difference')
-    plt.xticks(np.arange(0,100,5))
+    plt.xticks(np.arange(0,101,5))
     plt.legend(prop={'size': 25})
     plt.tight_layout()
     plt.savefig('average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation.jpg')
@@ -749,6 +1043,190 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
 
 #=======================================================================================================================
 #average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
+#=======================================================================================================================
+#=======================================================================================================================
+def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation2():
+
+    #RESULT_DATA.append((
+    # omega[0],
+    # mu[1],
+    # niche[2],
+    # survival_threshold[3],
+    # env_start[4],
+    # env_end[5],
+    # num_alive_start[6],
+    # num_alive_end[7]
+    # ))
+
+    st_start_temp = []
+    st_alives_start = []
+    st_alive_end = []
+    st_difference_end_start = []
+    nw_start_temp = []
+    nw_alives_start = []
+    nw_alive_end = []
+    nw_difference_end_start = []
+
+    for data_point in RESULT_DATA:
+        if((data_point[2]==5 and data_point[3]==0.2) or data_point[2]==10):
+            if(data_point[2]==5):
+                st_start_temp.append(data_point[4])
+                st_alives_start.append(data_point[6])
+                st_alive_end.append(data_point[7])
+                st_difference_end_start.append(data_point[7] - data_point[6])
+
+            if(data_point[2]==10):
+                nw_start_temp.append(data_point[4])
+                nw_alives_start.append(data_point[6])
+                nw_alive_end.append(data_point[7])
+                nw_difference_end_start.append(data_point[7] - data_point[6])
+
+
+
+    #print(start_temp_0)
+    #print(alive_end_0)
+
+    #fig.set_size_inches(3, 1.5)
+
+    uniq_start_temps = np.unique(np.array(st_start_temp))
+    uniq_start_temps.sort()
+
+    stats_temp_2 = []
+    stats_avg_alives_2 = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        sum = 0
+        count = 0
+        for each_instance in st_start_temp:
+            if(each_temp == each_instance):
+                sum += st_alive_end[index]
+                count += 1
+
+            index += 1
+        stats_temp_2.append(each_temp)
+        stats_avg_alives_2.append((sum/count))
+
+    st_temp_e = stats_temp_2.copy()
+    st_alive_e = stats_avg_alives_2.copy()
+
+    stats_temp_2 = []
+    stats_avg_alives_2 = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        sum = 0
+        count = 0
+        for each_instance in st_start_temp:
+            if(each_temp == each_instance):
+                sum += st_alives_start[index]
+                count += 1
+
+            index += 1
+        stats_temp_2.append(each_temp)
+        stats_avg_alives_2.append((sum/count))
+
+    st_temp_s = stats_temp_2.copy()
+    st_alive_s = stats_avg_alives_2.copy()
+
+    # DIFF ##########################
+    temps_diff = []
+    avg_diff = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        sum = 0
+        count = 0
+        for each_instance in st_start_temp:
+            if(each_temp == each_instance):
+                sum += st_difference_end_start[index]
+                count += 1
+
+            index += 1
+        temps_diff.append(each_temp)
+        avg_diff.append((sum/count))
+
+
+
+
+    stats_temp_2 = []
+    stats_avg_alives_2 = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        sum = 0
+        count = 0
+        for each_instance in nw_start_temp:
+            if(each_temp == each_instance):
+                sum += nw_alive_end[index]
+                count += 1
+
+            index += 1
+        stats_temp_2.append(each_temp)
+        stats_avg_alives_2.append((sum/count))
+
+    nw_temp_e = stats_temp_2.copy()
+    nw_alive_e = stats_avg_alives_2.copy()
+
+    stats_temp_2 = []
+    stats_avg_alives_2 = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        sum = 0
+        count = 0
+        for each_instance in nw_start_temp:
+            if(each_temp == each_instance):
+                sum += nw_alives_start[index]
+                count += 1
+
+            index += 1
+        stats_temp_2.append(each_temp)
+        stats_avg_alives_2.append((sum/count))
+
+    nw_temp_s = stats_temp_2.copy()
+    nw_alive_s = stats_avg_alives_2.copy()
+
+    # DIFF ##########################
+    nw_temps_diff = []
+    nw_avg_diff = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        sum = 0
+        count = 0
+        for each_instance in nw_start_temp:
+            if(each_temp == each_instance):
+                sum += nw_difference_end_start[index]
+                count += 1
+
+            index += 1
+        nw_temps_diff.append(each_temp)
+        nw_avg_diff.append((sum/count))
+
+
+
+    plt.figure(figsize=(20,20), dpi=200)
+    plt.title('Average number of alive species at the start and end of the simulations', fontsize=40)
+    plt.xlabel('Starting Temperature', fontsize=40)
+    plt.ylabel('Average Number of Alive Species', fontsize=40)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+    plt.plot(st_temp_s, st_alive_s, label='ST Model Alive species at Start')
+    plt.plot(st_temp_e, st_alive_e, label='ST Model Alive species at End')
+    plt.plot(temps_diff, avg_diff, label='ST Model Average Difference')
+    plt.plot(nw_temp_s, nw_alive_s, label='NW Model Alive species at Start')
+    plt.plot(nw_temp_e, nw_alive_e, label='NW Model Alive species at End')
+    plt.plot(nw_temps_diff, nw_avg_diff, label='NW Model Average Difference')
+    plt.xticks(np.arange(0,101,5))
+    plt.legend(prop={'size': 25})
+    plt.tight_layout()
+    plt.savefig('average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation2.jpg')
+    plt.show()
+
+
+#=======================================================================================================================
+#average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation2()
 #=======================================================================================================================
 
 def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation_trun_levels():
@@ -1018,8 +1496,39 @@ def abundance_alive_at_each_start_temperature_at_the_start_of_simulation():
                 abundance_start_2.append(data_point[8])
 
 
-    #print(start_temp_0)
-    #print(alive_start_0)
+    uniq_start_temps = np.unique(np.array(start_temp_0))
+    uniq_start_temps.sort()
+
+    st_err_x = []
+    st_err_y = []
+    st_err_e = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        data_s = []
+        for each_entry in start_temp_0:
+            if(each_temp == each_entry):
+                data_s.append(abundance_start_0[index])
+            index+=1
+        st_err_x.append(each_temp+1.5)
+        st_err_y.append(statistics.mean(data_s))
+        st_err_e.append(statistics.stdev(data_s))
+
+    nw_err_x = []
+    nw_err_y = []
+    nw_err_e = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        data_s = []
+        for each_entry in start_temp_2:
+            if(each_temp == each_entry):
+                data_s.append(abundance_start_2[index])
+            index+=1
+        nw_err_x.append(each_temp+3)
+        nw_err_y.append(statistics.mean(data_s))
+        nw_err_e.append(statistics.stdev(data_s))
+
 
     plt.figure(figsize=(20,20), dpi=200)
     plt.title('Total Abundance of species at the start of the simulations', fontsize=40)
@@ -1027,9 +1536,12 @@ def abundance_alive_at_each_start_temperature_at_the_start_of_simulation():
     plt.ylabel('Total Abundance', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
+    plt.errorbar(st_err_x, st_err_y,  yerr=st_err_e,fmt='o', markersize=10, capsize=10)
+    plt.errorbar(nw_err_x, nw_err_y,  yerr=nw_err_e,fmt='o', markersize=10, capsize=10)
+
     plt.scatter(start_temp_0, abundance_start_0, label='JI Model')
     plt.scatter(start_temp_2, abundance_start_2, label="ST Model")
-    plt.xticks(np.arange(0,100,5))
+    plt.xticks(np.arange(0,101,5))
     plt.legend(prop={'size': 30})
     plt.tight_layout()
     plt.savefig('abundance_alive_at_each_start_temperature_at_the_start_of_simulation.jpg')
@@ -1074,8 +1586,39 @@ def abundance_alive_at_each_start_temperature_at_the_end_of_simulation():
                 abundance_end_2.append(data_point[9])
 
 
-    #print(start_temp_0)
-    #print(alive_start_0)
+    uniq_start_temps = np.unique(np.array(start_temp_0))
+    uniq_start_temps.sort()
+
+    st_err_x = []
+    st_err_y = []
+    st_err_e = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        data_s = []
+        for each_entry in start_temp_0:
+            if(each_temp == each_entry):
+                data_s.append(abundance_end_0[index])
+            index+=1
+        st_err_x.append(each_temp+1.5)
+        st_err_y.append(statistics.mean(data_s))
+        st_err_e.append(statistics.stdev(data_s))
+
+    nw_err_x = []
+    nw_err_y = []
+    nw_err_e = []
+
+    for each_temp in uniq_start_temps:
+        index = 0
+        data_s = []
+        for each_entry in start_temp_2:
+            if(each_temp == each_entry):
+                data_s.append(abundance_end_2[index])
+            index+=1
+        nw_err_x.append(each_temp+3)
+        nw_err_y.append(statistics.mean(data_s))
+        nw_err_e.append(statistics.stdev(data_s))
+
 
     plt.figure(figsize=(20,20), dpi=200)
     plt.title('Total Abundance of species at the end of the simulations', fontsize=40)
@@ -1083,9 +1626,13 @@ def abundance_alive_at_each_start_temperature_at_the_end_of_simulation():
     plt.ylabel('Total Abundance', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
+
+    plt.errorbar(st_err_x, st_err_y,  yerr=st_err_e,fmt='o', markersize=10, capsize=10)
+    plt.errorbar(nw_err_x, nw_err_y,  yerr=nw_err_e,fmt='o', markersize=10, capsize=10)
+
     plt.scatter(start_temp_0, abundance_end_0, label='JI Model')
     plt.scatter(start_temp_2, abundance_end_2, label="ST Model")
-    plt.xticks(np.arange(0,100,5))
+    plt.xticks(np.arange(0,101,5))
     plt.legend(prop={'size': 30})
     plt.tight_layout()
     plt.savefig('abundance_alive_at_each_start_temperature_at_the_end_of_simulation.jpg')
@@ -1283,7 +1830,7 @@ def average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_s
     plt.plot(ji_temps, ji_diffs_avg, label='JI Model Average Abundance Difference')
     plt.plot(st_temps, st_diffs_avg, label='ST Model Average Abundance Difference')
 
-    plt.xticks(np.arange(0,100,5))
+    plt.xticks(np.arange(0,101,5))
 
     all_vals = dw_abundance_s+dw_abundance_e+st_abundance_s+st_abundance_e+ji_diffs_avg+st_diffs_avg
 
@@ -1515,13 +2062,24 @@ def end_temperature_both_zero_zero2_with_start_temps_dw_overlay():
 number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
 #=======================================================================================================================
 #=======================================================================================================================
+number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end2()
+#=======================================================================================================================
+#=======================================================================================================================
 number_alive_at_each_start_temperature_at_the_start_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#number_alive_at_each_start_temperature_at_the_end_of_simulation()
+number_alive_at_each_start_temperature_at_the_start_of_simulation2()
+#=======================================================================================================================
+#=======================================================================================================================
+number_alive_at_each_start_temperature_at_the_end_of_simulation()
+#=======================================================================================================================
+#=======================================================================================================================
+number_alive_at_each_start_temperature_at_the_end_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
 average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
+#=======================================================================================================================#=======================================================================================================================
+average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
 abundance_alive_at_each_start_temperature_at_the_start_of_simulation()
