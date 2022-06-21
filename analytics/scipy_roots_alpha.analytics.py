@@ -164,6 +164,7 @@ def plot_stable_biotic_log():
         k_x.clear()
         s_y.clear()
         index_num = 0
+
     marker = ""
     for each_N in uniq_n:
         if(each_N == 5):
