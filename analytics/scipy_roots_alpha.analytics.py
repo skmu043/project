@@ -175,6 +175,7 @@ def plot_stable_biotic_log():
         ax1.plot(plot_k_x[index_num], plot_s_y[index_num], marker, label = str("Niche = ") + str(each_N))
         index_num +=1
 
+
     ax1.set_title("Number of Species vs Stable Points")
     ax1.set_xlabel("Species")
     ax1.set_ylabel("Stable Points (mean)")
