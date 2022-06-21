@@ -44,10 +44,10 @@ El = ENV_START[1]
 
 system_state = np.zeros(SPECIES_K+ENV_VARS)
 
-print(ENV_START)
+#print(ENV_START)
 
-print(mu)
-print(omega)
+#print(mu)
+#print(omega)
 
 ################## INITIAL STATE
 # Abundance Init

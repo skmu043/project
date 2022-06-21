@@ -6,12 +6,12 @@ from multiprocessing import Process, Pool
 import numpy as np
 import time
 import sys
-
+from tqdm import tqdm
 #from numba import jit
 
 # Generating ALL Parameters
 SAMPLE_SIZE = 1
-SAMPLE_STEP = 7
+SAMPLE_STEP = 1
 RUN_ID = int(time.time())
 
 SPECIES_K   = 100                   # ----------- Number of Biotic Components
@@ -21,8 +21,8 @@ TIME_END    = 200                   # ----------- Length of Simulation
 TIME_STEP   = 1                   # ----------- Time Step3
 ENV_VARS    = 2                     # ----------- Number of Environment Variables
 NICHE = 5                           # ----------- Niche Size
-LOCAL_SIZE  = 50                    # ----------- Local Population Size (%)
-ALIVE_THRESHOLD = 0.5
+LOCAL_SIZE  = 20                    # ----------- Local Population Size (%)
+ALIVE_THRESHOLD = 0.2
 ENV_START=[]
 omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
@@ -36,9 +36,9 @@ for _ in range(int(LOCAL_SIZE/100 * SPECIES_K)):
     local_population_index.append(local_species)
 local_population_index.sort()
 
-print(omega)
-print(mu)
-print(local_population_index)
+#print(omega)
+#print(mu)
+#print(local_population_index)
 
 # Create Shelve to store parameters being sent to experiment run
 exp_name = "dyke.refactor.rk4"
@@ -49,8 +49,7 @@ def init_shelve():
 
     os.mkdir(data_directory)
     s = shelve.open(shelve_file)
-    print(data_directory, shelve_file)
-
+    #print(data_directory, shelve_file)
 
     try:
         #s['SAMPLE_SIZE'] = SAMPLE_SIZE
@@ -80,7 +79,7 @@ def init_shelve():
 def print_time():
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
-    print(current_time)
+    return(current_time)
 print_time()
 
 #@jit
@@ -94,12 +93,15 @@ if __name__ == '__main__':
 
     shelve_files = []
 
+    print("STARTING FILES: " + print_time())
+
+
     for Eg_temp in np.arange(0,RANGE_R,SAMPLE_STEP):
         for El_temp in np.arange(0,RANGE_R,SAMPLE_STEP):
 
             simulation_run_shelve = init_shelve()
             shelve_files.append(simulation_run_shelve)
-            print("InLoopCreates: ",simulation_run_shelve)
+            #print("InLoopCreates: ",simulation_run_shelve)
             simulation_shelve = shelve.open(simulation_run_shelve)
 
             ENV_START=[]
@@ -118,13 +120,17 @@ if __name__ == '__main__':
                 simulation_shelve.close()
             ENV_START.clear()
 
-    print("===")
-    #$for item in shelve_files:
-     #   print(item)
+    print()
+    print("COMPLETED FILES: " + print_time())
 
-
+    print("STARTING SIMULATIONS: " + print_time())
     pool = Pool(processes=7)
+    #pool.map(run_it, [_ for _ in shelve_files])
 
-    pool.map(run_it, [_ for _ in shelve_files])
+    results = []
 
-    print("Completed")
+    for result in tqdm(pool.imap_unordered(run_it, [_ for _ in shelve_files]), total=len(shelve_files)):
+        results.append(result)
+
+    print()
+    print("SIMULATIONS COMPLETED")
