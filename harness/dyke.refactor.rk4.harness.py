@@ -120,7 +120,6 @@ if __name__ == '__main__':
                 simulation_shelve.close()
             ENV_START.clear()
 
-    print()
     print("COMPLETED FILES: " + print_time())
 
     print("STARTING SIMULATIONS: " + print_time())

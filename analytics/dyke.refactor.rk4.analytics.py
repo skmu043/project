@@ -5,6 +5,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from tqdm import tqdm
 
 
 data_dr = os.getcwd() + '/data'
@@ -39,7 +40,7 @@ ENV_START_ = []
 results_gl = []
 time_steps = []
 
-for file in data_archives:
+for file in tqdm(data_archives):
     s = shelve.open(data_dr + "/" + str(file) + "/dyke.refactor.rk4.data")
 
     try:
@@ -100,7 +101,7 @@ def individual_plots():
     plt.ylabel('EG')
     heatmap = [[0 for _ in range(RANGE_R)] for _ in range(RANGE_R)]
     idx = 0
-    for start_vars in ENV_START_:
+    for start_vars in tqdm(ENV_START_):
         heatmap[int(start_vars[0])][int(start_vars[1])] += number_alive_global_start_[idx]
         idx += 1
     plt.colorbar(plt.pcolor(heatmap))
@@ -115,7 +116,7 @@ def individual_plots():
     plt.ylabel('EG')
     heatmap = [[0 for _ in range(RANGE_R)] for _ in range(RANGE_R)]
     idx = 0
-    for start_vars in ENV_START_:
+    for start_vars in tqdm(ENV_START_):
         idx += 1
     plt.colorbar(plt.pcolor(heatmap))
     plt.imshow(heatmap, cmap='hot', interpolation='nearest', origin='lower', vmin=0, vmax=12)
@@ -129,7 +130,7 @@ def individual_plots():
     plt.ylabel('EG')
     heatmap = [[0 for _ in range(RANGE_R)] for _ in range(RANGE_R)]
     idx = 0
-    for start_vars in ENV_START_:
+    for start_vars in tqdm(ENV_START_):
         heatmap[int(start_vars[0])][int(start_vars[1])] += number_alive_start_[idx]
         idx += 1
     plt.colorbar(plt.pcolor(heatmap))
@@ -145,7 +146,7 @@ def individual_plots():
     plt.ylabel('EG')
     heatmap = [[0 for _ in range(RANGE_R)] for _ in range(RANGE_R)]
     idx = 0
-    for start_vars in ENV_START_:
+    for start_vars in tqdm(ENV_START_):
         heatmap[int(start_vars[0])][int(start_vars[1])] += number_alive_global_end_[idx]
         idx += 1
     plt.colorbar(plt.pcolor(heatmap))
@@ -160,7 +161,7 @@ def individual_plots():
     plt.ylabel('EG')
     heatmap = [[0 for _ in range(RANGE_R)] for _ in range(RANGE_R)]
     idx = 0
-    for start_vars in ENV_START_:
+    for start_vars in tqdm(ENV_START_):
         heatmap[int(start_vars[0])][int(start_vars[1])] += number_alive_local_end_[idx]
         idx += 1
     plt.colorbar(plt.pcolor(heatmap))
@@ -175,7 +176,7 @@ def individual_plots():
     plt.ylabel('EG')
     heatmap = [[0 for _ in range(RANGE_R)] for _ in range(RANGE_R)]
     idx = 0
-    for start_vars in ENV_START_:
+    for start_vars in tqdm(ENV_START_):
         heatmap[int(start_vars[0])][int(start_vars[1])] += number_alive_end_[idx]
         idx += 1
     plt.colorbar(plt.pcolor(heatmap))
@@ -218,7 +219,7 @@ if __name__ == '__main__':
     plt.xlabel('X - EL', fontsize=10)
     plt.ylabel('Y - EG', fontsize=10)
 
-    for gl in results_gl:
+    for gl in tqdm(results_gl):
         c_l = gl[1][-1]
         c_g = gl[0][-1]
         if(c_l < 0 or c_g < 0 or c_l > 100 or c_g > 100 ):
