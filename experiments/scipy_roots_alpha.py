@@ -138,34 +138,6 @@ def stable_point_return():
     #print("Unique Points ...")
     zeros_uniq.sort()
 
-    #idx=0
-    #current_sign = "?"
-    #if(y[idx]>0):
-    #    current_sign = "+"
-    #elif(y[idx]<0):
-    #    current_sign = "-"
-
-    #stable_points = []
-
-    #for xi in np.arange(X1, Y1, 0.1):
-        #print(x[idx])
-    #    loopy_sign="?"
-        #print(y[idx])
-    #    if(y[idx]>0):
-    #        loopy_sign = "+"
-    #    elif(y[idx]<0):
-    #        loopy_sign = "-"
-
-    #    if(loopy_sign != current_sign):
-            #print("Sign Change Detected!")
-            #print("From : ", current_sign , " To : ", loopy_sign)
-    #        if(current_sign == "+" and loopy_sign == "-"):
-                #print(">>>>> Stable Point : ", x[idx])
-    #            stable_points.append(int(x[idx]))
-    #        current_sign = loopy_sign
-            #print(y[idx])
-
-    #    idx+=1
 
     #print(K)
     if(K == 100):
@@ -177,7 +149,7 @@ def stable_point_return():
         plt.yticks(fontsize=20)
         plt.axhline(y=0, color='r', linestyle='-')
         plt.plot(x,y)
-        plt.show()
+        #plt.show()
 
 
     #reduced_stable_points=[]

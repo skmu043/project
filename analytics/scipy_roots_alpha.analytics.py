@@ -34,10 +34,12 @@ for si in data_archives:
 
 uniq_n = []
 for x in data_points:
+    print(x[1])
     if x[1] not in uniq_n:
         uniq_n.append(x[1])
 
 uniq_n.sort()
+print("N: ")
 print(uniq_n)
 uniq_k = []
 for x in data_points:
@@ -45,6 +47,7 @@ for x in data_points:
         uniq_k.append(x[0])
 
 uniq_k.sort()
+print("K: ")
 print(uniq_k)
 
 def plot_stable_biotic():
@@ -126,7 +129,7 @@ def plot_stable_biotic():
     plt.savefig('stable_biotic_x.png')
     plt.show()
 
-#plot_stable_biotic()
+plot_stable_biotic()
 
 
 

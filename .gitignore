@@ -1,5 +1,3 @@
 /data/
 .DS_Store
-/data_50/
-/data_niche/
-/data_global_local/
+/data_*/
