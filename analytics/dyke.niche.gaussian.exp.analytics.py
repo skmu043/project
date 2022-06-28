@@ -3572,20 +3572,6 @@ def f1(x):
 def ji_stable_point_return():
 
 
-    x = []
-    y = []
-
-    X1 = -50
-    Y1 = RANGE_R + 50
-
-    #true_zeros = []
-    #for _ in range(RANGE_R):
-    #    sol = optimize.root(f1, [_], jac=False, method='hybr')
-    #    if(sol.x >=0 and sol.x <= RANGE_R):
-    #        true_zeros.append(sol.x)
-
-    zeros_root = []
-
     temp_range = np.arange(-5, 105, 0.01)
     biotic_values = []
     for temp in temp_range:
@@ -3626,44 +3612,12 @@ def ji_stable_point_return():
                 positive_or_negative_current = -1
 
     print(fsolve_search_points)
-    print("=======")
+    print("===================")
 
     fsolve_final_roots = []
     for crossing_zero in fsolve_search_points:
         roots = optimize.fsolve(f1,crossing_zero)
         fsolve_final_roots.append(roots)
-
-
-
-    print("---")
-
-    temperatures = []
-    biotic_force = [[] for _ in range(SPECIES_K)]
-    step = 0.01
-
-    for x in np.arange (-25, RANGE_R+25, step):
-        temperatures.append(x)
-
-    for y in range(SPECIES_K):
-        for temp in temperatures:
-            biotic_force[y].append((math.e) ** ((-1) * (((abs(temp-mu[0][y])) ** 2) / (2*(NICHE**2)))) * omega[0][y])
-
-    plt.figure(figsize=(20,20), dpi=300)
-    plt.xlabel('Temperature', fontsize=30)
-    plt.ylabel('Biotic Force', fontsize=30)
-    plt.xticks(fontsize=25)
-    plt.yticks(fontsize=25)
-    for _ in range(SPECIES_K):
-        plt.plot(temperatures,biotic_force[_])
-    for ro in fsolve_final_roots:
-        plt.axvline(ro,linewidth=5)
-
-    plt.plot(temperatures,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4, label='Combined Biotic Force')
-    plt.legend(prop={'size': 30})
-    plt.tight_layout()
-    plt.show()
-
-
 
     final_stable_points = []
     for each_point in fsolve_final_roots:
@@ -3671,6 +3625,32 @@ def ji_stable_point_return():
             final_stable_points.append(each_point)
 
     print(final_stable_points)
+    print("--------------------")
+
+    biotic_force = [[] for _ in range(SPECIES_K)]
+    step = 0.01
+
+
+    for y in range(SPECIES_K):
+        for temp in temp_range:
+            biotic_force[y].append((math.e) ** ((-1) * (((abs(temp-mu[0][y])) ** 2) / (2*(NICHE**2)))) * omega[0][y])
+
+    plt.figure(figsize=(20,20), dpi=300)
+    plt.xlabel('Temperature', fontsize=30)
+    plt.ylabel('Biotic Force', fontsize=30)
+    plt.xticks(fontsize=25)
+    plt.yticks(fontsize=25)
+
+    for _ in range(SPECIES_K):
+        plt.plot(temp_range,biotic_force[_])
+    for ro in final_stable_points:
+        plt.axvline(ro,linewidth=5)
+
+    plt.plot(temp_range,np.sum((np.array(biotic_force, dtype=float)), axis=0), lw=4, label='Combined Biotic Force')
+    plt.legend(prop={'size': 30})
+    plt.tight_layout()
+    plt.show()
+
     return(final_stable_points)
 
 def f1x(x):
@@ -3688,34 +3668,95 @@ def f1x(x):
 
 def st_stable_point_return():
 
-    x = []
-    y = []
+    print("ST START")
+    temp_range = np.arange(-5, 105, 0.01)
+    biotic_values = []
+    for temp in temp_range:
+        biotic_values.append(f1x(temp))
 
-    X1 = -50
-    Y1 = RANGE_R + 50
+    plt.plot(temp_range, biotic_values)
+    plt.show()
 
-    for xi in np.arange(X1, Y1, 0.1):
-        x.append(xi)
-        y.append(f1x(xi))
+    fsolve_search_points = []
+    positive_or_negative_current = 0
+    # get first point ...
+    first_point = 0
+    index_first_point = 0
+    for biotic_point in biotic_values:
+        if(biotic_point>0):
+            first_point = biotic_point
+            break
+        if(biotic_point<0):
+            first_point = biotic_point
+            break
+        index_first_point+=1
 
-    true_zeros = []
-    for _ in range(RANGE_R):
-        sol = optimize.root(f1x, [_], jac=False, method='hybr')
-        if(sol.x >=0 and sol.x <= RANGE_R):
-            true_zeros.append(sol.x)
+    if(first_point > 0):
+        positive_or_negative_current = 1
+    if(first_point < 0):
+        positive_or_negative_current = -1
 
-    zeros_uniq = []
-    for xi in true_zeros:
-        if(int(xi) not in zeros_uniq):
-            zeros_uniq.append(int(xi))
 
-    zeros_uniq.sort()
-    new_reduced_stable_points = []
-    for each_point in zeros_uniq:
-        if(f1x(each_point-0.5) > 0 and f1x(each_point+0.5) < 0):
-            new_reduced_stable_points.append(each_point)
+    for check_index in range(index_first_point+1, len(biotic_values)):
 
-    return(new_reduced_stable_points)
+        if(biotic_values[check_index]>0):
+            if(positive_or_negative_current == -1): # sign change has happened
+                fsolve_search_points.append(temp_range[check_index])
+                positive_or_negative_current = +1
+        if(biotic_values[check_index]<0):
+            if(positive_or_negative_current == 1): # sign change has happened
+                fsolve_search_points.append(temp_range[check_index])
+                positive_or_negative_current = -1
+
+    print(fsolve_search_points)
+    print("=======")
+
+    fsolve_final_roots = []
+    for crossing_zero in fsolve_search_points:
+        roots = optimize.fsolve(f1x,crossing_zero)
+        fsolve_final_roots.append(roots)
+
+    final_stable_points = []
+    for each_point in fsolve_final_roots:
+        if(f1x(each_point-0.01) > 0 and f1x(each_point+0.01) < 0):
+            final_stable_points.append(each_point)
+
+
+    print(final_stable_points)
+    print("---FINAL ROOTS ABOVE---")
+
+    temperatures = []
+    alive_value = [[] for _ in range(SPECIES_K)]
+    step = 0.01
+
+    truncation = 0.2
+    for y in range(SPECIES_K):
+        for x in temp_range:
+            aliveness = (math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2))))
+            if(aliveness <= truncation and aliveness >= (-1 * truncation)):
+                alive_value[y].append(0)
+            else:
+                alive_value[y].append(aliveness * omega[0][y])
+
+    plt.figure(figsize=(20,20), dpi=300)
+    #plt.title('Biotic Force for 100 species in the ST Model', fontsize=30)
+    plt.xlabel('Temperature', fontsize=30)
+    plt.ylabel('Biotic Force', fontsize=30)
+    plt.xticks(fontsize=25)
+    plt.yticks(fontsize=25)
+    for _ in range(SPECIES_K):
+        plt.plot(temp_range,alive_value[_])
+
+    for ro in final_stable_points:
+        plt.axvline(ro,linewidth=5)
+
+    plt.plot(temp_range,np.sum((np.array(alive_value, dtype=float)), axis=0), lw=4, label='Combined Biotic Force')
+    plt.legend(prop={'size': 30})
+    plt.tight_layout()
+    plt.show()
+
+    return(final_stable_points)
+
 
 
 def all_stable_points():
@@ -3745,10 +3786,10 @@ def all_stable_points():
 
 
 
-    print(len(UNIQ_SAMPLES))
+    #print(len(UNIQ_SAMPLES))
     count = 0
     for uniq_s in UNIQ_SAMPLES:
-        print(count)
+        #print(count)
         count += 1
         global omega
         omega = uniq_s[0]
@@ -3756,12 +3797,12 @@ def all_stable_points():
         mu = uniq_s[1]
         ji = ji_stable_point_return()
         st = st_stable_point_return()
-        print(ji)
-        print(st)
+        #print(ji)
+        #print(st)
 
 
-        print(omega)
-        print(mu)
+        #print(omega)
+        #print(mu)
 
         for stable in ji:
             ji_stable_x.append(stable)
