@@ -3572,7 +3572,7 @@ def f1(x):
 def ji_stable_point_return():
 
 
-    temp_range = np.arange(-5, 105, 0.01)
+    temp_range = np.arange(-25, 125, 0.01)
     biotic_values = []
     for temp in temp_range:
         biotic_values.append(f1(temp))
@@ -3623,10 +3623,6 @@ def ji_stable_point_return():
         if(f1(each_point-0.01) > 0 and f1(each_point+0.01) < 0):
             final_stable_points.append(each_point)
 
-    for item in final_stable_points:
-        print(item)
-    print("^^^Stable Points")
-
     biotic_force = [[] for _ in range(SPECIES_K)]
     step = 0.01
 
@@ -3656,6 +3652,8 @@ def ji_stable_point_return():
     for stable_p in final_stable_points:
         results_points.append(stable_p[0])
 
+    print(set(results_points))
+    print("^^^Stable Points")
     return(set(results_points))
 
 def f1x(x):
@@ -3673,7 +3671,7 @@ def f1x(x):
 
 def st_stable_point_return():
 
-    temp_range = np.arange(-5, 105, 0.01)
+    temp_range = np.arange(-25, 125, 0.01)
     biotic_values = []
     for temp in temp_range:
         biotic_values.append(f1x(temp))
@@ -3726,11 +3724,6 @@ def st_stable_point_return():
         if(f1x(each_point-0.01) > 0 and f1x(each_point+0.01) < 0):
             final_stable_points.append(each_point)
 
-
-    for item in final_stable_points:
-        print(item)
-    print("^^^Stable Points")
-
     temperatures = []
     alive_value = [[] for _ in range(SPECIES_K)]
     step = 0.01
@@ -3764,7 +3757,8 @@ def st_stable_point_return():
     results_points = []
     for stable_p in final_stable_points:
         results_points.append(stable_p[0])
-
+    print(set(results_points))
+    print("^^^Stable Points")
     return(set(results_points))
 
 ########################################################################################################################
@@ -3815,7 +3809,7 @@ def f1x2(x):
 def nw_stable_point_return():
 
 
-    temp_range = np.arange(-5, 105, 0.01)
+    temp_range = np.arange(-25, 125, 0.01)
     biotic_values = []
     for temp in temp_range:
         biotic_values.append(f1x2(temp))
@@ -3873,9 +3867,6 @@ def nw_stable_point_return():
     print("FSolved Roots : " + str(fsolve_final_roots))
 
     final_stable_points = reduced_points
-    for item in final_stable_points:
-        print(item)
-    print("^^^Stable Points")
 
     temperatures = []
     alive_value = [[] for _ in range(SPECIES_K)]
@@ -3911,7 +3902,8 @@ def nw_stable_point_return():
     plt.tight_layout()
     plt.show()
 
-
+    print(set(final_stable_points))
+    print("^^^Stable Points")
     return(set(final_stable_points))
 
 
@@ -3950,7 +3942,7 @@ def all_stable_points():
 
     #print(len(UNIQ_SAMPLES))
     count = 0
-    for uniq_s in UNIQ_SAMPLES[2:]:
+    for uniq_s in UNIQ_SAMPLES:
 
         global omega
         omega = uniq_s[0]
