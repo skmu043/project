@@ -105,14 +105,19 @@ y = df2['number_of_attractors'].tolist()
 #ax.set_xscale('log')
 #plt.plot(x,y)
 yhat = savgol_filter(y, 51, 3)
-
-#plt.plot(x,yhat_)
-sns.lineplot(x=x,y=y)
-sns.lineplot(x=x, y=yhat)
+yhat = savgol_filter(yhat, 51, 3)
+yhat = savgol_filter(yhat, 51, 3)
 
 fill1 = savgol_filter(df3_t.tolist(), 51, 3)
+fill1 = savgol_filter(fill1, 51, 3)
+fill1 = savgol_filter(fill1, 51, 3)
 fill2 = savgol_filter(df3_b.tolist(), 51, 3)
+fill2 = savgol_filter(fill2, 51, 3)
+fill2 = savgol_filter(fill2, 51, 3)
+
+#sns.lineplot(x=x,y=y)
 ax.fill_between(x, fill1, fill2, color="blue", alpha=0.3)
+sns.lineplot(x=x, y=yhat)
 sns.lineplot(x=x, y=fill1)
 sns.lineplot(x=x, y=fill2)
 
