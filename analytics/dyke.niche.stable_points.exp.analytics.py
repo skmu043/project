@@ -558,7 +558,7 @@ def stable_points_for_ji_st_nw():
 
     fig, ax = plt.subplots(figsize=(20,20), dpi= 200)
 
-    #sns.pointplot(data = df, x = 'start_temp', y = 'abundance_end', dodge=True, join=True, errwidth = 3, capsize = 0.5, markersize = 50)
+    sns.pointplot(data = df, x = 'model_name', y = 'stable_point_temp', palette = 'autumn', errwidth = 3, capsize = 0.5, markersize = 50, join = True)
     sns.stripplot(data = df, x = 'model_name', y = 'stable_point_temp', palette = 'viridis',  edgecolor='green', dodge=True)
 
     plt.title('Stable Point', fontsize=40)
@@ -610,8 +610,8 @@ def stable_point_counts_for_ji_st_nw():
     fig, ax = plt.subplots(figsize=(20,20), dpi= 200)
 
 
-    sns.stripplot(data = df, x = 'model_name', y = 'average_stable_points', palette = 'viridis',  edgecolor='green')
-    sns.pointplot(data = df, x = 'model_name', y = 'average_stable_points', palette = 'autumn', errwidth = 3, capsize = 0.5, markersize = 50)
+    sns.stripplot(data = df, x = 'model_name', y = 'average_stable_points', palette = 'viridis',  edgecolor='green', jitter = 0.04)
+    sns.pointplot(data = df, x = 'model_name', y = 'average_stable_points', palette = 'autumn', errwidth = 3, capsize = 0.5, join = True)
 
     print("JI Average Stable Points : " + str(statistics.mean(ji_sp)))
     print("ST Average Stable Points : " + str(statistics.mean(st_sp)))
@@ -629,4 +629,34 @@ def stable_point_counts_for_ji_st_nw():
     plt.show()
 
 stable_point_counts_for_ji_st_nw()
+
+def attractors_counts_for_ji_st_nw():
+
+    ji_sp = []
+    st_sp = []
+    nw_sp = []
+
+
+    i = 0
+    index = []
+    for entry in RESULT_DATA:
+        ji_sp.append(len(entry[2]))
+        st_sp.append(len(entry[3]))
+        nw_sp.append(len(entry[4]))
+        index.append(i)
+        i+=1
+
+
+    plt.title('Number of Attractors', fontsize=40)
+    plt.xticks(fontsize=X_TICKS)
+    plt.yticks(fontsize=Y_TICKS)
+    plt.scatter(index, ji_sp, label='JI')
+    plt.scatter(index, st_sp, label='ST')
+    plt.scatter(index, nw_sp, label='NW')
+    plt.tight_layout()
+    plt.legend()
+    plt.savefig('attractors_counts_for_ji_st_nw.jpg')
+    plt.show()
+
+attractors_counts_for_ji_st_nw()
 

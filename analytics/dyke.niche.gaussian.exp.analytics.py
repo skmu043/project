@@ -1345,7 +1345,7 @@ def number_alive_at_each_start_temperature_at_the_start_of_simulation_mini_color
     #sns.stripplot(data = df, x = 'start_temp', y = 'alive_start', hue = 'niche_size', palette = customPalette, jitter = 0.25, dodge = True)
     #sns.pointplot(data = df, x = 'start_temp', y = 'alive_start', hue = 'niche_size', palette = customPalette, dodge = True, errwidth = 3, capsize = 0.5, markersize = 50)
 
-    sns.stripplot(data = df_st, x = 'st_start_temp', y = 'st_alive_start', palette = 'autumn', jitter = 0.40, dodge = True)
+    sns.stripplot(data = df_st, x = 'st_start_temp', y = 'st_alive_start', palette = 'autumn', jitter = 0.4, dodge = True)
     sns.pointplot(data = df_st, x = 'st_start_temp', y = 'st_alive_start', palette = 'autumn', dodge = True, errwidth = 3, capsize = 0.5, markersize = 50, join=True)
     sns.stripplot(data = df_nw, x = 'nw_start_temp', y = 'nw_alive_start', palette = 'viridis', jitter = 0.25, dodge = True)
     sns.pointplot(data = df_nw, x = 'nw_start_temp', y = 'nw_alive_start',  palette = 'viridis', dodge = True, errwidth = 3, capsize = 0.5, markersize = 50, join=True)
