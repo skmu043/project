@@ -16,6 +16,8 @@ import matplotlib as mpl
 from scipy import optimize
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap, BoundaryNorm
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
 
 #from numba import jit
 plt.rcParams["font.family"] = "Times New Roman"
@@ -116,6 +118,132 @@ def rates_of_change_system_state(system_state):
     return(rate_of_change)
 
 
+
+def plot_attractor_global_local_mesh():
+
+    ideal_temp_global = 50
+    ideal_temp_local = 80
+
+    global_temp = np.arange(0,100,0.01)
+    local_temp = np.arange(0,100,0.01)
+
+    global_temp, local_temp = np.meshgrid(global_temp, local_temp)
+
+    abundance_global = (math.e) ** ((-1) * (((abs(global_temp-500)) ** 2) / (2*(NICHE**2)))) + (local_temp*0)
+    abundance_local = (math.e) ** ((-1) * (((abs(global_temp-500)) ** 2) / (2*(NICHE**2)))) * (math.e) ** ((-1) * (((abs(local_temp-500)) ** 2) / (2*(NICHE**2))))
+
+    for s_i in range(SPECIES_K):
+        if s_i in local_population_index:
+            abundance = np.exp(- abs(global_temp-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 )) * np.exp(- abs(local_temp-mu[1][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
+            abundance_local += abundance
+        if s_i not in local_population_index:
+            abundance = np.exp(- abs(global_temp-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 )) + (local_temp*0)
+            abundance_global += abundance
+
+
+    fig = plt.figure(dpi=300, figsize=(10,10))
+    ax = fig.gca(projection='3d')
+    ax.set_title('Global Population',fontsize = 14)
+    ax.set_xlabel('Global Temperature')
+    ax.set_ylabel('Local Temperature')
+    #plt.pcolormesh(global_temp, local_temp, abundance, cmap='viridis')
+    surf = ax.plot_surface(global_temp, local_temp, abundance_global, cmap=cm.coolwarm,linewidth=0, antialiased=False)
+    #ax.set_zlim(-1.01, 1.01)
+    ax.zaxis.set_major_locator(LinearLocator(10))
+    ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.show()
+
+    fig = plt.figure(dpi=300, figsize=(10,10))
+    ax = fig.gca(projection='3d')
+    ax.set_title('Local Population',fontsize = 14)
+    ax.set_xlabel('Global Temperature')
+    ax.set_ylabel('Local Temperature')
+    #plt.pcolormesh(global_temp, local_temp, abundance, cmap='viridis')
+    surf = ax.plot_surface(global_temp, local_temp, abundance_local, cmap=cm.coolwarm,linewidth=0, antialiased=False)
+    #ax.set_zlim(-1.01, 1.01)
+    ax.zaxis.set_major_locator(LinearLocator(10))
+    ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.show()
+
+    fig = plt.figure(dpi=300, figsize=(10,10))
+    ax = fig.gca(projection='3d')
+    ax.set_title('Combined Population',fontsize = 14)
+    ax.set_xlabel('Global Temperature')
+    ax.set_ylabel('Local Temperature')
+    #plt.pcolormesh(global_temp, local_temp, abundance, cmap='viridis')
+    surf = ax.plot_surface(global_temp, local_temp, abundance_global + abundance_local, cmap=cm.coolwarm,linewidth=0, antialiased=False)
+    #ax.set_zlim(-1.01, 1.01)
+    ax.zaxis.set_major_locator(LinearLocator(10))
+    ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.show()
+
+
+
+def plot_attractor_global_local_mesh_effects():
+
+
+    global_temp = np.arange(0,100,0.01)
+    local_temp = np.arange(0,100,0.01)
+
+    global_temp, local_temp = np.meshgrid(global_temp, local_temp)
+
+    biotic_force_global = (math.e) ** ((-1) * (((abs(global_temp-500)) ** 2) / (2*(NICHE**2)))) + (local_temp*0)
+    biotic_force_local = (math.e) ** ((-1) * (((abs(global_temp-500)) ** 2) / (2*(NICHE**2)))) * (math.e) ** ((-1) * (((abs(local_temp-500)) ** 2) / (2*(NICHE**2))))
+
+    for s_i in range(SPECIES_K):
+        if s_i in local_population_index:
+            biotic_force = np.exp(- abs(global_temp-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 )) * np.exp(- abs(local_temp-mu[1][s_i]) ** 2 / ( 2 * NICHE ** 2 )) * omega[1][s_i]
+            biotic_force_local += biotic_force
+        if s_i not in local_population_index:
+            biotic_force = np.exp(- abs(global_temp-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 )) + (local_temp*0) * omega[0][s_i]
+            biotic_force_global += biotic_force
+
+
+    fig = plt.figure(dpi=300, figsize=(10,10))
+    ax = fig.gca(projection='3d')
+    ax.set_title('Global Population',fontsize = 14)
+    ax.set_xlabel('Global Temperature')
+    ax.set_ylabel('Local Temperature')
+    #plt.pcolormesh(global_temp, local_temp, abundance, cmap='viridis')
+    surf = ax.plot_surface(global_temp, local_temp, biotic_force_global, cmap=cm.coolwarm,linewidth=0, antialiased=False)
+    #ax.set_zlim(-1.01, 1.01)
+    ax.zaxis.set_major_locator(LinearLocator(10))
+    ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.show()
+
+    fig = plt.figure(dpi=300, figsize=(10,10))
+    ax = fig.gca(projection='3d')
+    ax.set_title('Local Population',fontsize = 14)
+    ax.set_xlabel('Global Temperature')
+    ax.set_ylabel('Local Temperature')
+    #plt.pcolormesh(global_temp, local_temp, abundance, cmap='viridis')
+    surf = ax.plot_surface(global_temp, local_temp, biotic_force_local, cmap=cm.coolwarm,linewidth=0, antialiased=False)
+    #ax.set_zlim(-1.01, 1.01)
+    ax.zaxis.set_major_locator(LinearLocator(10))
+    ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.show()
+
+    fig = plt.figure(dpi=300, figsize=(10,10))
+    ax = fig.gca(projection='3d')
+    ax.set_title('Combined Population',fontsize = 14)
+    ax.set_xlabel('Global Temperature')
+    ax.set_ylabel('Local Temperature')
+    #plt.pcolormesh(global_temp, local_temp, abundance, cmap='viridis')
+    surf = ax.plot_surface(global_temp, local_temp, biotic_force_global + biotic_force_local, cmap=cm.coolwarm,linewidth=0, antialiased=False)
+    #ax.set_zlim(-1.01, 1.01)
+    ax.zaxis.set_major_locator(LinearLocator(10))
+    ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.show()
+
+plot_attractor_global_local_mesh_effects()
+plot_attractor_global_local_mesh()
+
 def plot_abundance_global_at_50_optimal():
 
     ideal_temp = 50
@@ -153,7 +281,7 @@ def plot_abundance_local_at_50_optimal_mesh():
     plt.show()
 
 
-#plot_abundance_local_at_50_optimal_mesh()
+plot_abundance_local_at_50_optimal_mesh()
 
 def plot_abundance_local_at_50_optimal():
 
@@ -173,7 +301,7 @@ def plot_abundance_local_at_50_optimal():
     fig.colorbar(surf, shrink=0.5, aspect=5)
     plt.show()
 
-#plot_abundance_local_at_50_optimal()
+plot_abundance_local_at_50_optimal()
 
 def plot_20_local_population():
 

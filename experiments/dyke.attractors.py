@@ -268,7 +268,7 @@ def nw_stable_point_return():
 
 if __name__ == '__main__':
 
-    RANGE_K = 501
+    RANGE_K = 201
 
     K_RESULT = []
 
@@ -285,16 +285,13 @@ if __name__ == '__main__':
         omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
         mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 
-        #NICHE = 5
-        #five = ji_stable_point_return()
-        #NICHE = 7
-        #seven = ji_stable_point_return()
-        #NICHE = 10
-        #ten = ji_stable_point_return()
+        NICHE = 5
+        five = ji_stable_point_return()
+        NICHE = 7
+        seven = ji_stable_point_return()
+        NICHE = 10
+        ten = ji_stable_point_return()
 
-        five = -1
-        seven = -1
-        ten = -1
         # 5 set for ST
         NICHE = 5
         st = st_stable_point_return()
