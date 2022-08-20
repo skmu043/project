@@ -1,3 +1,8 @@
+# The Difference between dyke.niche.gaussian and dyke.gaussian.exp1_exp2 is:
+# dyke.gaussian.exp1_exp2 has            for start_temperature in np.arange (5,100, 5): >>> excludes 0 and 100
+# wheras dyke.niche.gaussian has         for start_temperature in np.arange (0,101, 5): >>> includes 0 and 100
+# JI, ST, NW Writeup uses : dyke.niche.gaussian
+
 import sys, os
 import shelve
 import random

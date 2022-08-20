@@ -1,3 +1,9 @@
+# The Difference between dyke.niche.gaussian and dyke.gaussian.exp1_exp2 is:
+# dyke.gaussian.exp1_exp2 has            for start_temperature in np.arange (5,100, 5): >>> excludes 0 and 100
+# wheras dyke.niche.gaussian has         for start_temperature in np.arange (0,101, 5): >>> includes 0 and 100
+# JI, ST, NW Writeup uses : dyke.niche.gaussian
+
+
 import random
 import os
 import shelve
@@ -101,7 +107,7 @@ if __name__ == '__main__':
     print("COMPLETED FILES: " + print_time())
 
     print("STARTING SIMULATIONS: " + print_time())
-    pool = Pool(processes=16)
+    pool = Pool(processes=7)
 
     #pool.map(run_it, [_ for _ in shelve_files])
 
