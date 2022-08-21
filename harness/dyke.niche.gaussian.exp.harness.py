@@ -14,7 +14,7 @@ import time
 import sys
 from tqdm import tqdm
 
-SAMPLE_SIZE = 50
+SAMPLE_SIZE = 100
 SAMPLE_STEP = 1
 RUN_ID = int(time.time())
 

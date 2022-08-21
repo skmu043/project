@@ -21,8 +21,6 @@ import pandas as pd
 from scipy import optimize
 
 
-
-
 RESULT_DATA = []
 UNIQ_SAMPLES = []
 
@@ -186,11 +184,11 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
 
         fig, ax = plt.subplots(figsize=(20,20), dpi=200)
 
-        plt.title('JI Model', fontsize=TFONT)
+        plt.title('JI model simulations ending with alive species', fontsize=TFONT)
         if(each_survival_threshold == 0.2):
-            plt.title('ST Model', fontsize=TFONT)
-        ax.set_xlabel('Starting Temperature', fontsize=XFONT)
-        ax.set_ylabel('Number of Simulations', fontsize=YFONT)
+            plt.title('ST model simulations ending with alive species', fontsize=TFONT)
+        ax.set_xlabel('Simulation start temperature', fontsize=XFONT)
+        ax.set_ylabel('Number of simulations', fontsize=YFONT)
         plt.xticks(fontsize=X_TICKS)
         plt.yticks(fontsize=Y_TICKS)
 
@@ -225,8 +223,8 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
 
         X_axis = np.arange(len(X))
 
-        p1 = ax.bar(X_axis, alive_above,  label='Simulations with alive species')
-        p2 = ax.bar(X_axis, alive_below, bottom=alive_above , label='Simulations with no alive species')
+        p1 = ax.bar(X_axis, alive_above,  label='Alive species present')
+        p2 = ax.bar(X_axis, alive_below, bottom=alive_above , label='No alive species present')
 
         ax.set_xticks(X_axis)
         ax.set_xticklabels(X)
@@ -237,7 +235,8 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
         if(each_survival_threshold == 0.2):
             ax.bar_label(p2, label_type='center', fontsize=20)
         #ax.bar_label(p2)
-        ax.legend(loc='best', fontsize=30)
+        #ax.legend(loc='lower right', bbox_to_anchor=(1, 0.5))
+        ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5, fontsize=30)
         plt.tight_layout()
         plt.savefig('number_of_simulations_that_have_zero_alives_vs_more_3than_zero_alives_at_the_end_'+str(each_survival_threshold)+'.jpg')
         plt.show()
@@ -287,10 +286,11 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
 
     fig, ax = plt.subplots(figsize=(20,20), dpi=200)
 
-    plt.title('NW Model', fontsize=TFONT)
 
-    ax.set_xlabel('Starting Temperature', fontsize=XFONT)
-    ax.set_ylabel('Number of Simulations', fontsize=YFONT)
+    plt.title('NW model simulations ending with alive species', fontsize=TFONT)
+
+    ax.set_xlabel('Simulation start temperature', fontsize=XFONT)
+    ax.set_ylabel('Number of simulations', fontsize=YFONT)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
 
@@ -325,8 +325,8 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
 
     X_axis = np.arange(len(X))
 
-    p1 = ax.bar(X_axis, alive_above,  label='Simulations with alive species')
-    p2 = ax.bar(X_axis, alive_below, bottom=alive_above , label='Simulations with no alive species')
+    p1 = ax.bar(X_axis, alive_above,  label='Alive species present')
+    p2 = ax.bar(X_axis, alive_below, bottom=alive_above , label='No alive species present')
 
     ax.set_xticks(X_axis)
     ax.set_xticklabels(X)
@@ -336,7 +336,7 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
     ax.bar_label(p1, label_type='center', fontsize=20)
     ax.bar_label(p2, label_type='center', fontsize=20)
     #ax.bar_label(p2)
-    ax.legend(loc='best', fontsize=30)
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5, fontsize=30)
     plt.tight_layout()
     plt.savefig('number_of_simulations_that_have_zero_alives_vs_more_than_ze1ro_alives_at_the_end_10.jpg')
     plt.show()
@@ -1275,9 +1275,9 @@ def number_alive_at_each_start_temperature_at_the_start_of_simulation():
     sns.pointplot(start_temp_2, alive_start_2, palette=PALETTE,  join=False, errwidth = 3, capsize = 0.5, markersize = 50)
     sns.stripplot(start_temp_2, alive_start_2, palette=PALETTE,edgecolor='green', dodge=True)
 
-    plt.title('Number of alive species at the start of the simulation', fontsize=40)
-    ax.set_xlabel('Starting Temperature', fontsize=40)
-    ax.set_ylabel('Alive Species', fontsize=40)
+    plt.title('Alive species at the start of simulations using the ST model', fontsize=40)
+    ax.set_xlabel('Starting temperature', fontsize=40)
+    ax.set_ylabel('Number of alive species', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
     cmaps = [plt.cm.viridis]
@@ -1289,7 +1289,11 @@ def number_alive_at_each_start_temperature_at_the_start_of_simulation():
     plt.legend(handles=cmap_handles,
                labels=cmap_labels,
                handler_map=handler_map,
-               fontsize=12, prop={'size': 30})
+               fontsize=30, prop={'size': 30}, bbox_to_anchor=(0.7, -0.05), loc="upper left")
+
+
+    #ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5, fontsize=30)
+
     plt.tight_layout()
     plt.savefig('number_alive_at_each_start_temperature_at_the_start_of_s1imulation.jpg')
     plt.show()
@@ -1357,9 +1361,9 @@ def number_alive_at_each_start_temperature_at_the_start_of_simulation_mini_color
 
 
     plt.legend(prop={'size': 30})
-    plt.title('Number of alive species at the start of the simulation', fontsize=40)
-    ax.set_xlabel('Starting Temperature', fontsize=40)
-    ax.set_ylabel('Alive Species', fontsize=40)
+    plt.title('Alive species at the start of simulations using the ST and NW models', fontsize=40)
+    ax.set_xlabel('Starting temperature', fontsize=40)
+    ax.set_ylabel('Number of alive species', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
     cmaps = [plt.cm.autumn, plt.cm.viridis]
@@ -1373,7 +1377,7 @@ def number_alive_at_each_start_temperature_at_the_start_of_simulation_mini_color
     plt.legend(handles=cmap_handles,
                labels=cmap_labels,
                handler_map=handler_map,
-               fontsize=12, prop={'size': 30})
+               fontsize=30, prop={'size': 30}, loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('number_alive_at_each_start_temperature_at_the_st1art_of_simulation_ST_NW.jpg')
     plt.show()
@@ -1418,14 +1422,14 @@ def number_alive_at_each_start_temperature_at_the_start_of_simulation2():
     sns.stripplot(data = df, x = 'start_temp', y = 'alive_start', hue = 'niche_size', jitter = 0.25, dodge = True)
     sns.pointplot(data = df, x = 'start_temp', y = 'alive_start', hue = 'niche_size', dodge = True, errwidth = 3, capsize = 0.5, markersize = 50)
     plt.legend(prop={'size': 30})
-    plt.title('Number of alive species at the start of the simulation', fontsize=40)
-    ax.set_xlabel('Starting Temperature', fontsize=40)
-    ax.set_ylabel('Alive Species', fontsize=40)
+    plt.title('Alive species at the start of simulations using the ST and NW models', fontsize=40)
+    ax.set_xlabel('Starting temperature', fontsize=40)
+    ax.set_ylabel('Number of alive species', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
 
     handles, labels = ax.get_legend_handles_labels()
-    plt.legend(handles[0:2], labels[0:2], prop={'size': 25})
+    plt.legend(handles[0:2], labels[0:2], prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('number_alive_at_each_start_temperature_at_the_start_of_s1imulation_ST_NW.jpg')
     plt.show()
@@ -1468,9 +1472,9 @@ def number_alive_at_each_start_temperature_at_the_end_of_simulation():
     sns.pointplot(data = df, x = 'start_temp', y='alive_end', palette=PALETTE,  join=True, errwidth = 3, capsize = 0.5, markersize = 50)
     sns.stripplot(data = df, x = 'start_temp', y='alive_end', palette=PALETTE, edgecolor='green', dodge=True)
 
-    plt.title('Number of alive species at the end of the simulation', fontsize=40)
-    ax.set_xlabel('Starting Temperature', fontsize=40)
-    ax.set_ylabel('Alive Species', fontsize=40)
+    plt.title('Alive species at the end of simulations using the ST model', fontsize=40)
+    ax.set_xlabel('Starting temperature', fontsize=40)
+    ax.set_ylabel('Number of alive species', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
     cmaps = [plt.cm.viridis]
@@ -1482,7 +1486,7 @@ def number_alive_at_each_start_temperature_at_the_end_of_simulation():
     plt.legend(handles=cmap_handles,
                labels=cmap_labels,
                handler_map=handler_map,
-               fontsize=12, prop={'size': 30})
+               fontsize=12, prop={'size': 30},bbox_to_anchor=(0.7, -0.05),loc='upper left')
     plt.tight_layout()
     plt.savefig('number_alive_at_each_start_temperature_at_the_end_of_simul5ation.jpg')
     plt.show()
@@ -1534,16 +1538,16 @@ def number_alive_at_each_start_temperature_at_the_end_of_simulation2():
     sns.stripplot(data = df, x = 'start_temp', y = 'alive_end', hue = 'niche_size', jitter = 0.25, dodge = True)
     sns.pointplot(data = df, x = 'start_temp', y = 'alive_end', hue = 'niche_size', dodge = True, errwidth = 3, capsize = 0.5, markersize = 50)
     plt.legend(prop={'size': 30})
-    plt.title('Number of alive species at the end of the simulation', fontsize=40)
-    ax.set_xlabel('Starting Temperature', fontsize=40)
-    ax.set_ylabel('Alive Species', fontsize=40)
+    plt.title('Alive species at the end of simulations using the ST and NW models', fontsize=40)
+    ax.set_xlabel('Starting temperature', fontsize=40)
+    ax.set_ylabel('Number of alive species', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
     #red_patch = mpatches.Patch(color=color1, label='The red data')
     #red_patch = mpatches.Patch(color=color2, label='The red data')
     #plt.legend(handles=[red_patch])
     handles, labels = ax.get_legend_handles_labels()
-    plt.legend(handles[0:2], labels[0:2], prop={'size': 25})
+    plt.legend(handles[0:2], labels[0:2], prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('number_alive_at_each_start_temperature_at_the_end_of_simulatio2n_ST_NW.jpg')
     plt.show()
@@ -1647,18 +1651,18 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
 
 
     plt.figure(figsize=(20,20), dpi=200)
-    plt.title('Average number of alive species at the start and end of the simulations', fontsize=40)
-    plt.xlabel('Starting Temperature', fontsize=40)
-    plt.ylabel('Average Number of Alive Species', fontsize=40)
+    plt.title('Alive species at the beginning and end of simulations using the ST model', fontsize=40)
+    plt.xlabel('Starting temperature', fontsize=40)
+    plt.ylabel('Average number of alive species', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
     #plt.plot(dw_temp_s, dw_alive_s, label='Dyke/Weaver Alive Species at Start')
     #plt.plot(dw_temp_e, dw_alive_e, label='Dyke/Weaver Alive Species at End')
-    plt.plot(st_temp_s, st_alive_s, label='ST Model Alive species at Start')
-    plt.plot(st_temp_e, st_alive_e, label='ST Model Alive species at End')
-    plt.plot(temps_diff, avg_diff, label='ST Model Average Difference')
+    plt.plot(st_temp_s, st_alive_s, label='Starting alive species')
+    plt.plot(st_temp_e, st_alive_e, label='Ending alive species')
+    plt.plot(temps_diff, avg_diff, label='Difference between start and end')
     plt.xticks(np.arange(0,101,5))
-    plt.legend(prop={'size': 25})
+    plt.legend(prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('average_number_alive_at_each_start_temperature_at_the_start_an3d_end_of_simulation.jpg')
     plt.show()
@@ -1844,7 +1848,7 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
     plt.plot(nw_temp_e, nw_alive_e, label='NW Model Alive species at End')
     plt.plot(nw_temps_diff, nw_avg_diff, label='NW Model Average Difference')
     plt.xticks(np.arange(0,101,5))
-    plt.legend(prop={'size': 25})
+    plt.legend(prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=2)
     plt.tight_layout()
     plt.savefig('average_number_alive_at_each_start_temperature_at_the_start_and_en2d_of_simulation2.jpg')
     plt.show()
@@ -2137,19 +2141,20 @@ def abundance_alive_at_each_start_temperature_at_the_start_of_simulation():
 
     zipped = list(zip(start_temp, start_abundance, survival_threshold))
     df = pd.DataFrame(zipped, columns=['start_temp', 'start_abundance', 'survival_threshold'])
-
+    hue_order = ['JI Model', 'ST Model']
     fig, ax = plt.subplots(figsize=(20,20), dpi=200)
 
-    sns.stripplot(data = df, x = 'start_temp', y = 'start_abundance', hue = 'survival_threshold', jitter = 0.25, dodge = True)
-    sns.pointplot(data = df, x = 'start_temp', y = 'start_abundance', hue = 'survival_threshold', dodge = True, errwidth = 3, capsize = 0.5, markersize = 50)
+    sns.stripplot(data = df, x = 'start_temp', y = 'start_abundance', hue = 'survival_threshold', jitter = 0.25, dodge = True,hue_order=hue_order)
+    sns.pointplot(data = df, x = 'start_temp', y = 'start_abundance', hue = 'survival_threshold', dodge = True, errwidth = 3, capsize = 0.5, markersize = 50, hue_order=hue_order)
+
     plt.legend(prop={'size': 30})
-    plt.title('Total Abundance of species at the start of the simulations', fontsize=40)
-    ax.set_xlabel('Starting Temperature', fontsize=40)
-    ax.set_ylabel('Total Abundance', fontsize=40)
+    plt.title('Total abundance of species at the start of the simulations', fontsize=40)
+    ax.set_xlabel('Starting temperature', fontsize=40)
+    ax.set_ylabel('Total abundance', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
     handles, labels = ax.get_legend_handles_labels()
-    plt.legend(handles[0:2], labels[0:2], prop={'size': 25})
+    plt.legend(handles[0:2], labels[0:2], prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('abundance_alive_at_each_start_temperature_at_the_start_of_simulation_JI_ST5.jpg')
     plt.show()
@@ -2190,6 +2195,7 @@ def abundance_alive_at_each_start_temperature_at_the_start_of_simulation2():
                 start_temp.append(data_point[4])
                 start_abundance.append(data_point[8])
                 niche.append("ST Model")
+
             if(data_point[2]==10):
                 start_temp.append(data_point[4])
                 start_abundance.append(data_point[8])
@@ -2198,22 +2204,26 @@ def abundance_alive_at_each_start_temperature_at_the_start_of_simulation2():
 
     zipped = list(zip(start_temp, start_abundance, niche))
     df = pd.DataFrame(zipped, columns=['start_temp', 'start_abundance', 'niche_size'])
-
+    hue_order = ['ST Model', 'NW Model']
     fig, ax = plt.subplots(figsize=(20,20), dpi=200)
+    colors_sns = ["#FF7F0E", "#2CA02C"]
+    sns_custom = sns.set_palette(sns.color_palette(colors_sns))
 
-    sns.stripplot(data = df, x = 'start_temp', y = 'start_abundance', hue = 'niche_size', jitter = 0.25, dodge = True)
-    sns.pointplot(data = df, x = 'start_temp', y = 'start_abundance', hue = 'niche_size', dodge = True, errwidth = 3, capsize = 0.5, markersize = 50)
+    sns.stripplot(data = df, x = 'start_temp', y = 'start_abundance', hue = 'niche_size', jitter = 0.25, dodge = True, hue_order=hue_order, palette=sns_custom)
+    sns.pointplot(data = df, x = 'start_temp', y = 'start_abundance', hue = 'niche_size', dodge = True, errwidth = 3, capsize = 0.5, markersize = 50, hue_order=hue_order,palette=sns_custom)
+
     plt.legend(prop={'size': 30})
-    plt.title('Total Abundance of species at the start of the simulations', fontsize=40)
-    ax.set_xlabel('Starting Temperature', fontsize=40)
-    ax.set_ylabel('Total Abundance', fontsize=40)
+    plt.title('Total abundance of species at the start of the simulations', fontsize=40)
+    ax.set_xlabel('Starting temperature', fontsize=40)
+    ax.set_ylabel('Total abundance', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
     handles, labels = ax.get_legend_handles_labels()
-    plt.legend(handles[0:2], labels[0:2], prop={'size': 25})
+    plt.legend(handles[0:2], labels[0:2], prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('abundance_alive_at_each_start_temperature_at_the_start_of_simulation_ST_NW4.jpg')
     plt.show()
+    sns.set_palette(sns.color_palette("tab10"))
 
 
 #=======================================================================================================================
@@ -2261,22 +2271,24 @@ def abundance_alive_at_each_start_temperature_at_the_end_of_simulation():
 
     zipped = list(zip(end_temp, end_abundance, survival_threshold))
     df = pd.DataFrame(zipped, columns=['end_temp', 'end_abundance', 'survival_threshold'])
-
+    hue_order = ['JI Model', 'ST Model']
     fig, ax = plt.subplots(figsize=(20,20), dpi=200)
 
-    sns.stripplot(data = df, x = 'end_temp', y = 'end_abundance', hue = 'survival_threshold', jitter = 0.25, dodge = True)
-    sns.pointplot(data = df, x = 'end_temp', y = 'end_abundance', hue = 'survival_threshold', dodge = True, errwidth = 3, capsize = 0.5, markersize = 50)
+    sns.stripplot(data = df, x = 'end_temp', y = 'end_abundance', hue = 'survival_threshold', jitter = 0.25, dodge = True, hue_order=hue_order)
+    sns.pointplot(data = df, x = 'end_temp', y = 'end_abundance', hue = 'survival_threshold', dodge = True, errwidth = 3, capsize = 0.5, markersize = 50, hue_order=hue_order)
+
     plt.legend(prop={'size': 30})
-    plt.title('Total Abundance of species at the end of the simulations', fontsize=40)
-    ax.set_xlabel('Starting Temperature', fontsize=40)
-    ax.set_ylabel('Total Abundance', fontsize=40)
+    plt.title('Total abundance of species at the end of the simulations', fontsize=40)
+    ax.set_xlabel('Starting temperature', fontsize=40)
+    ax.set_ylabel('Total abundance', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
     handles, labels = ax.get_legend_handles_labels()
-    plt.legend(handles[0:2], labels[0:2], prop={'size': 25})
+    plt.legend(handles[0:2], labels[0:2], prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('abundance_alive_at_each_start_temperature_at_the_end_of_simulation_JI_ST3.jpg')
     plt.show()
+
 
 #=======================================================================================================================
 #abundance_alive_at_each_start_temperature_at_the_end_of_simulation()
@@ -2324,21 +2336,25 @@ def abundance_alive_at_each_start_temperature_at_the_end_of_simulation2():
     zipped = list(zip(end_temp, end_abundance, niche))
     df = pd.DataFrame(zipped, columns=['end_temp', 'end_abundance', 'niche_size'])
 
+    hue_order = ['ST Model', 'NW Model']
     fig, ax = plt.subplots(figsize=(20,20), dpi=200)
+    colors_sns = ["#FF7F0E", "#2CA02C"]
+    sns_custom = sns.set_palette(sns.color_palette(colors_sns))
 
-    sns.stripplot(data = df, x = 'end_temp', y = 'end_abundance', hue = 'niche_size', jitter = 0.25, dodge = True)
-    sns.pointplot(data = df, x = 'end_temp', y = 'end_abundance', hue = 'niche_size', dodge = True, errwidth = 3, capsize = 0.5, markersize = 50)
+    sns.stripplot(data = df, x = 'end_temp', y = 'end_abundance', hue = 'niche_size', jitter = 0.25, dodge = True,hue_order=hue_order, palette=sns_custom)
+    sns.pointplot(data = df, x = 'end_temp', y = 'end_abundance', hue = 'niche_size', dodge = True, errwidth = 3, capsize = 0.5, markersize = 50,hue_order=hue_order, palette=sns_custom)
     plt.legend(prop={'size': 30})
-    plt.title('Total Abundance of species at the end of the simulations', fontsize=40)
-    ax.set_xlabel('Starting Temperature', fontsize=40)
-    ax.set_ylabel('Total Abundance', fontsize=40)
+    plt.title('Total abundance of species at the end of the simulations', fontsize=40)
+    ax.set_xlabel('Starting temperature', fontsize=40)
+    ax.set_ylabel('Total abundance', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
     handles, labels = ax.get_legend_handles_labels()
-    plt.legend(handles[0:2], labels[0:2], prop={'size': 25})
+    plt.legend(handles[0:2], labels[0:2], prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('abundance_alive_at_each_start_temperature_at_the_end_of_simulation_ST_NW1.jpg')
     plt.show()
+    sns.set_palette(sns.color_palette("tab10"))
 
 #=======================================================================================================================
 #abundance_alive_at_each_start_temperature_at_the_end_of_simulation2()
@@ -2520,19 +2536,18 @@ def average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_s
         st_diffs_avg.append((sum/count))
 
     plt.figure(figsize=(20,20), dpi=200)
-    plt.title('Average Abundance at the start and end of the simulations', fontsize=40)
-    plt.xlabel('Starting Temperature', fontsize=40)
-    plt.ylabel('Average Abundance of Alive Species', fontsize=40)
+    plt.title('Average abundance at the start and end of the simulations', fontsize=40)
+    plt.xlabel('Starting temperature', fontsize=40)
+    plt.ylabel('Average abundance of alive species', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
 
-    plt.plot(dw_temp_s, dw_abundance_s, label='JI Model Abundance at Start')
-    plt.plot(dw_temp_e, dw_abundance_e, label='JI Model Abundance at End')
-    plt.plot(st_temp_s, st_abundance_s, label='ST Model Abundance at Start')
-    plt.plot(st_temp_e, st_abundance_e, label='ST Model Abundance at End')
-
-    plt.plot(ji_temps, ji_diffs_avg, label='JI Model Average Abundance Difference')
-    plt.plot(st_temps, st_diffs_avg, label='ST Model Average Abundance Difference')
+    plt.plot(dw_temp_s, dw_abundance_s, label='JI model starting abundance')
+    plt.plot(dw_temp_e, dw_abundance_e, label='JI model ending abundance')
+    plt.plot(ji_temps, ji_diffs_avg, label='JI model average difference in abundance')
+    plt.plot(st_temp_s, st_abundance_s, label='ST model starting abundance')
+    plt.plot(st_temp_e, st_abundance_e, label='ST model ending abundance')
+    plt.plot(st_temps, st_diffs_avg, label='ST model average difference in abundance')
 
     plt.xticks(np.arange(0,101,5))
 
@@ -2541,7 +2556,7 @@ def average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_s
     plt.yticks(np.arange(math.floor(min(all_vals)), math.ceil(max(all_vals)), 1))
 
 
-    plt.legend(prop={'size': 30})
+    plt.legend(prop={'size': 30},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=2)
     plt.tight_layout()
     plt.savefig('average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation2.jpg')
     plt.show()
@@ -2733,13 +2748,13 @@ def average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_s
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
 
-    plt.plot(dw_temp_s, dw_abundance_s, label='ST Model Abundance at Start')
-    plt.plot(dw_temp_e, dw_abundance_e, label='ST Model Abundance at End')
-    plt.plot(st_temp_s, st_abundance_s, label='NW Model Abundance at Start')
-    plt.plot(st_temp_e, st_abundance_e, label='NW Model Abundance at End')
+    plt.plot(dw_temp_s, dw_abundance_s, label='ST model starting abundance')
+    plt.plot(dw_temp_e, dw_abundance_e, label='ST model ending abundance')
+    plt.plot(ji_temps, ji_diffs_avg, label='ST model average difference in abundance')
+    plt.plot(st_temp_s, st_abundance_s, label='NW model starting abundance')
+    plt.plot(st_temp_e, st_abundance_e, label='NW model ending abundance')
+    plt.plot(st_temps, st_diffs_avg, label='NW model average difference in abundance')
 
-    plt.plot(ji_temps, ji_diffs_avg, label='ST Model Average Abundance Difference')
-    plt.plot(st_temps, st_diffs_avg, label='NW Model Average Abundance Difference')
 
     plt.xticks(np.arange(0,101,5))
 
@@ -2748,7 +2763,7 @@ def average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_s
     plt.yticks(np.arange(math.floor(min(all_vals)), math.ceil(max(all_vals)), 1))
 
 
-    plt.legend(prop={'size': 30})
+    plt.legend(prop={'size': 30},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=2)
     plt.tight_layout()
     plt.savefig('average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation21.jpg')
     plt.show()
@@ -3974,7 +3989,7 @@ def all_stable_points():
 
 
 
-all_stable_points()
+#all_stable_points()
 
 #RESULT_DATA.append((
 # omega[0],
@@ -3993,7 +4008,6 @@ all_stable_points()
 #=======================================================================================================================
 #all_stable_points()
 #=======================================================================================================================
-
 #=======================================================================================================================
 #sample_space_effects_agains_optimal_growing_temperature()
 #=======================================================================================================================
@@ -4002,65 +4016,77 @@ all_stable_points()
 #=======================================================================================================================
 #sample_space_effects_agains_optimal_growing_temperature()
 #=======================================================================================================================
-#>>>>>>number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
+#>>>>>>>>>>number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end2()
+#>>>>>>>>>>number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>ji_model_total_abundance_per_start_temperature()
+#ji_model_total_abundance_per_start_temperature()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>number_alive_at_each_start_temperature_at_the_start_of_simulation()
+#>>>>>>>>>>number_alive_at_each_start_temperature_at_the_start_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>number_alive_at_each_start_temperature_at_the_start_of_simulation2()
+#>>>>>>>>>>number_alive_at_each_start_temperature_at_the_start_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>number_alive_at_each_start_temperature_at_the_end_of_simulation()
+#>>>>>>>>>>number_alive_at_each_start_temperature_at_the_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>number_alive_at_each_start_temperature_at_the_end_of_simulation2()
+#>>>>>>>>>>number_alive_at_each_start_temperature_at_the_end_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
+#>>>>>>>>>>average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation2()
+#>>>>>>>>>>average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>abundance_alive_at_each_start_temperature_at_the_start_of_simulation()
+#>>>>>>>>>>abundance_alive_at_each_start_temperature_at_the_start_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>abundance_alive_at_each_start_temperature_at_the_end_of_simulation()
+#>>>>>>>>>>abundance_alive_at_each_start_temperature_at_the_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>abundance_alive_at_each_start_temperature_at_the_start_of_simulation2()
+#>>>>>>>>>>abundance_alive_at_each_start_temperature_at_the_start_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>abundance_alive_at_each_start_temperature_at_the_end_of_simulation2()
+#>>>>>>>>>>abundance_alive_at_each_start_temperature_at_the_end_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation()
+#>>>>>>>>>>average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation2()
+#>>>>>>>>>>average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R()
+number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R()
 #=======================================================================================================================
-#>>>>>>number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ST()
+number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ST()
 #=======================================================================================================================
-#>>>>>>number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R2()
-#=======================================================================================================================
-#=======================================================================================================================
-#>>>>>>ji_start_end_temperature_with_abundance()
+number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>st_start_end_temperature_with_abundance()
+ji_start_end_temperature_with_abundance()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>nw_start_end_temperature_with_abundance()
+st_start_end_temperature_with_abundance()
+#=======================================================================================================================
+#=======================================================================================================================
+nw_start_end_temperature_with_abundance()
+#=======================================================================================================================
+#=======================================================================================================================
+number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ST_threshold()
+#=======================================================================================================================
+#=======================================================================================================================
+number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_alive_threshold()
+#=======================================================================================================================
+ji_start_end_temperature_with_abundance_diff()
+#=======================================================================================================================
+st_start_end_temperature_with_abundance_diff()
+#=======================================================================================================================
+nw_start_end_temperature_with_abundance_diff()
 #=======================================================================================================================
 #jt_abundance_outside_0_R_only_per_start_temp()
 #=======================================================================================================================
@@ -4086,18 +4112,6 @@ all_stable_points()
 #=======================================================================================================================
 #=======================================================================================================================
 #end_temperature_both_zero_zero2_with_start_temps_dw_overlay()
-#=======================================================================================================================
-#=======================================================================================================================
-number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ST_threshold()
-#=======================================================================================================================
-#=======================================================================================================================
-number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_alive_threshold()
-#=======================================================================================================================
-ji_start_end_temperature_with_abundance_diff()
-#=======================================================================================================================
-st_start_end_temperature_with_abundance_diff()
-#=======================================================================================================================
-nw_start_end_temperature_with_abundance_diff()
 #=======================================================================================================================
 
 
