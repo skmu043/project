@@ -469,9 +469,9 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
 
     fig, ax = plt.subplots(figsize=(20,20), dpi=200)
 
-    plt.title('JI Model simulations ending with respect to the essential range', fontsize=40)
+    plt.title('JI Model simulations end temperatures', fontsize=40)
     ax.set_xlabel('Starting Temperature', fontsize=40)
-    ax.set_ylabel('Essential Range', fontsize=40)
+    ax.set_ylabel('Number of Simulations', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
 
@@ -524,8 +524,8 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
         index_temp +=1
 
 
-    p1 = ax.bar(X_axis, results_inside, bottom = b_inside, label = 'Simulations within the essential range')
-    p2 = ax.bar(X_axis, results_outside, bottom = b_outside , label = 'Simulations outside the essential range')
+    p1 = ax.bar(X_axis, results_inside, bottom = b_inside, label = 'System temperature within the essential range')
+    p2 = ax.bar(X_axis, results_outside, bottom = b_outside , label = 'System temperature outside the essential range')
 
     ax.set_xticks(X_axis, label = X)
     # Label with label_type 'center' instead of the default 'edge'
@@ -533,7 +533,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
     ax.bar_label(p2, label_type='center', fontsize=25)
 
     #ax.bar_label(p2)
-    ax.legend(loc='best', fontsize=25)
+    ax.legend(fontsize=25,loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('number_of_simulations_that_have_end_temperature_in8side_0R_and_outside_0R_JI.jpg' )
     plt.show()
@@ -558,7 +558,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ali
 
     plt.title('JI Model Stable - with threshold 0.08', fontsize=40)
     ax.set_xlabel('Starting Temperature', fontsize=40)
-    ax.set_ylabel('Essential Range', fontsize=40)
+    ax.set_ylabel('Number of simulations', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
 
@@ -620,7 +620,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ali
     ax.bar_label(p2, label_type='center', fontsize=25)
 
     #ax.bar_label(p2)
-    ax.legend(loc='best', fontsize=25)
+    ax.legend(fontsize=25,loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_alive_threshold.jpg' )
     plt.show()
@@ -656,9 +656,9 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ST(
 
     fig, ax = plt.subplots(figsize=(20,20), dpi=200)
 
-    plt.title('ST Model simulations ending with respect to the essential range', fontsize=40)
+    plt.title('ST Model simulations end temperatures', fontsize=40)
     ax.set_xlabel('Starting Temperature', fontsize=40)
-    ax.set_ylabel('Essential Range', fontsize=40)
+    ax.set_ylabel('Number of simulations', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
 
@@ -714,8 +714,8 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ST(
         index_temp +=1
 
 
-    p1 = ax.bar(X_axis, results_inside, bottom = b_inside, label = 'Simulations within the essential range')
-    p2 = ax.bar(X_axis, results_outside, bottom = b_outside , label = 'Simulations outside the essential range')
+    p1 = ax.bar(X_axis, results_inside, bottom = b_inside, label = 'System temperature within the essential range')
+    p2 = ax.bar(X_axis, results_outside, bottom = b_outside , label = 'System temperature outside the essential range')
 
     ax.set_xticks(X_axis, label = X)
     # Label with label_type 'center' instead of the default 'edge'
@@ -723,7 +723,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ST(
     ax.bar_label(p2, label_type='center', fontsize=25)
 
     #ax.bar_label(p2)
-    ax.legend(loc='best', fontsize=25)
+    ax.legend(fontsize=25,loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('number_of_simulations_that_have_end_temperature_inside_0R_and_out7side_0R_ST.jpg' )
     plt.show()
@@ -825,7 +825,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ST_
     ax.bar_label(p2, label_type='center', fontsize=25)
 
     #ax.bar_label(p2)
-    ax.legend(loc='best', fontsize=25)
+    ax.legend(fontsize=25,loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ST_threshold.jpg' )
     plt.show()
@@ -882,7 +882,7 @@ def function_stacked():
         if(each_survival_threshold == 0.2):
             plt.title('ST Model simulations ending with respect to the essential range', fontsize=40)
         ax.set_xlabel('Starting Temperature', fontsize=40)
-        ax.set_ylabel('Essential Range', fontsize=40)
+        ax.set_ylabel('Number of simulations', fontsize=40)
         plt.xticks(fontsize=X_TICKS)
         plt.yticks(fontsize=Y_TICKS)
 
@@ -960,7 +960,7 @@ def function_stacked():
         ax.bar_label(p3, label_type='center', fontsize=25)
 
         #ax.bar_label(p2)
-        ax.legend(loc='best', fontsize=25)
+        ax.legend(fontsize=25,loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
         plt.tight_layout()
         plt.savefig('number_of_simulations_that_have_end_temperature_i5nside_0R_and_outside_0R_' + str(each_survival_threshold) + '.jpg' )
         plt.show()
@@ -992,9 +992,9 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R2():
 
     fig, ax = plt.subplots(figsize=(20,20), dpi=200)
 
-    plt.title('NW Model simulations ending with respect to the essential range', fontsize=40)
+    plt.title('NW Model simulations end temperature', fontsize=40)
     ax.set_xlabel('Starting Temperature', fontsize=40)
-    ax.set_ylabel('Essential Range', fontsize=40)
+    ax.set_ylabel('Number of simulations', fontsize=40)
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
 
@@ -1050,8 +1050,8 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R2():
         index_temp +=1
 
 
-    p1 = ax.bar(X_axis, results_inside, bottom = b_inside, label = 'Simulations within the essential range')
-    p2 = ax.bar(X_axis, results_outside, bottom = b_outside , label = 'Simulations outside the essential range')
+    p1 = ax.bar(X_axis, results_inside, bottom = b_inside, label = 'System temperature within the essential range')
+    p2 = ax.bar(X_axis, results_outside, bottom = b_outside , label = 'System temperature outside the essential range')
 
     ax.set_xticks(X_axis, label = X)
     # Label with label_type 'center' instead of the default 'edge'
@@ -1059,7 +1059,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R2():
     ax.bar_label(p2, label_type='center', fontsize=25)
 
     #ax.bar_label(p2)
-    ax.legend(loc='best', fontsize=25)
+    ax.legend(fontsize=25,loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('number_of_simulations_that_have_end_temperature_insid2e_0R_and_outside_0R_NW.jpg' )
     plt.show()
@@ -1208,7 +1208,7 @@ def number_of_simulations_that_have_end_temperature_both_inside_dyke_weaver_insi
     ax.bar_label(p3, label_type='center', fontsize=25)
     ax.bar_label(p4, label_type='center', fontsize=25)
     #ax.bar_label(p2)
-    ax.legend(loc='best', fontsize=25)
+    ax.legend(fontsize=25,loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
     plt.savefig('number_of_simulations_that_have_end_temperature_both_insid3e_dyke_weaver_inside_only_truncated_inside_only.jpg')
     plt.show()
@@ -4016,49 +4016,49 @@ def all_stable_points():
 #=======================================================================================================================
 #sample_space_effects_agains_optimal_growing_temperature()
 #=======================================================================================================================
-#>>>>>>>>>>number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
+number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>>number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end2()
+number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end2()
 #=======================================================================================================================
 #=======================================================================================================================
 #ji_model_total_abundance_per_start_temperature()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>>number_alive_at_each_start_temperature_at_the_start_of_simulation()
+number_alive_at_each_start_temperature_at_the_start_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>>number_alive_at_each_start_temperature_at_the_start_of_simulation2()
+number_alive_at_each_start_temperature_at_the_start_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>>number_alive_at_each_start_temperature_at_the_end_of_simulation()
+number_alive_at_each_start_temperature_at_the_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>>number_alive_at_each_start_temperature_at_the_end_of_simulation2()
+number_alive_at_each_start_temperature_at_the_end_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>>average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
+average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>>average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation2()
+average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>>abundance_alive_at_each_start_temperature_at_the_start_of_simulation()
+abundance_alive_at_each_start_temperature_at_the_start_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>>abundance_alive_at_each_start_temperature_at_the_end_of_simulation()
+abundance_alive_at_each_start_temperature_at_the_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>>abundance_alive_at_each_start_temperature_at_the_start_of_simulation2()
+abundance_alive_at_each_start_temperature_at_the_start_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>>abundance_alive_at_each_start_temperature_at_the_end_of_simulation2()
+abundance_alive_at_each_start_temperature_at_the_end_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>>average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation()
+average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>>average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation2()
+average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
 number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R()
@@ -4113,9 +4113,3 @@ nw_start_end_temperature_with_abundance_diff()
 #=======================================================================================================================
 #end_temperature_both_zero_zero2_with_start_temps_dw_overlay()
 #=======================================================================================================================
-
-
-
-
-
-
