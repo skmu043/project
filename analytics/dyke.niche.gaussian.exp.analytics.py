@@ -238,7 +238,7 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
         #ax.legend(loc='lower right', bbox_to_anchor=(1, 0.5))
         ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5, fontsize=30)
         plt.tight_layout()
-        plt.savefig('number_of_simulations_that_have_zero_alives_vs_more_3than_zero_alives_at_the_end_'+str(each_survival_threshold)+'.jpg')
+        plt.savefig('01number_of_simulations_that_have_zero_alives_vs_more_3than_zero_alives_at_the_end_'+str(each_survival_threshold)+'.jpg')
         plt.show()
 
 
@@ -338,7 +338,7 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
     #ax.bar_label(p2)
     ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5, fontsize=30)
     plt.tight_layout()
-    plt.savefig('number_of_simulations_that_have_zero_alives_vs_more_than_ze1ro_alives_at_the_end_10.jpg')
+    plt.savefig('15number_of_simulations_that_have_zero_alives_vs_more_than_ze1ro_alives_at_the_end_10.jpg')
     plt.show()
 
 
@@ -535,7 +535,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R():
     #ax.bar_label(p2)
     ax.legend(fontsize=25,loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
-    plt.savefig('number_of_simulations_that_have_end_temperature_in8side_0R_and_outside_0R_JI.jpg' )
+    plt.savefig('09number_of_simulations_that_have_end_temperature_in8side_0R_and_outside_0R_JI.jpg' )
     plt.show()
 
 #=======================================================================================================================
@@ -622,7 +622,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ali
     #ax.bar_label(p2)
     ax.legend(fontsize=25,loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
-    plt.savefig('number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_alive_threshold.jpg' )
+    plt.savefig('13number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_alive_threshold.jpg' )
     plt.show()
 
 #=======================================================================================================================
@@ -725,7 +725,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ST(
     #ax.bar_label(p2)
     ax.legend(fontsize=25,loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
-    plt.savefig('number_of_simulations_that_have_end_temperature_inside_0R_and_out7side_0R_ST.jpg' )
+    plt.savefig('10number_of_simulations_that_have_end_temperature_inside_0R_and_out7side_0R_ST.jpg' )
     plt.show()
 
 #=======================================================================================================================
@@ -827,7 +827,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ST_
     #ax.bar_label(p2)
     ax.legend(fontsize=25,loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
-    plt.savefig('number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ST_threshold.jpg' )
+    plt.savefig('14number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R_ST_threshold.jpg' )
     plt.show()
 
 #=======================================================================================================================
@@ -1061,7 +1061,7 @@ def number_of_simulations_that_have_end_temperature_inside_0R_and_outside_0R2():
     #ax.bar_label(p2)
     ax.legend(fontsize=25,loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
-    plt.savefig('number_of_simulations_that_have_end_temperature_insid2e_0R_and_outside_0R_NW.jpg' )
+    plt.savefig('21number_of_simulations_that_have_end_temperature_insid2e_0R_and_outside_0R_NW.jpg' )
     plt.show()
 
 #=======================================================================================================================
@@ -1295,7 +1295,7 @@ def number_alive_at_each_start_temperature_at_the_start_of_simulation():
     #ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5, fontsize=30)
 
     plt.tight_layout()
-    plt.savefig('number_alive_at_each_start_temperature_at_the_start_of_s1imulation.jpg')
+    plt.savefig('03number_alive_at_each_start_temperature_at_the_start_of_s1imulation.jpg')
     plt.show()
 
 
@@ -1431,7 +1431,7 @@ def number_alive_at_each_start_temperature_at_the_start_of_simulation2():
     handles, labels = ax.get_legend_handles_labels()
     plt.legend(handles[0:2], labels[0:2], prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
-    plt.savefig('number_alive_at_each_start_temperature_at_the_start_of_s1imulation_ST_NW.jpg')
+    plt.savefig('16number_alive_at_each_start_temperature_at_the_start_of_s1imulation_ST_NW.jpg')
     plt.show()
 
 
@@ -1488,7 +1488,7 @@ def number_alive_at_each_start_temperature_at_the_end_of_simulation():
                handler_map=handler_map,
                fontsize=12, prop={'size': 30},bbox_to_anchor=(0.7, -0.05),loc='upper left')
     plt.tight_layout()
-    plt.savefig('number_alive_at_each_start_temperature_at_the_end_of_simul5ation.jpg')
+    plt.savefig('04number_alive_at_each_start_temperature_at_the_end_of_simul5ation.jpg')
     plt.show()
 
 
@@ -1549,7 +1549,7 @@ def number_alive_at_each_start_temperature_at_the_end_of_simulation2():
     handles, labels = ax.get_legend_handles_labels()
     plt.legend(handles[0:2], labels[0:2], prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
-    plt.savefig('number_alive_at_each_start_temperature_at_the_end_of_simulatio2n_ST_NW.jpg')
+    plt.savefig('17number_alive_at_each_start_temperature_at_the_end_of_simulatio2n_ST_NW.jpg')
     plt.show()
 
 
@@ -1664,7 +1664,7 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
     plt.xticks(np.arange(0,101,5))
     plt.legend(prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
-    plt.savefig('average_number_alive_at_each_start_temperature_at_the_start_an3d_end_of_simulation.jpg')
+    plt.savefig('05average_number_alive_at_each_start_temperature_at_the_start_an3d_end_of_simulation.jpg')
     plt.show()
 
 
@@ -1850,7 +1850,7 @@ def average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simul
     plt.xticks(np.arange(0,101,5))
     plt.legend(prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=2)
     plt.tight_layout()
-    plt.savefig('average_number_alive_at_each_start_temperature_at_the_start_and_en2d_of_simulation2.jpg')
+    plt.savefig('18average_number_alive_at_each_start_temperature_at_the_start_and_en2d_of_simulation2.jpg')
     plt.show()
 
 
@@ -2156,7 +2156,7 @@ def abundance_alive_at_each_start_temperature_at_the_start_of_simulation():
     handles, labels = ax.get_legend_handles_labels()
     plt.legend(handles[0:2], labels[0:2], prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
-    plt.savefig('abundance_alive_at_each_start_temperature_at_the_start_of_simulation_JI_ST5.jpg')
+    plt.savefig('06abundance_alive_at_each_start_temperature_at_the_start_of_simulation_JI_ST5.jpg')
     plt.show()
 
 
@@ -2221,7 +2221,7 @@ def abundance_alive_at_each_start_temperature_at_the_start_of_simulation2():
     handles, labels = ax.get_legend_handles_labels()
     plt.legend(handles[0:2], labels[0:2], prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
-    plt.savefig('abundance_alive_at_each_start_temperature_at_the_start_of_simulation_ST_NW4.jpg')
+    plt.savefig('19abundance_alive_at_each_start_temperature_at_the_start_of_simulation_ST_NW4.jpg')
     plt.show()
     sns.set_palette(sns.color_palette("tab10"))
 
@@ -2286,7 +2286,7 @@ def abundance_alive_at_each_start_temperature_at_the_end_of_simulation():
     handles, labels = ax.get_legend_handles_labels()
     plt.legend(handles[0:2], labels[0:2], prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
-    plt.savefig('abundance_alive_at_each_start_temperature_at_the_end_of_simulation_JI_ST3.jpg')
+    plt.savefig('07abundance_alive_at_each_start_temperature_at_the_end_of_simulation_JI_ST3.jpg')
     plt.show()
 
 
@@ -2352,7 +2352,7 @@ def abundance_alive_at_each_start_temperature_at_the_end_of_simulation2():
     handles, labels = ax.get_legend_handles_labels()
     plt.legend(handles[0:2], labels[0:2], prop={'size': 25},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=5)
     plt.tight_layout()
-    plt.savefig('abundance_alive_at_each_start_temperature_at_the_end_of_simulation_ST_NW1.jpg')
+    plt.savefig('20abundance_alive_at_each_start_temperature_at_the_end_of_simulation_ST_NW1.jpg')
     plt.show()
     sns.set_palette(sns.color_palette("tab10"))
 
@@ -2558,7 +2558,7 @@ def average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_s
 
     plt.legend(prop={'size': 30},loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=2)
     plt.tight_layout()
-    plt.savefig('average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation2.jpg')
+    plt.savefig('08average_number_abundance_at_each_start_temperature_at_the_start_and_end_of_simulation2.jpg')
     plt.show()
 
 
@@ -3055,7 +3055,7 @@ def ji_start_end_temperature_with_abundance():
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
     plt.tight_layout()
-    plt.savefig('ji_start_end_temperature_with_abundance_JI.jpg')
+    plt.savefig('11ji_start_end_temperature_with_abundance_JI.jpg')
     plt.show()
 
 
@@ -3111,7 +3111,7 @@ def st_start_end_temperature_with_abundance():
     plt.xticks(fontsize=X_TICKS)
     plt.yticks(fontsize=Y_TICKS)
     plt.tight_layout()
-    plt.savefig('st_start_end_temperature_with_abundance_ST.jpg')
+    plt.savefig('12st_start_end_temperature_with_abundance_ST.jpg')
     plt.show()
 
 

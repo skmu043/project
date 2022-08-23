@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 # Generating ALL Parameters
 SAMPLE_SIZE = 1
-SAMPLE_STEP = 5
+SAMPLE_STEP = 1
 RUN_ID = int(time.time())
 
 SPECIES_K   = 100                   # ----------- Number of Biotic Components
@@ -95,8 +95,8 @@ if __name__ == '__main__':
 
     print("STARTING FILES: " + print_time())
 
-    for Eg_temp in np.arange (0,101, 5):
-        for El_temp in np.arange (0,101, 5):
+    for Eg_temp in np.arange(0,RANGE_R,SAMPLE_STEP):
+        for El_temp in np.arange(0,RANGE_R,SAMPLE_STEP):
 
             simulation_run_shelve = init_shelve()
             shelve_files.append(simulation_run_shelve)
