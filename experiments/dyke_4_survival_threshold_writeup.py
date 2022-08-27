@@ -579,8 +579,8 @@ if __name__ == '__main__':
     #10
     #omega = [[0.6299139040430586, -0.24954835404693054, -0.6555460819796104, 0.14618239626180762, 0.6768643822603426, -0.7852596214094743, -0.8965568690781378, -0.40477355781649704, -0.520443921754858, -0.6994068634825146, -0.46194826796748845, 0.5519583676156736, 0.870815948717053, -0.023866981836854206, 0.35571746866404585, 0.8872963569388206, -0.5108879345813602, 0.6088015214563631, 0.19151653348777442, 0.1783364542133632, 0.7320423651463444, -0.6338142933870945, 0.13346174486584128, -0.22135122990281264, -0.9807750696856632, -0.8439894722480521, 0.5198113755880487, -0.9295034386225678, 0.5371270766651772, -0.6430032786505187, 0.13654843677377348, -0.1343811287231278, -0.9407141451681209, 0.013643467007429688, -0.39141937266741933, 0.25099356868266764, 0.6791384833715743, 0.6466870957599793, 0.2987286289552449, 0.5190131594866496, -0.19399702681773312, 0.8935316172464247, 0.8359110350701917, -0.35130760157618646, -0.13655496434988157, 0.9323013386518908, -0.6013414090877378, 0.2824463705807969, 0.8103280307102554, 0.8302111530852307, -0.7173551109438057, -0.14730237337271102, -0.0015208337218928225, -0.9179330447900036, -0.424204965900836, 0.8135182681995159, 0.5628017459475303, -0.9770105273796781, 0.31364724298114344, 0.15704503690738147, 0.820482259282517, -0.6013098975947953, -0.7994369247412179, 0.4822151504075478, -0.36745870174770245, -0.24912239850774665, -0.8700192683318397, -0.4173202148394528, 0.22046333851918143, -0.5260277965634055, -0.823811550679963, -0.08154245288691819, -0.9059195121689443, 0.5555653839760726, 0.03982516123274449, -0.13658744259319722, 0.8851832564928466, -0.5932021622913075, 0.16660903347665457, 0.37774969342223663, -0.18626511029723614, -0.20091219434294105, 0.9649139682696548, -0.3723136889124645, 0.6197401220889325, -0.7500942717619852, -0.9856251265948222, 0.6141258184189755, -0.8928039838738187, -0.8975601287964607, -0.39661991836115096, -0.46733041834046385, -0.7874368843242983, -0.3963569289183908, 0.12079005951087152, -0.7811710351868364, -0.41000845716836065, 0.5520635621246446, -0.6732528374777607, -0.4802365773947337]]
 
-    omega = [[0.79986235823773, 0.6091010996979873, -0.20250200196664903, -0.8733980751992751, -0.027184493063225013, -0.37776680223675196, -0.8385360522954668, 0.11681912164708064, 0.13669634205535375, -0.16345880683481795, -0.6514159095753493, 0.602359959328014, -0.20238536190497336, -0.6832847892999749, 0.7371701951028902, 0.7006370500309731, -0.1291726776236808, -0.8692681161039084, -0.01138995750670535, 0.12267177117392047, -0.8617342152360354, -0.9315314166082891, 0.16533244909382283, 0.27206507008500136, -0.32420246616042414, 0.17751788177597727, 0.09785189169299335, 0.5823473250118218, 0.5658839336692008, 0.9071305965349254, 0.8483225488276764, 0.2677845161128678, -0.5364804270728953, -0.12467142573080192, -0.17580393975059705, 0.14158838525215667, -0.9994173053146553, -0.018202869499435614, 0.7464313855234763, -0.6622243933091259, -0.43212065086126383, -0.35289655092772265, 0.027653862694068554, 0.8583079752329001, -0.011429358896809072, -0.35104699292406294, -0.05810904540122519, -0.18795493575078415, -0.6576312555057435, 0.29567427555697123, 0.6003099716647493, -0.8877872119780978, -0.024264439245028857, 0.21371205961727058, -0.791305781941539, -0.8269615716983159, 0.32519736859390935, -0.23529523067672353, -0.8464897027131402, 0.28542470036580947, 0.12993482601462492, 0.2277040984283838, -0.5742605619951635, 0.21028450660074238, 0.5160167436191334, -0.5085116533645468, 0.6348912961258308, -0.009536131578756768, -0.01702970306789031, -0.2849499923075589, -0.8477032310882648, -0.571103164080492, 0.15521600114833123, -0.12437914053748811, -0.3439683947208083, 0.2465239318182939, -0.918813018104617, 0.16584516198818022, 0.025248413291998117, 0.2620624232357165, -0.7477576950075384, -0.891973038729962, -0.9339440952354723, 0.8617218506134927, -0.6613488106011702, -0.43950219849008, -0.20723868976972604, 0.6148951451218967, 0.17681288202009227, 0.7763497747996566, 0.5177069281137403, -0.7140044603736491, 0.7589955100339418, 0.8612697735047212, 0.5498770259429124, -0.275107500786141, -0.16957185937699615, -0.5522222993390276, -0.6030748780278545, -0.013269728472857123]]
-    mu = [[5.66769221409843, 43.23504909431952, 29.923614001698663, 91.56033019600483, 64.38923768153907, 7.443812943484507, 64.41570899610473, 11.165489028582476, 6.168463045166117, 66.00717278116004, 62.970020621268674, 80.33962882265993, 15.710475545136626, 77.78681173303431, 95.26277653630957, 97.58111053758593, 23.695355826320963, 48.81018891518878, 25.612460247674672, 95.386296020038, 22.03821526336981, 6.817679740293725, 8.77836955917447, 14.308217356997933, 69.3270796217085, 62.482347092936074, 51.657699375805855, 68.54194156655853, 37.20063611970431, 41.23871178744951, 67.00994219240994, 16.537781076050805, 87.42202033012086, 82.96949267196948, 68.07093286798647, 82.51209507115865, 8.518603051642193, 51.583977473137544, 36.75329897490298, 87.61826401673973, 76.53796211517636, 95.68928303339092, 34.457456628358116, 55.895154199132726, 43.72621148266004, 8.10231240279805, 11.918979213003977, 17.592580496385025, 95.53149540416007, 10.452406034640816, 17.043243690543186, 28.75724918595758, 19.95161522960167, 63.533638446518715, 33.70921499029114, 96.48242011482667, 12.192196947254963, 32.546684209771925, 98.5287452940411, 35.56726541581795, 58.213519262554804, 3.819965940748926, 43.72964305952895, 95.31314390623227, 82.99568502999806, 30.68475130421656, 20.71134892271389, 59.12006752168638, 70.48633470273796, 44.84032004210441, 60.37248329464091, 62.65489074926097, 27.927030145565325, 82.03076827209946, 52.849364409403265, 40.981467547479845, 94.18645346273755, 36.70100614447141, 97.44245261810967, 5.870690098055487, 40.66047301397062, 36.08389899512443, 28.307114842973558, 42.84296456192212, 86.2766473810414, 49.08878839966465, 97.45139826397417, 93.33136321320988, 77.3295413420423, 19.64609921424223, 1.9296118470522705, 64.63108368707599, 43.85115448553189, 96.54212341246176, 29.586704579782662, 99.15737098378136, 87.81441800175149, 64.46075820930336, 5.192639623265971, 57.67768256496794]]
+    #omega = [[0.79986235823773, 0.6091010996979873, -0.20250200196664903, -0.8733980751992751, -0.027184493063225013, -0.37776680223675196, -0.8385360522954668, 0.11681912164708064, 0.13669634205535375, -0.16345880683481795, -0.6514159095753493, 0.602359959328014, -0.20238536190497336, -0.6832847892999749, 0.7371701951028902, 0.7006370500309731, -0.1291726776236808, -0.8692681161039084, -0.01138995750670535, 0.12267177117392047, -0.8617342152360354, -0.9315314166082891, 0.16533244909382283, 0.27206507008500136, -0.32420246616042414, 0.17751788177597727, 0.09785189169299335, 0.5823473250118218, 0.5658839336692008, 0.9071305965349254, 0.8483225488276764, 0.2677845161128678, -0.5364804270728953, -0.12467142573080192, -0.17580393975059705, 0.14158838525215667, -0.9994173053146553, -0.018202869499435614, 0.7464313855234763, -0.6622243933091259, -0.43212065086126383, -0.35289655092772265, 0.027653862694068554, 0.8583079752329001, -0.011429358896809072, -0.35104699292406294, -0.05810904540122519, -0.18795493575078415, -0.6576312555057435, 0.29567427555697123, 0.6003099716647493, -0.8877872119780978, -0.024264439245028857, 0.21371205961727058, -0.791305781941539, -0.8269615716983159, 0.32519736859390935, -0.23529523067672353, -0.8464897027131402, 0.28542470036580947, 0.12993482601462492, 0.2277040984283838, -0.5742605619951635, 0.21028450660074238, 0.5160167436191334, -0.5085116533645468, 0.6348912961258308, -0.009536131578756768, -0.01702970306789031, -0.2849499923075589, -0.8477032310882648, -0.571103164080492, 0.15521600114833123, -0.12437914053748811, -0.3439683947208083, 0.2465239318182939, -0.918813018104617, 0.16584516198818022, 0.025248413291998117, 0.2620624232357165, -0.7477576950075384, -0.891973038729962, -0.9339440952354723, 0.8617218506134927, -0.6613488106011702, -0.43950219849008, -0.20723868976972604, 0.6148951451218967, 0.17681288202009227, 0.7763497747996566, 0.5177069281137403, -0.7140044603736491, 0.7589955100339418, 0.8612697735047212, 0.5498770259429124, -0.275107500786141, -0.16957185937699615, -0.5522222993390276, -0.6030748780278545, -0.013269728472857123]]
+    #mu = [[5.66769221409843, 43.23504909431952, 29.923614001698663, 91.56033019600483, 64.38923768153907, 7.443812943484507, 64.41570899610473, 11.165489028582476, 6.168463045166117, 66.00717278116004, 62.970020621268674, 80.33962882265993, 15.710475545136626, 77.78681173303431, 95.26277653630957, 97.58111053758593, 23.695355826320963, 48.81018891518878, 25.612460247674672, 95.386296020038, 22.03821526336981, 6.817679740293725, 8.77836955917447, 14.308217356997933, 69.3270796217085, 62.482347092936074, 51.657699375805855, 68.54194156655853, 37.20063611970431, 41.23871178744951, 67.00994219240994, 16.537781076050805, 87.42202033012086, 82.96949267196948, 68.07093286798647, 82.51209507115865, 8.518603051642193, 51.583977473137544, 36.75329897490298, 87.61826401673973, 76.53796211517636, 95.68928303339092, 34.457456628358116, 55.895154199132726, 43.72621148266004, 8.10231240279805, 11.918979213003977, 17.592580496385025, 95.53149540416007, 10.452406034640816, 17.043243690543186, 28.75724918595758, 19.95161522960167, 63.533638446518715, 33.70921499029114, 96.48242011482667, 12.192196947254963, 32.546684209771925, 98.5287452940411, 35.56726541581795, 58.213519262554804, 3.819965940748926, 43.72964305952895, 95.31314390623227, 82.99568502999806, 30.68475130421656, 20.71134892271389, 59.12006752168638, 70.48633470273796, 44.84032004210441, 60.37248329464091, 62.65489074926097, 27.927030145565325, 82.03076827209946, 52.849364409403265, 40.981467547479845, 94.18645346273755, 36.70100614447141, 97.44245261810967, 5.870690098055487, 40.66047301397062, 36.08389899512443, 28.307114842973558, 42.84296456192212, 86.2766473810414, 49.08878839966465, 97.45139826397417, 93.33136321320988, 77.3295413420423, 19.64609921424223, 1.9296118470522705, 64.63108368707599, 43.85115448553189, 96.54212341246176, 29.586704579782662, 99.15737098378136, 87.81441800175149, 64.46075820930336, 5.192639623265971, 57.67768256496794]]
 #[47]
 #[1, 47]
 
@@ -639,12 +639,18 @@ if __name__ == '__main__':
     ENV_VAR_ALIVE_ZERO_END = system_state[SPECIES_K+0]
     results_nt = results
 
-
+    #================
+    #================
+    #================
+    #================
     #================
     plot_gaussian_trunk()
     plot_temps()
     ALIVE_THRESHOLD=0.2
     plot_alphas_truncated()
+    #plot_stable_points()
+    #plot_stable_points_t()
+
 
     results = [[] for _ in range(SPECIES_K+ENV_VARS)]
     times_steps=[]
@@ -674,7 +680,7 @@ if __name__ == '__main__':
         system_state += ((k1 + (2*k2) + (2*k3) + k4)/6)
     ENV_VAR_ALIVE_ONE_END = system_state[SPECIES_K+0]
 
-
+    print("[JI + ST Simulations Completed]")
 
     ji_final_results = results_nt
 
@@ -682,16 +688,16 @@ if __name__ == '__main__':
         if(ji_final_results[s_i][-1] > 0):
             ji_alives_at_end[s_i] = 1
 
-    print(results[-1])
+    #print(results[-1])
     st_final_results = results
     for s_i in range(SPECIES_K):
         if(st_final_results[s_i][-1] > 0.00001):
             st_alives_at_end[s_i] = 1
 
-    print(ji_alives_at_start)
-    print(ji_alives_at_end)
-    print(st_alives_at_start)
-    print(st_alives_at_end)
+    #print(ji_alives_at_start)
+    #print(ji_alives_at_end)
+    #print(st_alives_at_start)
+    #print(st_alives_at_end)
 
     temperatures = []
     biotic_force = [[] for _ in range(SPECIES_K)]
@@ -809,12 +815,12 @@ if __name__ == '__main__':
 
     #if((results[-1][-1] > 106 or results[-1][-1] < -6)):
 
-        print(omega)
-        print(mu)
-        print(Eg)
+        #print(omega)
+        #print(mu)
+        #print(Eg)
 
-        for line in results:
-            print(line[-2])
+        #for line in results:
+        #    print(line[-2])
 
         print("=================================================")
 
@@ -828,8 +834,6 @@ if __name__ == '__main__':
         ax3 = fig.add_subplot(gs[1, :])
 
         SIZE = 17
-
-
 
         myList = results_nt[:-1]
         for item in myList:
@@ -863,16 +867,325 @@ if __name__ == '__main__':
         fig.tight_layout()
         fig.show()
 
+        ################################################################################################################
+        # Abundance Start Higher then End Graphs
+        fig = plt.figure(dpi=300, figsize=(20,10))
 
-    #number_alive_global_end = 0
-        #number_alive_end = 0
+        gs = fig.add_gridspec(1,2)
+        ax1 = fig.add_subplot(gs[0, 0])
+        ax2 = fig.add_subplot(gs[0, 1])
 
-        #for s_i in range(SPECIES_K):
+        myList = results_nt[:-1]
+        ji_abundance_total_start = 0
+        ji_abundance_total_end = 0
 
-        #    a_star = system_state[s_i]
-        #    if a_star >= ALIVE_THRESHOLD:
-        #        number_alive_global_end +=1
+        for item in myList:
+            ji_abundance_total_start += item[0]
+            ji_abundance_total_end += item[-1]
 
-        #number_alive_end = number_alive_global_end
+            ax1.scatter("Start",item[0])
+            ax1.scatter("End",item[-1])
 
-        print(results)
+
+        ax1.annotate(str(ji_abundance_total_start),
+                    xy=(0.1, 0.5),
+                    xycoords='axes fraction',
+                    xytext=(0.1, 0.5))
+        ax1.annotate(str(ji_abundance_total_end),
+                     xy=(0.5, 0.5),
+                     xycoords='axes fraction',
+                     xytext=(0.5, 0.5))
+
+
+        ax1.set_title('JI Model', fontsize=20)
+        ax1.set_xlabel('Time Steps', fontsize=19)
+        ax1.set_ylabel('Abundance', fontsize=19)
+        for label in (ax1.get_xticklabels() + ax1.get_yticklabels()):
+            label.set_fontsize(SIZE)
+
+        myList = results[:-1]
+
+        st_abundance_total_start = 0
+        st_abundance_total_end = 0
+
+        for item in myList:
+            st_abundance_total_start += item[0]
+            st_abundance_total_end += item[-1]
+
+            ax2.scatter("Start",item[0])
+            ax2.scatter("End",item[-1])
+
+
+        ax2.annotate(str(st_abundance_total_start),
+                     xy=(0.1, 0.5),
+                     xycoords='axes fraction',
+                     xytext=(0.1, 0.5))
+        ax2.annotate(str(st_abundance_total_end),
+                     xy=(0.5, 0.5),
+                     xycoords='axes fraction',
+                     xytext=(0.5, 0.5))
+
+        ax2.set_title('ST Model', fontsize=20)
+        ax2.set_xlabel('Time Steps', fontsize=19)
+        ax2.set_ylabel('Abundance', fontsize=19)
+        for label in (ax2.get_xticklabels() + ax2.get_yticklabels()):
+            label.set_fontsize(SIZE)
+
+        fig.tight_layout()
+        fig.show()
+
+        ################################################################################################################
+        #
+        temperatures=[]
+        for x in np.arange (-25, RANGE_R+25, step):
+            temperatures.append(x)
+
+        ji_close_by_abundances = []
+        for y in range(SPECIES_K):
+            abundances_species_near_start = []
+            for x in np.arange (-25, RANGE_R+25, step):
+                abundances_species_near_start.append((math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2)))))
+
+            vicinity = 0
+            temp_index = 0
+            for temp in temperatures:
+                if((temp >=45 and temp <=55) and abundances_species_near_start[temp_index] >0):
+                    vicinity = 1
+                temp_index+=1
+            if(vicinity == 1):
+                ji_close_by_abundances.append(abundances_species_near_start)
+
+        st_close_by_abundances = []
+        for y in range(SPECIES_K):
+            abundances_species_near_start = []
+            for x in np.arange (-25, RANGE_R+25, step):
+                a_star=((math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2)))))
+                if a_star < ALIVE_THRESHOLD:
+                    abundances_species_near_start.append(0)
+                else:
+                    abundances_species_near_start.append(a_star)
+
+            vicinity = 0
+            temp_index = 0
+            for temp in temperatures:
+                if((temp >=45 and temp <=55) and abundances_species_near_start[temp_index] >0):
+                    vicinity = 1
+                temp_index+=1
+            if(vicinity == 1):
+                st_close_by_abundances.append(abundances_species_near_start)
+
+
+        fig = plt.figure(dpi=300, figsize=(20,10))
+
+        gs = fig.add_gridspec(1,2)
+        ax1 = fig.add_subplot(gs[0, 0])
+        ax2 = fig.add_subplot(gs[0, 1])
+
+        for item in ji_close_by_abundances:
+            ax1.plot(temperatures,item)
+
+        ax1.set_title('JI Model', fontsize=20)
+        ax1.set_xlabel('Time Steps', fontsize=19)
+        ax1.set_ylabel('Abundance', fontsize=19)
+        for label in (ax1.get_xticklabels() + ax1.get_yticklabels()):
+            label.set_fontsize(SIZE)
+
+        for item in st_close_by_abundances:
+            ax2.plot(temperatures,item)
+
+        ax2.set_title('ST Model', fontsize=20)
+        ax2.set_xlabel('Time Steps', fontsize=19)
+        ax2.set_ylabel('Abundance', fontsize=19)
+        for label in (ax2.get_xticklabels() + ax2.get_yticklabels()):
+            label.set_fontsize(SIZE)
+
+        fig.tight_layout()
+        fig.show()
+
+
+#------------------------------ Experiment Reset
+
+
+    JI_Start_TEMP_Abundance=[]
+    ST_Start_TEMP_Abundance=[]
+
+    for start_temperature in np.arange (0,101, 5):
+        print("Running for Start Temp : " + str(start_temperature))
+        ji_start_abundance = 0
+        ji_end_abundance = 0
+        st_start_abundance = 0
+        st_end_abundance = 0
+        system_state = np.zeros(SPECIES_K+ENV_VARS)
+        Eg = start_temperature
+
+        for s_i in range(SPECIES_K):
+            a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
+            system_state[s_i] = a_star
+            ji_start_abundance += a_star
+
+            if(a_star > 0):
+                ji_alives_at_start[s_i] = 1
+        for _ in range(ENV_VARS):
+            system_state[SPECIES_K+_] = start_temperature
+
+
+        ENV_VAR_ALIVE_ZERO_START = ENV_START[0]
+        ENV_VAR_ALIVE_ONE_START = ENV_START[0]
+
+        ALIVE_THRESHOLD=0
+        results = [[] for _ in range(SPECIES_K+ENV_VARS)]
+        times_steps=[]
+
+        for step in np.arange(TIME_START, TIME_END, TIME_STEP):
+            times_steps.append(step)
+            for _ in range(SPECIES_K+ENV_VARS):
+                results[_].append(system_state[_])
+            k1 = TIME_STEP * rates_of_change_system_state(system_state)
+            k2 = TIME_STEP * rates_of_change_system_state(system_state + k1 * 0.5)
+            k3 = TIME_STEP * rates_of_change_system_state(system_state + k2 * 0.5)
+            k4 = TIME_STEP * rates_of_change_system_state(system_state + k3)
+            system_state += ((k1 + (2*k2) + (2*k3) + k4)/6)
+        ENV_VAR_ALIVE_ZERO_END = system_state[SPECIES_K+0]
+        results_nt = results
+        for _ in range(SPECIES_K):
+            ji_end_abundance += results[_][-1]
+
+        JI_Start_TEMP_Abundance.append([start_temperature, ji_start_abundance, ji_end_abundance])
+
+        ALIVE_THRESHOLD=0.2
+
+
+        results = [[] for _ in range(SPECIES_K+ENV_VARS)]
+        times_steps=[]
+        system_state = np.zeros(SPECIES_K+ENV_VARS)
+        Eg = start_temperature
+
+        for s_i in range(SPECIES_K):
+            a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
+            if a_star < ALIVE_THRESHOLD:
+                a_star = 0
+            system_state[s_i] = a_star
+            st_start_abundance+=a_star
+
+            if(a_star > 0.00001):
+                st_alives_at_start[s_i] = 1
+
+        for _ in range(ENV_VARS):
+            system_state[SPECIES_K+_] = start_temperature
+
+        for step in np.arange(TIME_START, TIME_END, TIME_STEP):
+            times_steps.append(step)
+            for _ in range(SPECIES_K+ENV_VARS):
+                results[_].append(system_state[_])
+            k1 = TIME_STEP * rates_of_change_system_state(system_state)
+            k2 = TIME_STEP * rates_of_change_system_state(system_state + k1 * 0.5)
+            k3 = TIME_STEP * rates_of_change_system_state(system_state + k2 * 0.5)
+            k4 = TIME_STEP * rates_of_change_system_state(system_state + k3)
+            system_state += ((k1 + (2*k2) + (2*k3) + k4)/6)
+        ENV_VAR_ALIVE_ONE_END = system_state[SPECIES_K+0]
+
+        for _ in range(SPECIES_K):
+            st_end_abundance += results[_][-1]
+
+        ST_Start_TEMP_Abundance.append([start_temperature, st_start_abundance, st_end_abundance])
+
+        print("[JI + ST Simulations Completed] for : " + str(start_temperature))
+
+        # print("=================================================")
+        #
+        # fig = plt.figure(dpi=300, figsize=(20,10))
+        # #fig.suptitle('Species Aliveness ' + str(sim))
+        # #fig.suptitle('A simulation run with 100 biotic components', fontsize=20)
+        #
+        # gs = fig.add_gridspec(2,2)
+        # ax1 = fig.add_subplot(gs[0, 0])
+        # ax2 = fig.add_subplot(gs[0, 1])
+        # ax3 = fig.add_subplot(gs[1, :])
+        #
+        # SIZE = 17
+        #
+        # myList = results_nt[:-1]
+        # for item in myList:
+        #     ax1.plot(times_steps,item)
+        # ax1.set_title('JI Model', fontsize=20)
+        # ax1.set_xlabel('Time Steps', fontsize=19)
+        # ax1.set_ylabel('Abundance', fontsize=19)
+        # for label in (ax1.get_xticklabels() + ax1.get_yticklabels()):
+        #     label.set_fontsize(SIZE)
+        # #ax1.set_ylim([0, 1])
+        # myList = results[:-1]
+        # for item in myList:
+        #     ax2.plot(times_steps,item)
+        # ax2.set_title('ST Model', fontsize=20)
+        # ax2.set_xlabel('Time Steps', fontsize=19)
+        # ax2.set_ylabel('Abundance', fontsize=19)
+        # for label in (ax2.get_xticklabels() + ax2.get_yticklabels()):
+        #     label.set_fontsize(SIZE)
+        # #ax2.set_ylim([0, 1])
+        # ax3.set_title('The Environment Condition',fontsize=20)
+        # ax3.set_xlabel('Time Steps', fontsize=19)
+        # ax3.set_ylabel('Temperature', fontsize=19)
+        # ax3.plot(times_steps,results_nt[-1], "b", label = "JI Model")
+        # ax3.plot(times_steps, results[-1],"k", label = "ST Model")
+        # for label in (ax3.get_xticklabels() + ax3.get_yticklabels()):
+        #     label.set_fontsize(SIZE)
+        #
+        # #ax3.set_ylim([0, 100])
+        # plt.subplots_adjust(hspace=0.1)
+        # ax3.legend(prop={'size': 15})
+        # fig.tight_layout()
+        # fig.show()
+        #
+        # ################################################################################################################
+        #
+
+
+    fig = plt.figure(dpi=300, figsize=(20,10))
+
+    gs = fig.add_gridspec(1,2)
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+
+    #JI_Start_TEMP_Abundance=[]
+    #ST_Start_TEMP_Abundance=[]
+
+    start_abundance_line = []
+    end_abundance_line = []
+    temperature = []
+
+    for start_t_start_a_end_a in JI_Start_TEMP_Abundance:
+        temperature.append(start_t_start_a_end_a[0])
+    for start_t_start_a_end_a in JI_Start_TEMP_Abundance:
+        start_abundance_line.append(start_t_start_a_end_a[1])
+        end_abundance_line.append(start_t_start_a_end_a[2])
+
+    ax1.plot(temperature, start_abundance_line, 'k')
+    ax1.plot(temperature, end_abundance_line, 'g')
+
+    ax1.set_title('JI Model', fontsize=20)
+    ax1.set_xlabel('Start Temp', fontsize=19)
+    ax1.set_ylabel('Abundance', fontsize=19)
+    for label in (ax1.get_xticklabels() + ax1.get_yticklabels()):
+        label.set_fontsize(SIZE)
+
+    start_abundance_line = []
+    end_abundance_line = []
+    temperature = []
+
+    for start_t_start_a_end_a in ST_Start_TEMP_Abundance:
+        temperature.append(start_t_start_a_end_a[0])
+    for start_t_start_a_end_a in ST_Start_TEMP_Abundance:
+        start_abundance_line.append(start_t_start_a_end_a[1])
+        end_abundance_line.append(start_t_start_a_end_a[2])
+
+    ax2.plot(temperature, start_abundance_line, 'k')
+    ax2.plot(temperature, end_abundance_line, 'g')
+
+    ax2.set_title('ST Model', fontsize=20)
+    ax2.set_xlabel('Start Temp', fontsize=19)
+    ax2.set_ylabel('Abundance', fontsize=19)
+    for label in (ax2.get_xticklabels() + ax2.get_yticklabels()):
+        label.set_fontsize(SIZE)
+
+    fig.tight_layout()
+    fig.show()
