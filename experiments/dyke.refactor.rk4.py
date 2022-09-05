@@ -24,7 +24,7 @@ try:
     ENV_VARS = s['ENV_VARS']
     NICHE = s['NICHE']
     LOCAL_SIZE = s['LOCAL_SIZE']
-    ALIVE_THRESHOLD = s['ALIVE_THRESHOLD']
+    JI_ST = s['JI_ST']
 
     exp_name = s['exp_name']
     data_directory = s['data_directory']
@@ -52,39 +52,44 @@ system_state = np.zeros(SPECIES_K+ENV_VARS)
 ################## INITIAL STATE
 # Abundance Init
 
-number_alive_global_start = 0
-number_alive_local_start = 0
-number_alive_start = 0
 
+if(JI_ST==0): # JI Processing
 
+    for s_i in range(SPECIES_K):
+        if s_i in local_population_index:
+            a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 )) \
+                     * \
+                     np.exp(- abs(El-mu[1][s_i]) ** 2 / ( 2 * NICHE ** 2))
 
-for s_i in range(SPECIES_K):
-    if s_i in local_population_index:
-        a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 )) \
-                 * \
-                 np.exp(- abs(El-mu[1][s_i]) ** 2 / ( 2 * NICHE ** 2))
+            system_state[s_i] = a_star
 
-        if a_star < ALIVE_THRESHOLD:
-            a_star = 0
+        else :
+            a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
 
-        system_state[s_i] = a_star
+            system_state[s_i] = a_star
 
-        if a_star >= ALIVE_THRESHOLD:
-            number_alive_local_start += 1
+if(JI_ST==0.2): # ST Processing
 
-    else :
-        a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
+    for s_i in range(SPECIES_K):
+        if s_i in local_population_index:
+            a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 )) \
+                     * \
+                     np.exp(- abs(El-mu[1][s_i]) ** 2 / ( 2 * NICHE ** 2))
 
-        if a_star < ALIVE_THRESHOLD:
-            a_star = 0
+            if a_star <= 0.2:
+                a_star = 0
 
-        system_state[s_i] = a_star
+            system_state[s_i] = a_star
 
-        if a_star >= ALIVE_THRESHOLD:
-            number_alive_global_start +=1
+        else :
+            a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
 
+            if a_star <= 0.2:
+                a_star = 0
 
-number_alive_start = number_alive_local_start + number_alive_global_start
+            system_state[s_i] = a_star
+
+########################################################################################################################
 
 # Environment Init
 for _ in range(ENV_VARS):
@@ -102,24 +107,39 @@ def rates_of_change_system_state(system_state):
     Eg = system_state[SPECIES_K+0]
     El = system_state[SPECIES_K+1]
 
-    for s_i in range(SPECIES_K):
-        if s_i in local_population_index:                     # Hard coded 0 and 1 -> see notes [E1], [E1, E2], [E3][E4][E5] - scale with Es like w, u there will be another
-            a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 )) \
-                     * \
-                     np.exp(- abs(El-mu[1][s_i]) ** 2 / ( 2 * NICHE ** 2))
+    if(JI_ST==0): # JI Processing
+        for s_i in range(SPECIES_K):
+            if s_i in local_population_index:
+                a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 )) \
+                         * \
+                         np.exp(- abs(El-mu[1][s_i]) ** 2 / ( 2 * NICHE ** 2))
 
-            if a_star < ALIVE_THRESHOLD:
-                a_star = 0
+                rate_of_change[s_i] = a_star - system_state[s_i]
 
-            rate_of_change[s_i] = a_star - system_state[s_i]
+            else :
+                a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
 
-        else :
-            a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
+                rate_of_change[s_i] =  a_star - system_state[s_i]
 
-            if a_star < ALIVE_THRESHOLD:
-                a_star = 0
+    if(JI_ST==0.2): # ST Processing
+        for s_i in range(SPECIES_K):
+            if s_i in local_population_index:
+                a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 )) \
+                         * \
+                         np.exp(- abs(El-mu[1][s_i]) ** 2 / ( 2 * NICHE ** 2))
 
-            rate_of_change[s_i] =  a_star - system_state[s_i]
+                if a_star <= 0.2:
+                    a_star = 0
+
+                rate_of_change[s_i] = a_star - system_state[s_i]
+
+            else :
+                a_star = np.exp(- abs(Eg-mu[0][s_i]) ** 2 / ( 2 * NICHE ** 2 ))
+
+                if a_star <= 0.2:
+                    a_star = 0
+
+                rate_of_change[s_i] =  a_star - system_state[s_i]
 
 
         #da/dt = a* - a
@@ -165,36 +185,10 @@ if __name__ == '__main__':
     s = shelve.open(shelve_file)
 
 
-    number_alive_global_end = 0
-    number_alive_local_end = 0
-    number_alive_end = 0
-
-    for s_i in range(SPECIES_K):
-        if s_i in local_population_index:
-            a_star = system_state[s_i]
-            if a_star >= ALIVE_THRESHOLD:
-                number_alive_local_end += 1
-
-        else :
-            a_star = system_state[s_i]
-            if a_star >= ALIVE_THRESHOLD:
-                number_alive_global_end +=1
-
-    number_alive_end = number_alive_local_end + number_alive_global_end
-
     try:
         #s['system_state'] = system_state
         s['results'] = results
         s['times_steps'] = times_steps
-
-        s['number_alive_global_start'] = number_alive_global_start
-        s['number_alive_local_start'] = number_alive_local_start
-        s['number_alive_global_end'] = number_alive_global_end
-        s['number_alive_local_end'] = number_alive_local_end
-
-        s['number_alive_start'] = number_alive_start
-        s['number_alive_end'] = number_alive_end
-
     finally:
             s.close()
 

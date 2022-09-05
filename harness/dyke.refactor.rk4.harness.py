@@ -10,7 +10,7 @@ from tqdm import tqdm
 #from numba import jit
 
 # Generating ALL Parameters
-SAMPLE_SIZE = 1
+SAMPLE_SIZE = 100
 SAMPLE_STEP = 1
 RUN_ID = int(time.time())
 
@@ -22,7 +22,6 @@ TIME_STEP   = 1                   # ----------- Time Step3
 ENV_VARS    = 2                     # ----------- Number of Environment Variables
 NICHE = 5                           # ----------- Niche Size
 LOCAL_SIZE  = 20                    # ----------- Local Population Size (%)
-ALIVE_THRESHOLD = 0.2
 ENV_START=[]
 omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
@@ -44,7 +43,7 @@ local_population_index.sort()
 exp_name = "dyke.refactor.rk4"
 
 def init_shelve():
-    data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
+    data_directory = str(os.getcwd())+"/data_global_local/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
     shelve_file = data_directory + "/" + exp_name + ".data"
 
     os.mkdir(data_directory)
@@ -64,7 +63,6 @@ def init_shelve():
         s['ENV_VARS'] = ENV_VARS
         s['NICHE'] = NICHE
         s['LOCAL_SIZE'] = LOCAL_SIZE
-        s['ALIVE_THRESHOLD'] = ALIVE_THRESHOLD
         #s['ENV_START'] = ENV_START
 
         s['exp_name'] = exp_name
@@ -95,29 +93,52 @@ if __name__ == '__main__':
 
     print("STARTING FILES: " + print_time())
 
-    for Eg_temp in np.arange(0,RANGE_R,SAMPLE_STEP):
-        for El_temp in np.arange(0,RANGE_R,SAMPLE_STEP):
+    # [(5,95)........... (95,95)]
+    # [.........(50,50).........]
+    # [(5,5)............. (95,5)]
 
-            simulation_run_shelve = init_shelve()
-            shelve_files.append(simulation_run_shelve)
-            #print("InLoopCreates: ",simulation_run_shelve)
-            simulation_shelve = shelve.open(simulation_run_shelve)
+    samples_sequence = np.arange(0, SAMPLE_SIZE, SAMPLE_STEP)
+    print("STARTING FILES: " + print_time())
+    for _ in tqdm(samples_sequence):
+        tqdm.write(str(_))
 
-            ENV_START=[]
-            ENV_START.append(Eg_temp)
-            ENV_START.append(El_temp)
+        omega = [[random.uniform(-1, 1) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
+        mu = [[random.uniform(0, RANGE_R) for _ in range(SPECIES_K)] for _ in range(ENV_VARS)]
 
-            try:
-                simulation_shelve['omega'] = omega
-                simulation_shelve['mu'] = mu
-                simulation_shelve['local_population_index'] = local_population_index
-                simulation_shelve['Eg'] = Eg_temp
-                simulation_shelve['El'] = El_temp
-                simulation_shelve['ENV_START'] = ENV_START
+        local_population_index = []
+        uniq_k = []
+        for _ in range(int(LOCAL_SIZE/100 * SPECIES_K)):
+            local_species = random.randint(0,SPECIES_K-1)
+            while local_species in local_population_index:
+                local_species = random.randint(0,SPECIES_K-1)
+            local_population_index.append(local_species)
+        local_population_index.sort()
 
-            finally:
-                simulation_shelve.close()
-            ENV_START.clear()
+        for Eg_temp in [5,50,95]:
+            for El_temp in [5,50,95]:
+                for JI_ST in [0,0.2]:
+
+                    simulation_run_shelve = init_shelve()
+                    shelve_files.append(simulation_run_shelve)
+                    #print("InLoopCreates: ",simulation_run_shelve)
+                    simulation_shelve = shelve.open(simulation_run_shelve)
+
+                    ENV_START=[]
+                    ENV_START.append(Eg_temp)
+                    ENV_START.append(El_temp)
+
+                    try:
+                        simulation_shelve['omega'] = omega
+                        simulation_shelve['mu'] = mu
+                        simulation_shelve['local_population_index'] = local_population_index
+                        simulation_shelve['Eg'] = Eg_temp
+                        simulation_shelve['El'] = El_temp
+                        simulation_shelve['ENV_START'] = ENV_START
+                        simulation_shelve['JI_ST'] = JI_ST
+
+                    finally:
+                        simulation_shelve.close()
+                    ENV_START.clear()
 
     print("COMPLETED FILES: " + print_time())
 

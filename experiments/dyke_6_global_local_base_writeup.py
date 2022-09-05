@@ -118,15 +118,133 @@ def rates_of_change_system_state(system_state):
     return(rate_of_change)
 
 
-def st_trunc(x):
-    if x<=0.2:
-        return 0
-    return x
+def st_trunc(e1, e2):
+
+    biotic_total = 0
+    for s_i in range(SPECIES_K):
+        a1 = np.exp(- abs(e1-mu[0][s_i]) ** 2 / (2 * NICHE ** 2))
+        if(a1 <=0.2):
+            a1 = 0
+        a2 = np.exp(- abs(e2-mu[1][s_i]) ** 2 / (2 * NICHE ** 2))
+        if(a2 <=0.2):
+            a2 = 0
+
+        biotic1 = a1 * omega[0][s_i]
+        biotic2 = a2 * omega[1][s_i]
+
+        biotic_total += biotic1+biotic2
+
+    return biotic_total
+
+
+def plot_JI_ST_():
+
+    E1 = np.arange(0,100,1)
+    E2 = np.arange(0,100,1)
+
+    BIOTIC_FORCE = []
+    print("calculating ...")
+    # for e1 in E1:
+    #     for e2 in E2:
+    #         biotic_E1 = 0
+    #         biotic_E2 = 0
+    #
+    #         for s_i in range(SPECIES_K):
+    #             biotic_E1 += np.exp(- abs(e1-mu[0][s_i]) ** 2 / (2 * NICHE ** 2)) * omega[0][s_i]
+    #             biotic_E2 += np.exp(- abs(e2-mu[1][s_i]) ** 2 / (2 * NICHE ** 2)) * omega[1][s_i]
+    #
+    #         biotic_total = biotic_E1+biotic_E2
+    #         print(e1, e2, biotic_total)
+    #         BIOTIC_FORCE.append((e1, e2, biotic_total))
+
+    print("graphing ...")
+    fig = plt.figure()
+    ax = plt.axes(projection='3d')
+    ax.set_title('JI Model',fontsize = 14)
+    ax.set_xlabel('E1')
+    ax.set_ylabel('E2')
+    ax.set_zlabel('Total Biotic Force')
+
+    X=[]
+    Y=[]
+    Z=[]
+
+    for xyz in BIOTIC_FORCE:
+        X.append(xyz[0])
+        Y.append(xyz[1])
+        Z.append(xyz[2])
+
+    X1,Y1 = np.meshgrid(E1,E2)
+    Z1 = np.exp(- abs(X1-mu[0][0]) ** 2 / (2 * NICHE ** 2)) * omega[0][0] + np.exp(- abs(Y1-mu[1][0]) ** 2 / (2 * NICHE ** 2)) * omega[1][0] * 0
+    print(Z1)
+    for s_i in range(SPECIES_K):
+        Z1 += np.exp(- abs(X1-mu[0][s_i]) ** 2 / (2 * NICHE ** 2)) * omega[0][s_i] + np.exp(- abs(Y1-mu[1][s_i]) ** 2 / (2 * NICHE ** 2)) * omega[1][s_i]
+        print(s_i)
+
+
+    print(Z1)
+    ax.plot_surface(X1, Y1, Z1, cmap='viridis')
+    #ax.plot_trisurf(X, Y, Z, color='white', edgecolors='grey', alpha=0.5)
+    plt.show()
+
+    print("done")
+
+    E1 = np.arange(0,100,1)
+    E2 = np.arange(0,100,1)
+
+    print("calculating ...")
+
+    biotic_total = np.exp(- abs(E1-mu[0][0]) ** 2 / (2 * NICHE ** 2)) * 0 + np.exp(- abs(E2-mu[1][0]) ** 2 / (2 * NICHE ** 2)) * 0
+
+    print(E1.shape)
+    print(E2.shape)
+    print(biotic_total.shape)
+
+    for s_i in range(SPECIES_K):
+        a1 = np.exp(- abs(E1-mu[0][s_i]) ** 2 / (2 * NICHE ** 2))
+        a2 = np.exp(- abs(E2-mu[1][s_i]) ** 2 / (2 * NICHE ** 2))
+
+        a1x = np.clip(a1, 0.2, 1)
+        a2x = np.clip(a2, 0.2, 1)
+
+        biotic1 = a1x * omega[0][s_i]
+        biotic2 = a2x * omega[1][s_i]
+
+        biotic_total += biotic1+biotic2
+
+    ######################################################
+    # def fun(x, y):
+    #     return x**2 + y
+    #
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111, projection='3d')
+    # x = y = np.arange(-3.0, 3.0, 0.05)
+    # X, Y = np.meshgrid(x, y)
+    # zs = np.array(fun(np.ravel(X), np.ravel(Y)))
+    # Z = zs.reshape(X.shape)
+    #
+    # ax.plot_surface(X, Y, Z)
+    ######################################################
+
+    print("graphing ...")
+    fig = plt.figure()
+    ax = plt.axes(projection='3d')
+    ax.set_title('ST Model',fontsize = 14)
+    ax.set_xlabel('E1')
+    ax.set_ylabel('E2')
+    ax.set_zlabel('Total Biotic Force')
+    ax.plot_surface(E1, E2, biotic_total)
+
+    plt.show()
+
+    print("done")
+
+plot_JI_ST_()
 
 def plot_JI_ST_Biotic_ALL_E():
 
-    E1 = np.arange(0,100,0.1)
-    E2 = np.arange(0,100,0.1)
+    E1 = np.arange(0,100,0.01)
+    E2 = np.arange(0,100,0.01)
 
     E1, E2 = np.meshgrid(E1, E2)
 
@@ -151,13 +269,18 @@ def plot_JI_ST_Biotic_ALL_E():
     ax.zaxis.set_major_locator(LinearLocator(10))
     ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
     fig.colorbar(surf, shrink=0.5, aspect=5)
+    for angle in range(0, 360):
+        ax.view_init(30, angle)
+    plt.draw()
+    plt.pause(.001)
+
     plt.show()
 
 
 
 
-    E1 = np.arange(0,100,0.1)
-    E2 = np.arange(0,100,0.1)
+    E1 = np.arange(0,100,0.01)
+    E2 = np.arange(0,100,0.01)
 
     E1, E2 = np.meshgrid(E1, E2)
 
@@ -199,6 +322,10 @@ def plot_JI_ST_Biotic_ALL_E():
     ax.zaxis.set_major_locator(LinearLocator(10))
     ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
     fig.colorbar(surf, shrink=0.5, aspect=5)
+    for angle in range(0, 360):
+        ax.view_init(30, angle)
+    plt.draw()
+    plt.pause(.001)
     plt.show()
 
 plot_JI_ST_Biotic_ALL_E()
