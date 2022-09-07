@@ -152,4 +152,4 @@ if __name__ == '__main__':
         results.append(result)
 
     print()
-    print("SIMULATIONS COMPLETED")
+    print("SIMULATIONS COMPLETED"+ print_time())

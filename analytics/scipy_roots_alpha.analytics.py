@@ -13,7 +13,7 @@ RUN_ID  = 0
 
 data_points = []
 
-data_dr = os.getcwd() + '/data'
+data_dr = os.getcwd() + '/data_stable'
 data_archives = os.listdir(data_dr)
 
 for si in data_archives:

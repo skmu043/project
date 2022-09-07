@@ -4202,18 +4202,18 @@ def st_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_
     X_axis = np.arange(len(X))
 
     in_alive = []
-    in_not_alive = []
+    out_alive = []
     out_=[]
 
     for each_result in result_set:
         #print("JI")
         #print(each_result[1]+each_result[2]+each_result[3]+each_result[4])
         in_alive.append(each_result[1])
-        in_not_alive.append(each_result[2])
-        out_.append(each_result[3]+each_result[4])
+        out_alive.append(each_result[3])
+        out_.append(each_result[4])
 
     in_alive_bottom = []
-    in_not_alive_bottom = []
+    out_alive_bottom = []
     out_bottom = []
 
     index_temp = 0
@@ -4221,14 +4221,14 @@ def st_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_
     for each_temp in set(start_temp):
 
         in_alive_bottom.append(0)
-        in_not_alive_bottom.append(in_alive[index_temp])
-        out_bottom.append(in_alive[index_temp] + in_not_alive[index_temp])
+        out_alive_bottom.append(in_alive[index_temp])
+        out_bottom.append(in_alive[index_temp] + out_alive[index_temp])
         index_temp +=1
 
 
     p1 = ax.bar(X_axis, in_alive, bottom= in_alive_bottom,  label='Simulation End Temperature within essential range with Alive Species')
-    p2 = ax.bar(X_axis, in_not_alive, bottom=in_not_alive_bottom , label='Simulation End Temperature within essential range but without Alive Species')
-    p3 = ax.bar(X_axis, out_, bottom=out_bottom , label='Simulation End Temperature outside the essential range')
+    p2 = ax.bar(X_axis, out_alive, bottom=out_alive_bottom , label='Simulation End Temperature outside the essential range with Alive Species')
+    p3 = ax.bar(X_axis, out_, bottom=out_bottom , label='Simulation End Temperature outside the essential range without Alive Species')
 
     ax.set_xticks(X_axis)
     ax.set_xticklabels(X)
@@ -4321,18 +4321,18 @@ def nw_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_
     X_axis = np.arange(len(X))
 
     in_alive = []
-    in_not_alive = []
+    out_alive = []
     out_=[]
 
     for each_result in result_set:
         #print("JI")
         #print(each_result[1]+each_result[2]+each_result[3]+each_result[4])
         in_alive.append(each_result[1])
-        in_not_alive.append(each_result[2])
-        out_.append(each_result[3]+each_result[4])
+        out_alive.append(each_result[3])
+        out_.append(each_result[4])
 
     in_alive_bottom = []
-    in_not_alive_bottom = []
+    out_alive_bottom = []
     out_bottom = []
 
     index_temp = 0
@@ -4340,14 +4340,14 @@ def nw_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_
     for each_temp in set(start_temp):
 
         in_alive_bottom.append(0)
-        in_not_alive_bottom.append(in_alive[index_temp])
-        out_bottom.append(in_alive[index_temp] + in_not_alive[index_temp])
+        out_alive_bottom.append(in_alive[index_temp])
+        out_bottom.append(in_alive[index_temp] + out_alive[index_temp])
         index_temp +=1
 
 
     p1 = ax.bar(X_axis, in_alive, bottom= in_alive_bottom,  label='Simulation End Temperature within essential range with Alive Species')
-    p2 = ax.bar(X_axis, in_not_alive, bottom=in_not_alive_bottom , label='Simulation End Temperature within essential range but without Alive Species')
-    p3 = ax.bar(X_axis, out_, bottom=out_bottom , label='Simulation End Temperature outside the essential range')
+    p2 = ax.bar(X_axis, out_alive, bottom=out_alive_bottom , label='Simulation End Temperature outside the essential range with Alive Species')
+    p3 = ax.bar(X_axis, out_, bottom=out_bottom , label='Simulation End Temperature outside the essential range without Alive Species')
 
     ax.set_xticks(X_axis)
     ax.set_xticklabels(X)

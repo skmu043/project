@@ -367,7 +367,7 @@ if __name__ == '__main__':
     #plot_aot()             #plot abundance of each species over time
     #plot_aot_scaled()      #plot abundance of each species over time scaled by R
     #plot_aot_inc_dec()     #plot species that increase temperature and decrease temperature
-    #plot_b_p()             #plot biotic force and P
-    #plot_e()               #plot temperature value over time
-    #plot_efp()             #plot temperature, biotic force and P over time
-    plot_ep(LP)               #plot temperature and large P
+    plot_b_p()             #plot biotic force and P
+    plot_e()               #plot temperature value over time
+    plot_efp()             #plot temperature, biotic force and P over time
+    lot_ep(LP)               #plot temperature and large P
