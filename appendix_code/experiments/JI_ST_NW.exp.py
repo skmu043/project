@@ -3,7 +3,6 @@ import shelve
 import math
 import numpy as np
 
-
 if int(len(sys.argv)) != int(2):
     print("Args: shelve file name which contains all of > (K, R, P, E, start, end, step, EN, OE, RUN_ID)")
     print("e.g K=100, R=100, P=0, E=X, start=0, end=200, step=0.01, EN=2, OE=5, RUN_ID : epoch")

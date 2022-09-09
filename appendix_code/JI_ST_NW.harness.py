@@ -17,11 +17,12 @@ TIME_END            = 200                   # --- Length of Simulation
 TIME_STEP           = 1                     # --- Time Steps
 ENV_VARS            = 1                     # --- Number of Environment Variables
 NICHE               = 5                     # --- Niche Size
-SURVIVAL_THRESHOLD  = 0
-ENV_START           = [50]
+SURVIVAL_THRESHOLD  = 0                     # --- Survival Threshold
+ENV_START           = [0]                   # --- System Start Temperature
 exp_name            = "JI_ST_NW.exp"
 
 def init_shelve():
+
     data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
     shelve_file = data_directory + "/" + exp_name + ".data"
     os.mkdir(data_directory)
