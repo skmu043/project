@@ -6,7 +6,6 @@ import numpy as np
 from tqdm import tqdm
 from multiprocessing import Pool
 
-
 RUN_ID = int(time.time())                   # --- Unique Run ID
 SAMPLE_SIZE = 100                           # --- Size of sample
 SAMPLE_STEP = 1                             # --- Sample Step
@@ -16,6 +15,7 @@ TIME_START          = 0                     # --- Start of Simulation
 TIME_END            = 200                   # --- Length of Simulation
 TIME_STEP           = 1                     # --- Time Steps
 ENV_VARS            = 1                     # --- Number of Environment Variables
+ENV_VARS            = 1                     # --- Number of Environment Variables
 NICHE               = 5                     # --- Niche Size
 SURVIVAL_THRESHOLD  = 0                     # --- Survival Threshold
 ENV_START           = [0]                   # --- System Start Temperature
@@ -23,14 +23,14 @@ exp_name            = "JI_ST_NW.exp"        # --- Experiment Name
 
 def init_shelve():
 
-    # Create the shelve file that contains the experiment's starting variable values
+    # Create the shelve file that contains the experiment's starting parameters
     data_directory = str(os.getcwd())+"/data/" + str(time.time()) + "." + str(random.randint(100, 999)) + "." + exp_name
     shelve_file = data_directory + "/" + exp_name + ".data"
     os.mkdir(data_directory)
     s = shelve.open(shelve_file)
 
     try:
-        # Stores starting variable values into shelve file
+        # Stores starting parameters into shelve file
         s['RANGE_R']        = RANGE_R
         s['SPECIES_K']      = SPECIES_K
         s['TIME_START']     = TIME_START
@@ -79,7 +79,7 @@ if __name__ == '__main__':
                         simulation_shelve = shelve.open(simulation_run_shelve)
 
                         try:
-                            # Store experiment values in shelve file
+                            # Store experiment parameters in shelve file
                             simulation_shelve['omega']              = omega
                             simulation_shelve['mu']                 = mu
                             simulation_shelve['ENV_START']          = start_temperature
