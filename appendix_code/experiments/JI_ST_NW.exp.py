@@ -154,8 +154,6 @@ if __name__ == '__main__':
 
     abundance_end = 0
 
-    if(SURVIVAL_THRESHOLD > 0):
-        aliveness = 0.000001
 
     for abundance_stream in results[:-1]:
         if abundance_stream[-1] > aliveness:
