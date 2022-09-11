@@ -340,8 +340,6 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
     ax.tick_params(which='minor', length=4)
     ax.set_xticklabels(X)
     ax.legend()
-
-
     # Label with label_type 'center' instead of the default 'edge'
     ax.bar_label(p1, label_type='center', fontsize=20)
     ax.bar_label(p2, label_type='center', fontsize=20)
