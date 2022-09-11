@@ -19,6 +19,7 @@ from matplotlib.patches import Rectangle
 from matplotlib.legend_handler import HandlerBase
 import pandas as pd
 from scipy import optimize
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 
 
 RESULT_DATA = []
@@ -228,6 +229,10 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
 
         ax.set_xticks(X_axis)
         ax.set_xticklabels(X)
+        ax.yaxis.set_minor_locator(AutoMinorLocator())
+        ax.tick_params(which='both', width=1)
+        ax.tick_params(which='major', length=7)
+        ax.tick_params(which='minor', length=4)
         ax.legend()
 
         # Label with label_type 'center' instead of the default 'edge'
@@ -329,6 +334,10 @@ def number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_
     p2 = ax.bar(X_axis, alive_below, bottom=alive_above , label='No alive species present')
 
     ax.set_xticks(X_axis)
+    ax.yaxis.set_minor_locator(AutoMinorLocator())
+    ax.tick_params(which='both', width=1)
+    ax.tick_params(which='major', length=7)
+    ax.tick_params(which='minor', length=4)
     ax.set_xticklabels(X)
     ax.legend()
 
@@ -4125,7 +4134,6 @@ def ji_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_
     plt.savefig('ji_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simulations_ending_outside_R_WITH_AND_WITHOUT_ALIVE_species.jpg')
     plt.show()
 
-ji_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simulations_ending_outside_R_WITH_AND_WITHOUT_ALIVE_species()
 
 def st_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simulations_ending_outside_R_WITH_AND_WITHOUT_ALIVE_species():
 
@@ -4244,7 +4252,6 @@ def st_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_
     plt.savefig('st_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simulations_ending_outside_R_WITH_AND_WITHOUT_ALIVE_species.jpg')
     plt.show()
 
-st_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simulations_ending_outside_R_WITH_AND_WITHOUT_ALIVE_species()
 
 def nw_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simulations_ending_outside_R_WITH_AND_WITHOUT_ALIVE_species():
 
@@ -4363,7 +4370,6 @@ def nw_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_
     plt.savefig('nw_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simulations_ending_outside_R_WITH_AND_WITHOUT_ALIVE_species.jpg')
     plt.show()
 
-nw_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simulations_ending_outside_R_WITH_AND_WITHOUT_ALIVE_species()
 #=======================================================================================================================
 #all_stable_points()
 #=======================================================================================================================
@@ -4375,22 +4381,22 @@ nw_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simu
 #=======================================================================================================================
 #sample_space_effects_agains_optimal_growing_temperature()
 #=======================================================================================================================
-#>>>>>>>>>number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
+number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end2()
+number_of_simulations_that_have_zero_alives_vs_more_than_zero_alives_at_the_end2()
 #=======================================================================================================================
 #=======================================================================================================================
 #ji_model_total_abundance_per_start_temperature()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>number_alive_at_each_start_temperature_at_the_start_of_simulation()
+number_alive_at_each_start_temperature_at_the_start_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>number_alive_at_each_start_temperature_at_the_start_of_simulation2()
+number_alive_at_each_start_temperature_at_the_start_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
-#>>>>>>>>>number_alive_at_each_start_temperature_at_the_end_of_simulation()
+number_alive_at_each_start_temperature_at_the_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
 #>>>>>>>>>number_alive_at_each_start_temperature_at_the_end_of_simulation2()
@@ -4473,3 +4479,11 @@ nw_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simu
 #=======================================================================================================================
 #end_temperature_both_zero_zero2_with_start_temps_dw_overlay()
 #=======================================================================================================================
+#>>>>>>>>>>ji_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simulations_ending_outside_R_WITH_AND_WITHOUT_ALIVE_species()
+#=======================================================================================================================
+#>>>>>>>>>>st_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simulations_ending_outside_R_WITH_AND_WITHOUT_ALIVE_species()
+#=======================================================================================================================
+#>>>>>>>>>>nw_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simulations_ending_outside_R_WITH_AND_WITHOUT_ALIVE_species()
+#=======================================================================================================================
+
+

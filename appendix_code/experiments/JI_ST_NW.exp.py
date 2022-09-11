@@ -38,28 +38,23 @@ system_state        = np.zeros(SPECIES_K+ENV_VARS)
 SystemTemperature   = ENV_START
 
 # ---------------------------------------------------------------------------------------------------------------------#
-# NICHE - Match Range on Niche Change
+# The following functions are used only by the NW model to calculate the abundance of species
 
-def fYaI(Xe, Ni, u, T):
+# Returns the distance from the optimal growing temperature to the edge of the abundance graph
+def temperature_range(Survival_Threshold, Niche_, Optimum_Growing_Temperature):
+    return (Optimum_Growing_Temperature + (math.sqrt(((math.log(Survival_Threshold,math.e) / -1) * (2*(Niche_**2))))))
 
-    abundance = ((math.e) ** ((-1) * (((abs(Xe-u)) ** 2) / (2*(Ni**2)))))
+def negative_temperature_range(Survival_Threshold, Niche_, Optimum_Growing_Temperature):
+    return (Optimum_Growing_Temperature - (math.sqrt(((math.log(Survival_Threshold,math.e) / -1) * (2*(Niche_**2))))))
 
-    if(abundance <= T):
-        abundance = 0
+# Utilizes the distance to calculate the abundance for a species
+def abundance_temperature_range(SystemTemperature, Niche_, Optimum_Growing_Temperature, Temperature_Range):
 
-    return(abundance)
+    abundance = ((math.e) ** ((-1) * (((abs(SystemTemperature-Optimum_Growing_Temperature)) ** 2) / (2*(Niche_**2)))))
 
-def temperature_range(Ya, Ni, u):
-    return (u + (math.sqrt(((math.log(Ya,math.e) / -1) * (2*(Ni**2))))))
-
-def negative_temperature_range(Ya, Ni, u):
-    return (u - (math.sqrt(((math.log(Ya,math.e) / -1) * (2*(Ni**2))))))
-
-def abundance_temperature_range(Xe, Ni, u, NRange):
-
-    abundance = ((math.e) ** ((-1) * (((abs(Xe-u)) ** 2) / (2*(Ni**2)))))
-
-    if((Xe >= u + NRange) or (Xe <= u - NRange)):
+    if((SystemTemperature >= Optimum_Growing_Temperature + Temperature_Range)
+        or
+      (SystemTemperature <= Optimum_Growing_Temperature - Temperature_Range)):
         abundance = 0
 
     return(abundance)

@@ -5,7 +5,7 @@ from tqdm import tqdm
 import seaborn as sns
 import pandas as pd
 from scipy.signal import savgol_filter
-
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 
 RESULT_DATA = []
 UNIQ_SAMPLES = []
@@ -31,25 +31,25 @@ specific_model = []
 for item in RESULT_DATA:
     for entry in item:
 
-        #biotic_components.append(entry[0][0]-1)
-        #number_of_attractors.append(len(entry[3]))
-        #specific_model.append("JI05")
-
-        #biotic_components.append(entry[0][0]-1)
-        #number_of_attractors.append(len(entry[4]))
-        #specific_model.append("JI07")
-
-        #biotic_components.append(entry[0][0]-1)
-        #number_of_attractors.append(len(entry[5]))
-        #specific_model.append("JI10")
+        biotic_components.append(entry[0][0]-1)
+        number_of_attractors.append(len(entry[3]))
+        specific_model.append("Niche = 5")
 
         biotic_components.append(entry[0][0]-1)
-        number_of_attractors.append(len(entry[6]))
-        specific_model.append("ST05")
+        number_of_attractors.append(len(entry[4]))
+        specific_model.append("Niche = 7")
 
         biotic_components.append(entry[0][0]-1)
-        number_of_attractors.append(len(entry[7]))
-        specific_model.append("NW10")
+        number_of_attractors.append(len(entry[5]))
+        specific_model.append("Niche = 10")
+
+        #biotic_components.append(entry[0][0]-1)
+        #number_of_attractors.append(len(entry[6]))
+        #specific_model.append("ST05")
+
+        #biotic_components.append(entry[0][0]-1)
+        #number_of_attractors.append(len(entry[7]))
+        #specific_model.append("NW10")
 
 
 zipped = list(zip(biotic_components,number_of_attractors,specific_model))
@@ -65,8 +65,6 @@ fig, ax = plt.subplots(figsize=(20,20), dpi= 200)
 
 
 for specific_model in df['specific_model'].unique():
-
-
 
     SMDF_mean = df[df['specific_model'] == specific_model].groupby(['biotic_components']).mean()
     SMDF_std = df[df['specific_model'] == specific_model].groupby(['biotic_components']).std()
@@ -86,22 +84,30 @@ for specific_model in df['specific_model'].unique():
     #sns.scatterplot(x=x,y=y)
     #plt.plot(x,y)
     #ax.fill_between(x, fill1, fill2, alpha=0.3)
-    sns.lineplot(x=x, y=yhat, label = str(specific_model))
+    sns.lineplot(x=x, y=y, label = str(specific_model), markers=["o", "o", "o"])
     #sns.lineplot(x=x, y=fill1)
     #sns.lineplot(x=x, y=fill2)
 
 #ax.set_xscale('log')
 
-plt.title('Attractors', fontsize=40)
-ax.set_xlabel('Biotic Components', fontsize=40)
-ax.set_ylabel('Attractors', fontsize=40)
+plt.title('Attractors for three niche sizes', fontsize=40)
+ax.set_xlabel('Number of Species', fontsize=40)
+ax.set_ylabel('Number of Attractors', fontsize=40)
 
+ax.xaxis.set_minor_locator(AutoMinorLocator())
+ax.yaxis.set_minor_locator(AutoMinorLocator())
+
+ax.tick_params(which='both', width=1)
+ax.tick_params(which='major', length=7)
+ax.tick_params(which='minor', length=4)
+ax.set_xscale('log')
+
+plt.xticks(fontsize=20)
+plt.yticks(fontsize=20)
 plt.legend(loc=2,prop={'size': 20})
 plt.tight_layout()
 plt.savefig('attractors_JI05_JI07_JI10_ST05_NW10.jpg')
 plt.show()
-
-
 
 
 #df2 = df.groupby(['biotic_components']).mean()

@@ -191,8 +191,8 @@ if __name__ == '__main__':
 
         fig, ax = plt.subplots()
 
-        plt.title("Forces acting on the system", fontsize = 15)
-        plt.xlabel('Time', fontsize = 15)
+        plt.title("The total biotic force", fontsize = 15)
+        plt.xlabel('Time Step', fontsize = 15)
         plt.ylabel('Force', fontsize = 15)
 
         ax.plot(times_steps,perturb, 'b--',label = 'Perturbing Force')
@@ -219,7 +219,7 @@ if __name__ == '__main__':
         fig, ax = plt.subplots()
 
         plt.title("System Temperature", fontsize = 15)
-        plt.xlabel('Time', fontsize = 15)
+        plt.xlabel('Time Step', fontsize = 15)
         plt.ylabel('Temperature', fontsize = 15)
 
         ax.plot(times_steps,results[-1], 'r-',label = 'With alive species')
