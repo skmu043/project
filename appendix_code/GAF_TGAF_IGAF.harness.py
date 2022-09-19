@@ -18,7 +18,7 @@ ENV_VARS            = 1                     # --- Number of Environment Variable
 NICHE               = 5                     # --- Niche Size
 SURVIVAL_THRESHOLD  = 0                     # --- Survival Threshold
 ENV_START           = [0]                   # --- System Start Temperature
-exp_name            = "JI_ST_NW.exp"        # --- Experiment Name
+exp_name            = "GAF_TGAF_IGAF.exp"        # --- Experiment Name
 
 def init_shelve():
 
