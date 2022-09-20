@@ -4708,9 +4708,9 @@ print()
 print('z_stat: %0.3f, p_value: %0.3f' % (stat, p_value))
 
 if p_value > significance:
-    print ("Fail to reject the null hypothesis - we have nothing else to say")
+    print ("Fail to reject the null hypothesis : sample against Ho for Ha != Ho")
 else:
-    print ("Reject the null hypothesis - suggest the alternative hypothesis is true")
+    print ("Reject the null hypothesis - suggest the alternative hypothesis is true : sample against Ho for Ha != Ho")
 
 
 sample_success_a, sample_size_a = (sum(r2), 100*21)
@@ -4728,9 +4728,9 @@ print()
 print('z_stat: %0.3f, p_value: %0.3f' % (stat, p_value))
 
 if p_value > significance:
-    print ("Fail to reject the null hypothesis - we have nothing else to say")
+    print ("Fail to reject the null hypothesis : sample against Ho for Ha != Ho")
 else:
-    print ("Reject the null hypothesis - suggest the alternative hypothesis is true")
+    print ("Reject the null hypothesis - suggest the alternative hypothesis is true : sample against Ho for Ha != Ho")
 #=======================================================================================================================
 #all_stable_points()
 #=======================================================================================================================
