@@ -103,11 +103,17 @@ def ji_stable_point_return():
     return(return_results)
 
 
+def f1_abundance(x):
+    biotic_force = []
+    for y in range(SPECIES_K):
+        biotic_force.append(((math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2))))))
+    return(np.sum((np.array(biotic_force, dtype=float))))
+
 def ji_stable_point_abundance_return(attractors):
 
     attractor_abundance = []
     for equilibrium in attractors:
-        attractor_abundance.append((equilibrium, f1(equilibrium)))
+        attractor_abundance.append((equilibrium, f1_abundance(equilibrium)))
     return(attractor_abundance)
 
 
@@ -183,11 +189,24 @@ def st_stable_point_return():
 
     return(return_results)
 
+def f1x_abundance(x):
+    biotic_force = []
+    truncation=0.2
+
+    for y in range(SPECIES_K):
+        aliveness = (math.e) ** ((-1) * (((abs(x-mu[0][y])) ** 2) / (2*(NICHE**2))))
+        if(aliveness <= truncation and aliveness >= (-1 * truncation)):
+            biotic_force.append(0)
+        else:
+            biotic_force.append(aliveness)
+
+    return(np.sum((np.array(biotic_force, dtype=float))))
+
 def st_stable_point_abundance_return(attractors):
 
     attractor_abundance = []
     for equilibrium in attractors:
-        attractor_abundance.append((equilibrium, f1x(equilibrium)))
+        attractor_abundance.append((equilibrium, f1x_abundance(equilibrium)))
     return(attractor_abundance)
 
 ########################################################################################################################
@@ -293,11 +312,23 @@ def nw_stable_point_return():
 
     return(return_results)
 
+def f1x2_abundance(x):
+
+    biotic_force = []
+    truncation=0.2
+
+    for y in range(SPECIES_K):
+        NRange = (fXe(0.2, 5, mu[0][y]) - mu[0][y])
+        aliveness = fYaIx(x, 10, mu[0][y], NRange)
+        biotic_force.append(aliveness)
+
+    return(np.sum((np.array(biotic_force, dtype=float))))
+
 def nw_stable_point_abundance_return(attractors):
 
     attractor_abundance = []
     for equilibrium in attractors:
-        attractor_abundance.append((equilibrium,f1x2(equilibrium)))
+        attractor_abundance.append((equilibrium,f1x2_abundance(equilibrium)))
     return(attractor_abundance)
 
 if __name__ == '__main__':
