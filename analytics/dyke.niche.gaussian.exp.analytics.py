@@ -20,6 +20,7 @@ from matplotlib.legend_handler import HandlerBase
 import pandas as pd
 from scipy import optimize
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+from statsmodels.stats.proportion import proportions_ztest
 
 
 RESULT_DATA = []
@@ -4522,6 +4523,214 @@ def nw_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_
     plt.savefig('nw_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_simulations_ending_outside_R_WITH_AND_WITHOUT_ALIVE_species.jpg')
     plt.show()
 
+
+
+
+########################################################################################################################
+global x1
+x1 = 0
+global x2
+x2 = 0
+global x3
+x3 = 0
+
+global s1
+s1 = 0
+global s2
+s2 = 0
+global s3
+s3 = 0
+
+n1 = 100
+n2 = 100
+n3 = 100
+
+global r1
+r1 = []
+
+global r2
+r2 = []
+
+global r3
+r3 = []
+
+
+def GAF_Regulation_Stats():
+
+    global x1
+    global s1
+    global r1
+
+    UNIQ_SAMPLES = []
+
+    for data_point in RESULT_DATA:
+        if((data_point[0],data_point[1])) not in UNIQ_SAMPLES:
+            UNIQ_SAMPLES.append((data_point[0],data_point[1]))
+
+    TEMPERATURE_REGULATION = []
+
+    for uniq in UNIQ_SAMPLES:
+        temp_reg = 0
+        for data_point in RESULT_DATA:
+            if(data_point[0] == uniq[0] and data_point[1] == uniq[1] and data_point[2]==5 and (data_point[3]==0)): # Niche 5 with ST 0 = JI model
+                #start_temp.append(data_point[4])
+                #end_temp.append(data_point[5])
+                #end_abundance.append(data_point[9])
+                if(data_point[5] <= 100 and data_point[5] >= 0 and data_point[9] >= 0.08):
+                    temp_reg +=1
+        TEMPERATURE_REGULATION.append((data_point[0], data_point[1], temp_reg))
+
+    RES = []
+    for item in TEMPERATURE_REGULATION:
+        RES.append(item[2])
+    print(RES)
+    print("Mean of the sample is % s " % (statistics.mean(RES)))
+    print("Standard Deviation of the sample is % s "% (statistics.stdev(RES)))
+    print()
+    x1 = statistics.mean(RES)
+    s1 = statistics.stdev(RES)
+    r1 = RES
+
+GAF_Regulation_Stats()
+
+def TGAF_Regulation_Stats():
+
+    global x2
+    global s2
+    global r2
+
+    UNIQ_SAMPLES = []
+
+    for data_point in RESULT_DATA:
+        if((data_point[0],data_point[1])) not in UNIQ_SAMPLES:
+            UNIQ_SAMPLES.append((data_point[0],data_point[1]))
+
+    TEMPERATURE_REGULATION = []
+
+    for uniq in UNIQ_SAMPLES:
+        temp_reg = 0
+        for data_point in RESULT_DATA:
+            if(data_point[0] == uniq[0] and data_point[1] == uniq[1] and data_point[2]==5 and (data_point[3]==0.2)):
+                # start_temp.append(data_point[4])
+                # end_temp.append(data_point[5])
+                # end_alive.append(data_point[7])
+                if(data_point[5] <= 100 and data_point[5] >= 0 and data_point[7] > 0):
+                    temp_reg +=1
+        TEMPERATURE_REGULATION.append((data_point[0], data_point[1], temp_reg))
+
+    RES = []
+    for item in TEMPERATURE_REGULATION:
+        RES.append(item[2])
+    print(RES)
+    print("Mean of the sample is % s " % (statistics.mean(RES)))
+    print("Standard Deviation of the sample is % s "% (statistics.stdev(RES)))
+    print()
+    x2 = statistics.mean(RES)
+    s2 = statistics.stdev(RES)
+    r2 = RES
+
+TGAF_Regulation_Stats()
+
+def IGAF_Regulation_Stats():
+
+    global x3
+    global s3
+    global r3
+
+    UNIQ_SAMPLES = []
+
+    for data_point in RESULT_DATA:
+        if((data_point[0],data_point[1])) not in UNIQ_SAMPLES:
+            UNIQ_SAMPLES.append((data_point[0],data_point[1]))
+
+    TEMPERATURE_REGULATION = []
+
+    for uniq in UNIQ_SAMPLES:
+        temp_reg = 0
+        for data_point in RESULT_DATA:
+            if(data_point[0] == uniq[0] and data_point[1] == uniq[1] and data_point[2]==10):
+                # start_temp.append(data_point[4])
+                # end_temp.append(data_point[5])
+                # end_alive.append(data_point[7])
+                if(data_point[5] <= 100 and data_point[5] >= 0 and data_point[7] > 0):
+                    temp_reg +=1
+        TEMPERATURE_REGULATION.append((data_point[0], data_point[1], temp_reg))
+
+    RES = []
+    for item in TEMPERATURE_REGULATION:
+        RES.append(item[2])
+    print(RES)
+    print("Mean of the sample is % s " % (statistics.mean(RES)))
+    print("Standard Deviation of the sample is % s "% (statistics.stdev(RES)))
+    print()
+    x3 = statistics.mean(RES)
+    s3 = statistics.stdev(RES)
+    r3 = RES
+
+IGAF_Regulation_Stats()
+
+
+print(x1,x2,x3,s1,s2,s3,n1,n2,n3)
+
+d1 = s1/n1 + s2/n2
+d2 = s2/n2 + s3/n3
+
+sq1 = math.sqrt(d1)
+sq2 = math.sqrt(d2)
+
+nx1 = x1-x2
+nx2 = x2-x3
+
+print(nx1/sq1)
+print(x1-x2/math.sqrt(s1/n1 + s2/n2))
+print(nx2/sq2)
+print(x2-x3/math.sqrt(s2/n2 + s3/n3))
+
+
+# can we assume anything from our sample
+significance = 0.025
+
+# our samples - 82% are good in one, and ~79% are good in the other
+# note - the samples do not need to be the same size
+
+sample_success_a, sample_size_a = (sum(r1), 100*21)
+sample_success_b, sample_size_b = (sum(r2), 100*21)
+
+# check our sample against Ho for Ha != Ho
+successes = np.array([sample_success_a, sample_success_b])
+samples = np.array([sample_size_a, sample_size_b])
+
+# note, no need for a Ho value here - it's derived from the other parameters
+stat, p_value = proportions_ztest(count=successes, nobs=samples,  alternative='two-sided')
+
+# report
+print()
+print('z_stat: %0.3f, p_value: %0.3f' % (stat, p_value))
+
+if p_value > significance:
+    print ("Fail to reject the null hypothesis - we have nothing else to say")
+else:
+    print ("Reject the null hypothesis - suggest the alternative hypothesis is true")
+
+
+sample_success_a, sample_size_a = (sum(r2), 100*21)
+sample_success_b, sample_size_b = (sum(r3), 100*21)
+
+# check our sample against Ho for Ha != Ho
+successes = np.array([sample_success_a, sample_success_b])
+samples = np.array([sample_size_a, sample_size_b])
+
+# note, no need for a Ho value here - it's derived from the other parameters
+stat, p_value = proportions_ztest(count=successes, nobs=samples,  alternative='two-sided')
+
+# report
+print()
+print('z_stat: %0.3f, p_value: %0.3f' % (stat, p_value))
+
+if p_value > significance:
+    print ("Fail to reject the null hypothesis - we have nothing else to say")
+else:
+    print ("Reject the null hypothesis - suggest the alternative hypothesis is true")
 #=======================================================================================================================
 #all_stable_points()
 #=======================================================================================================================
@@ -4557,7 +4766,7 @@ def nw_simulations_ending_inside_R_WITH_AND_WITHOUT_ALIVE_species_together_with_
 #>>>>>>>>>>>average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation()
 #=======================================================================================================================
 #=======================================================================================================================
-average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation2()
+#>>>>>>>>>>>average_number_alive_at_each_start_temperature_at_the_start_and_end_of_simulation2()
 #=======================================================================================================================
 #=======================================================================================================================
 #abundance_alive_at_each_start_temperature_at_the_start_of_simulation2()
