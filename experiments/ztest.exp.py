@@ -300,7 +300,6 @@ def nw_stable_point_abundance_return(attractors):
         attractor_abundance.append((equilibrium,f1x2(equilibrium)))
     return(attractor_abundance)
 
-
 if __name__ == '__main__':
 
     RANGE_K = 201
